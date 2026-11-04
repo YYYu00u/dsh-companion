@@ -2,6 +2,8 @@
 
 # dsh-companion
 
+[![CI](https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml/badge.svg)](https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml)
+
 给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 做的本地陪伴插件。她有人设、本子、心情、经历记忆、表情包、一个网页房间，还有自己的日子；所有东西都在你本机，模型用你自己配的。
 
 她不是一个“带人设的助手”，而是一个单独的 preset：只聊天，不带干活工具。干活留给你正常的 DSH 会话。
