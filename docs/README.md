@@ -17,6 +17,7 @@ English is the primary README; the Chinese version is [../README.zh-CN.md](../RE
 | [plans/ears.md](plans/ears.md) | The "listen to music/video/voice" plan: capture, ASR, ShazamKit, licensing, phases. |
 | [../packages/voice/README.md](../packages/voice/README.md) | Local voice: ZipVoice setup, resource cost, and why the wavs are not shipped. |
 | [releases/v0.3.0.md](releases/v0.3.0.md) | Release notes for v0.3.0: ears, voice, window, and verified numbers. |
+| [releases/v0.3.1.md](releases/v0.3.1.md) | v0.3.1 correction: what the public packages actually ship. |
 
 The five reviews are: [architecture](reviews/architecture.md), [UI](reviews/ui.md), [interaction](reviews/interaction.md), [function](reviews/function.md), [product](reviews/product.md).
 

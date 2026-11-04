@@ -2,14 +2,22 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.1 — 2026-11-05
+
+### Fixed
+
+- Corrected the 0.3.0 notes: the public packages ship the optional ears button and the window icon, but **not** the private deployment's hold-to-talk voice bubbles or TTS cache.
+- The voice package README now says the cache lives in the host, not in `@dsh-companion/voice`.
+
 ## 0.3.0 — 2026-11-05
 
 ### Added
 
 - `@dsh-companion/ears` (beta): push-to-talk system audio / microphone / audio files → text. Objective-C ScreenCaptureKit helper, local sherpa-onnx + SenseVoiceSmall, optional AssemblyAI; `listen_now` / `listen_file`; pet menu and `/ears/api/*` when installed as a Host bundle.
 - `@dsh-companion/voice` (beta): local ZipVoice zero-shot voice, click-to-play; model and reference audio stay out of the repository.
-- Window: custom fish icon and app name for the Electron chat window; hold-to-talk voice messages with a WeChat-style bar and long-press transcript; history opens at the bottom.
-- Web: optional listen button (hidden unless the ears endpoint exists), voice-message upload/playback, TTS cache by text + voice.
+- Window: custom fish icon and app name for the Electron chat window; history opens at the bottom.
+- Web: optional listen button, hidden unless the ears endpoint exists.
+- The private deployment also has hold-to-talk voice messages, WeChat-style voice bubbles, and a TTS cache; those are not part of this release yet.
 - Tests: 48 total, including ears WAV/STT/pet-menu and window boot.
 
 ### Notes
@@ -117,22 +125,6 @@ First public release. Three packages extracted from a working DSH 0.2.1-rc.5 set
 - The private persona, diary, notebook, memories, stickers, and screenshots of the real deployment.
 - LCCC corpus data.
 - The Chrome wrapper and its `node_modules`.
-
-## 0.3.0 — 2026-11-05
-
-### Added
-
-- `@dsh-companion/ears` (beta): push-to-talk system audio / microphone / audio files → text. Objective-C ScreenCaptureKit helper, local sherpa-onnx + SenseVoiceSmall, optional AssemblyAI; `listen_now` / `listen_file`; pet menu and `/ears/api/*` when installed as a Host bundle.
-- `@dsh-companion/voice` (beta): local ZipVoice zero-shot voice, click-to-play; model and reference audio stay out of the repository.
-- Window: custom fish icon and app name for the Electron chat window; hold-to-talk voice messages with a WeChat-style bar and long-press transcript; history opens at the bottom.
-- Web: optional listen button (hidden unless the ears endpoint exists), voice-message upload/playback, TTS cache by text + voice.
-- Tests: 48 total, including ears WAV/STT/pet-menu and window boot.
-
-### Notes
-
-- `ears` and `voice` are beta; see [docs/verification.md](docs/verification.md).
-- TTS is CPU-only and not real-time (15–60 s per sentence); voice messages are transcribed in the background, not live captions.
-
 
 ### Planned
 

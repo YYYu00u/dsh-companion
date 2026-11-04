@@ -27,7 +27,7 @@ Then install the bundle in DSH. The default config starts the local server on po
 - `GET /health` — readiness and the voice ids
 - `GET /api/voices` is exposed by the web package, not this one.
 
-Text + voice pairs are cached by the web host in `<home>/.data/tts-cache/` so repeated playback does not re-synthesize.
+The companion web host can cache text + voice pairs in `<home>/.data/tts-cache/`; that cache lives in the host, not in this package.
 
 ## Why the wav files are not here
 
