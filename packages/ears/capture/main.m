@@ -46,6 +46,7 @@
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.done = YES;
         [self.stream stopCaptureWithCompletionHandler:^(NSError *stopError) {
+          [self.file close];
           completion(stopError);
           [NSThread exit];
         }];
@@ -136,6 +137,7 @@ int main(int argc, const char *argv[]) {
       [NSThread sleepForTimeInterval:(NSTimeInterval)seconds];
       [engine stop];
       [input removeTapOnBus:0];
+      [file close];
       return 0;
     }
 

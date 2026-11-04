@@ -36,7 +36,7 @@ Every shipped tool, route, and scheduled behavior; edge cases; API contracts; pe
 |---|---|---|
 | Chat API | `POST /api/send`, SSE `/api/events`, `/api/history` | Verified |
 | UI language | 中/EN toggle, remembered, `?lang=` links, server-error mapping | Verified (tests + both layouts) |
-| Ears | `listen_now` / `listen_file`, system audio/mic capture, local whisper | **Beta** — capture verified; STT needs whisper.cpp |
+| Ears | `listen_now` / `listen_file`, system audio/mic capture, SenseVoice | **Verified** — capture + real SenseVoice on 4.2 s clip; song ID/web UI pending |
 | Window | `/companion-window/`, same transcript, Electron window / Chrome fallback | Page + Electron verified; pet menu beta |
 | Mind API | `/api/mind`, `/api/level`, `/api/reflect` | Verified |
 | Images | `/api/sticker/<name>`, `/api/pic/<id>`, upload validation | Verified |
@@ -109,12 +109,12 @@ All JSON responses are `no-store`; images are cached for an hour. The API has no
 | core apply smoke | 1 | real `apply()` with a fake ctx, expected tools |
 | web apply smoke | 1 | web `apply()` boots with no DSH session |
 | window apply smoke | 1 | window `apply()` boots with no DSH window |
-| ears helpers | 9 | WAV parse, clean transcript, whisper args, capture bounds, plugin boot |
+| ears helpers | 9 | WAV parse, clean transcript, whisper/sherpa args, capture bounds, plugin boot |
 | delivery | 5 | split, sticker, gap, typo, ordered send |
 | life | 2 | own-time variety, rollback |
 | Bing | 2 | parse, empty page |
 | i18n | 7 | zh/en key parity, HTML/app.js key coverage, interpolation, detection, server errors |
-| **Total** | **43** | `npm test` |
+| **Total** | **45** | `npm test` |
 
 Not covered: HTTP routes (would need a DSH harness), session events, model calls, exam, hands, multi-persona, macOS senses.
 

@@ -32,7 +32,7 @@ try {
   const threads = Number(arg('threads', '2')) || 2
   if (!model || !tokens || !file) throw new Error('sherpa-worker: --model, --tokens and --file are required')
   let sherpa
-  try { sherpa = await import('sherpa-onnx-node') } catch (error) {
+  try { const mod = await import('sherpa-onnx-node'); sherpa = mod.default ?? mod } catch (error) {
     throw new Error(`找不到 sherpa-onnx-node：${error.message}；在 packages/ears 里 npm install sherpa-onnx-node`)
   }
   const wav = wavSamples(readFileSync(file))

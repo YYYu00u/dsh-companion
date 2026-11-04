@@ -48,7 +48,7 @@ export function createEars({ home, config = {}, log }) {
   const defaultSource = config.capture?.defaultSource === 'mic' ? 'mic' : 'system'
 
   async function speech(file) {
-    if (!sttOptions.model) throw new Error('没有配置 stt.model（whisper 模型路径）')
+    if (sttOptions.provider === 'local' && !sttOptions.model) throw new Error('没有配置 stt.model（whisper 模型路径）')
     return transcribe({ ...sttOptions, file })
   }
 

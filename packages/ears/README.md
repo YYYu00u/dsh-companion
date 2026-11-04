@@ -4,8 +4,9 @@ Push-to-talk listening for the companion: system audio, microphone, or an audio 
 
 ## Status
 
-- **Capture is verified** on macOS 15.1 / Apple M2: a 5-second system-audio WAV and a 3-second microphone WAV were recorded and checked with `ffprobe` / `volumedetect`.
-- **STT adapters are written but not verified with the real model here**: the default is `sherpa` (sherpa-onnx + SenseVoiceSmall); `local` (whisper.cpp) and `assemblyai` are optional. The build environment could not download the model, so the first run will fail with a clear message until you install it.
+- **Capture is verified** on macOS 15.1 / Apple M2: system-audio and microphone WAVs were recorded and checked with `ffprobe` / `volumedetect`. The helper now closes the WAV file before exiting, so the data chunk has a valid size.
+- **STT is verified with the real model** on macOS 15.1 / M2: a 4.2-second system-audio clip was transcribed in about 0.9 s (`sherpa-onnx` + SenseVoice int8), and `listen_now` end-to-end took 5.7 s including the 4 s capture. The model is not committed; install it with the steps below.
+- `local` (whisper.cpp) and `assemblyai` remain optional providers.
 - ShazamKit song ID and the web voice-message UI are not in this package yet; see [docs/plans/ears.md](../../docs/plans/ears.md).
 
 ## Install

@@ -18,3 +18,6 @@ packages/voice/assets/*.mp3
 
 # 本地模型（ears/voice 用）
 .models/
+
+.models/
+packages/ears/node_modules/

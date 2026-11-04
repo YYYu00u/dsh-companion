@@ -6,7 +6,8 @@
 
 - `packages/ears/capture/` 的 Objective-C helper 已编译通过，在本机 macOS 15.1 / M2 上抓到 **5 秒系统声音**和 **3 秒麦克风**；`ffprobe` 时长正确，`volumedetect` 最大 -2.7 dB，不是静音。
 - 采集没有用原计划的 CoreAudio process tap，而是 ScreenCaptureKit：本机 Command Line Tools 的 Swift 编译器和 SDK 版本对不上，Swift 编不了；Objective-C 能编，且 macOS 15 上可用。代价是要“屏幕与系统音频录制”权限，不是纯音频权限。后续可加 CoreAudio tap 后端，CLI 参数不变。
-- 转写代码（sherpa-onnx + SenseVoice、whisper.cpp CLI、AssemblyAI）已写，但本机没有 SenseVoice 模型，网络下载被重置，**没有端到端验过**。第一次跑会明确报“找不到模型/找不到 sherpa-onnx-node”。
+- 转写代码（sherpa-onnx + SenseVoice、whisper.cpp CLI、AssemblyAI）已写；SenseVoice int8 模型已下到本机，**真链路验过**：4.2 秒系统声音 → “我是大肥鱼，这是一段测试音频。”，worker 约 0.9 秒；`listen_now` 端到端 5.7 秒（含 4 秒采集）。
+- 采集 helper 修了一个 bug：原来 `exit(0)` 前没关 `AVAudioFile`，WAV 的 `data` chunk 长度是 0；现在先 `close` 再退出，`ffprobe`/解析都正常。
 - 网页语音上传、ShazamKit 识歌还没做。
 
 ## 1. 这一版做什么
@@ -184,8 +185,8 @@ ctx.get('ears').transcribe(buffer, { mime, source: 'voice' })
 
 | 阶段 | 交付 | 时间 | 验收 |
 |---|---|---|---|
-| 0 | 采集 helper 抓 15 秒系统声音，落 wav，能播放 | 0.5–1 天 | 放一首歌，wav 有声音；权限拒绝时不崩（**已完成**：5s 系统声音 + 3s 麦克风） |
-| 1 | sherpa-onnx + SenseVoice 转写，`listen_now` 工具，结果进她上下文 | 2–3 天 | 说一句话，5 秒内出文字；音乐段不乱转 |
+| 0 | 采集 helper 抓 15 秒系统声音，落 wav，能播放 | 0.5–1 天 | 放一首歌，wav 有声音；权限拒绝时不崩（**已完成**：系统声音 + 麦克风 + WAV 头修复） |
+| 1 | sherpa-onnx + SenseVoice 转写，`listen_now` 工具，结果进她上下文 | 2–3 天 | 说一句话，5 秒内出文字；音乐段不乱转（**转写已完成并验过**） |
 | 2 | 语音/音频上传，网页“听到了”卡片 | 1–2 天 | 发一条微信语音，她接得上话 |
 | 3 | ShazamKit 识歌 + 歌名卡片 | 1–2 天 | 放《晴天》能出歌名；没听出来明确说 |
 | 4 | 文档、NOTICE、测试、截图、发版 | 1–2 天 | `npm test` / `npm run check` 绿；CI 过 |

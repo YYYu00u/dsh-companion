@@ -5,7 +5,7 @@
 ## Automated
 
 ```bash
-npm test          # 43 tests
+npm test          # 45 tests
 npm run check     # syntax + package hygiene + secret/path scan
 npm run demo      # real UI, mock backend, no model calls
 ```
@@ -57,7 +57,7 @@ That history is why the packages are called verified. It is not a claim that eve
 | `exam` | Needs a judge model + LCCC corpus (not shipped) | Configure both, set level ≥2, trigger `/api/reflect`, check `exams.md` |
 | Hands | Needs Chrome MCP + a child preset | Ask her to open a page; confirm `use_hands` returns a result and a skill can be saved |
 | Window pet menu | Needs dsh-pet and the metadata registration | Right-click the pet; confirm "More / Chat with her" opens the Electron window and a second click focuses it |
-| Ears STT | Needs `sherpa-onnx-node` + SenseVoiceSmall int8; the build environment could not download the model | Install model, set `stt.sherpa.*`, call `listen_file` on a known WAV, confirm text |
+| Ears STT | `sherpa-onnx-node` + SenseVoice int8 downloaded locally | **Verified**: 4.2 s system audio → “我是大肥鱼，这是一段测试音频。” in ~0.9 s; `listen_now` end-to-end 5.7 s incl. 4 s capture |
 | Ears song ID / web voice UI | Not implemented yet | See [plans/ears.md](plans/ears.md) |
 | Sticker send/judge loop | Depends on the model emitting `[表情:name]` correctly | Chat until she sends one; check `.data/stickers/sent.jsonl` and `judged` |
 | Pet bubbles | Needs dsh-pet | Set `pet: main`, speak, confirm a bubble |

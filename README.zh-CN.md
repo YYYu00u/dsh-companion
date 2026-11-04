@@ -121,7 +121,7 @@
 | [`@dsh-companion/web`](packages/web) | 网页房间、SSE、本子、日子、日记、中英切换 | 已验证 |
 | [`@dsh-companion/window`](packages/window) | 像 QQ 的独立聊天窗，从桌宠右键打开 | 页面和 Electron 已验证；桌宠菜单是 beta |
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | 不用 key 的必应搜索 | 已验证 |
-| [`@dsh-companion/ears`](packages/ears) | 按一下听系统声音/麦克风/音频文件，转文字 | **beta**：采集已验证；转写要装 SenseVoice 模型 |
+| [`@dsh-companion/ears`](packages/ears) | 按一下听系统声音/麦克风/音频文件，转文字 | **beta**：采集 + SenseVoice 已验证；识歌/网页语音还没做 |
 | [`@dsh-companion/voice`](packages/voice) | 本地嗓子：ZipVoice 零样本克隆，网页里点「▶ 语音」才念 | **beta**：8 步一句要等 15~60 秒；模型 197 MB、参考音频要自己生成 |
 | [extras/chrome](extras/chrome) | 接 Chrome DevTools MCP 的配置示例，不是我们的代码 | 可选 |
 
@@ -165,7 +165,7 @@ node scripts/init-home.mjs --name 大肥鱼
 
 ## 耳朵（beta）
 
-`@dsh-companion/ears` 按一下录 15–30 秒系统声音/麦克风/音频文件，转成文字再给她；不是全天监听。采集 helper 在本机 macOS 15.1 / M2 上验过；转写要装本地 sherpa-onnx + SenseVoiceSmall 模型。方案和边界见 [docs/plans/ears.md](docs/plans/ears.md)。
+`@dsh-companion/ears` 按一下录 15–30 秒系统声音/麦克风/音频文件，转成文字再给她；不是全天监听。采集 helper 在本机 macOS 15.1 / M2 上验过；转写已在本机用 SenseVoice int8 验过；识歌和网页语音还没做。方案和边界见 [docs/plans/ears.md](docs/plans/ears.md)。
 
 ## 架构
 
@@ -189,11 +189,11 @@ flowchart LR
 
 ## 验证
 
-- `npm test`：43 个单元/冒烟测试，覆盖建家、本子、档位、记忆检索、发送层、日子回滚、必应解析、界面中英文、耳朵的 WAV/STT 辅助函数。
+- `npm test`：45 个单元/冒烟测试，覆盖建家、本子、档位、记忆检索、发送层、日子回滚、必应解析、界面中英文、耳朵的 WAV/STT 辅助函数。
 - `npm run check`：语法、包清单、私人路径、密钥、旧作用域。
 - `npm run demo`：真网页 + 假后端，桌面、手机、独立窗口都能看。
 - core / web / window / search 来自一套在 DSH 0.2.1-rc.5 上日常跑的配置；窗口页面和 Electron 窗口都实际跑过并截了图。
-- `ears` 是 beta：采集 helper 在本机抓过 5 秒系统声音和 3 秒麦克风，`ffprobe` 有声音；转写要装 SenseVoice 模型，还没端到端验。
+- `ears` 是 beta：采集 helper 在本机抓过系统声音和麦克风，`ffprobe` 有声音；SenseVoice 转写也端到端验过（4.2 秒音频约 0.9 秒出字）。识歌和网页语音还没做。
 - 仍然是 **beta** 的：全新安装后的压缩、多人格 `people`、可选体检、桌宠菜单、手。手动验收步骤在 [docs/verification.md](docs/verification.md)，没有假装全绿。
 
 ## 隐私和安全
