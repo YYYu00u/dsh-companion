@@ -8,7 +8,8 @@ Our code is MIT (see [LICENSE](LICENSE)). The "ears" feature is planned to borro
 |---|---|---|---|
 | [insidegui/AudioCap](https://github.com/insidegui/AudioCap) | BSD-2-Clause | Reference for macOS system-audio capture | The shipped helper is independent Objective-C using ScreenCaptureKit; no AudioCap code was copied. The license text is kept in [LICENSES/BSD-2-Clause-AudioCap.txt](LICENSES/BSD-2-Clause-AudioCap.txt) for the reference. |
 | [ggml-org/whisper.cpp](https://github.com/ggml-org/whisper.cpp) | MIT | Local speech-to-text | External CLI/library; not vendored |
-| [QwenAudio/SenseVoice](https://github.com/QwenAudio/SenseVoice) | MIT | Optional Chinese short-audio ASR | External model/runtime; not vendored |
+| [k2-fsa/sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) | Apache-2.0 | Local ASR runtime (`sherpa-onnx-node`) | External npm dependency; not vendored |
+| [QwenAudio/SenseVoice](https://github.com/QwenAudio/SenseVoice) | MIT | Chinese short-audio ASR (SenseVoiceSmall) | External model; not vendored |
 | [pyannote/pyannote-audio](https://github.com/pyannote/pyannote-audio) | MIT | Speaker diarization (later phase) | External dependency; not vendored |
 | [ShazamKit](https://developer.apple.com/documentation/shazamkit) | Apple system framework | Song identification | System framework, no code copied |
 | [FFmpeg](https://ffmpeg.org/) | LGPL-2.1+ or GPL (build-dependent) | Decode/convert audio | External CLI; the repo does not redistribute binaries |

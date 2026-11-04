@@ -56,3 +56,19 @@ export function cleanTranscript(text) {
     .replace(/\s+/g, ' ')
     .trim()
 }
+
+/** Decode a 16-bit PCM or 32-bit float WAV into mono float32 samples at its own rate. */
+export function wavSamples(buffer) {
+  const wav = parseWav(buffer)
+  const bytes = wav.bitsPerSample / 8
+  if (![1, 3].includes(wav.format)) throw new Error(`wav: unsupported format ${wav.format}`)
+  if (![16, 32].includes(wav.bitsPerSample)) throw new Error(`wav: unsupported bits ${wav.bitsPerSample}`)
+  const frames = Math.floor(wav.dataSize / (bytes * wav.channels))
+  const out = new Float32Array(frames)
+  for (let i = 0; i < frames; i++) {
+    const at = wav.dataOffset + i * bytes * wav.channels
+    if (wav.format === 3) out[i] = buffer.readFloatLE(at)
+    else out[i] = buffer.readInt16LE(at) / 32768
+  }
+  return { samples: out, sampleRate: wav.sampleRate, channels: wav.channels }
+}

@@ -6,7 +6,7 @@
 
 - `packages/ears/capture/` 的 Objective-C helper 已编译通过，在本机 macOS 15.1 / M2 上抓到 **5 秒系统声音**和 **3 秒麦克风**；`ffprobe` 时长正确，`volumedetect` 最大 -2.7 dB，不是静音。
 - 采集没有用原计划的 CoreAudio process tap，而是 ScreenCaptureKit：本机 Command Line Tools 的 Swift 编译器和 SDK 版本对不上，Swift 编不了；Objective-C 能编，且 macOS 15 上可用。代价是要“屏幕与系统音频录制”权限，不是纯音频权限。后续可加 CoreAudio tap 后端，CLI 参数不变。
-- 转写代码（whisper.cpp CLI / AssemblyAI）已写，但本机没有 whisper 模型，网络下载被重置，**没有端到端验过**。第一次跑会明确报“找不到模型/找不到 whisper-cli”。
+- 转写代码（sherpa-onnx + SenseVoice、whisper.cpp CLI、AssemblyAI）已写，但本机没有 SenseVoice 模型，网络下载被重置，**没有端到端验过**。第一次跑会明确报“找不到模型/找不到 sherpa-onnx-node”。
 - 网页语音上传、ShazamKit 识歌还没做。
 
 ## 1. 这一版做什么
@@ -50,7 +50,7 @@ flowchart LR
   U[网页 / 聊天窗] -->|按一下| E[@dsh-companion/ears]
   E -->|spawn| H[ears-helper<br/>Swift + CoreAudio tap]
   H -->|16k mono wav| E
-  E -->|VAD / 切段| S[whisper.cpp 或 SenseVoice]
+  E -->|VAD / 切段| S[sherpa-onnx / SenseVoice]
   E -->|12s 音频| Z[ShazamKit]
   S -->|文字| E
   Z -->|歌名/歌手| E
@@ -73,8 +73,8 @@ flowchart LR
 
 ### 转写：本地优先
 
-- 默认 `whisper.cpp`，模型 `ggml-large-v3-turbo-q5_0`（约 1–1.5 GB）或 `ggml-small`（约 500 MB）；M2 上 5–10 倍实时。
-- 中文可选 `SenseVoiceSmall`（MIT，FunAudioLLM）：中文/粤语/英/日/韩，带情绪和事件标签；比 whisper 更轻，适合短语音。
+- 默认 `sherpa-onnx` + `SenseVoiceSmall`（Apache-2.0 运行时 / MIT 模型）：中文/粤语/英/日/韩，带标点和情绪/事件标签；模型 int8 约 250 MB，CPU 1–2 线程。
+- `whisper.cpp` 保留为 `stt.provider: local` 的备选；大模型不推荐，资源占用高。
 - 云端可选 AssemblyAI / Deepgram，配置里换 provider；默认不联网。
 - VAD：先做能量阈值 + 静音切段；后面再换 Silero VAD。
 
@@ -151,14 +151,15 @@ ctx.get('ears').transcribe(buffer, { mime, source: 'voice' })
 - `SFSpeechRecognizer` 能编译，`zh-CN` locale 也能创建；`SFSpeechURLRecognitionRequest` + `requiresOnDeviceRecognition` 的代码已写。
 - 直接跑 CLI 和临时 `.app` 都在 `SFSpeechRecognizer requestAuthorization` 处 `SIGABRT`；崩溃报告明确写 TCC 认为缺少 `NSSpeechRecognitionUsageDescription`，但 Info.plist 和代码签名里都有这个键。
 - `tccutil reset SpeechRecognition` 在当前沙箱里 `Operation not permitted`，`open` 启动临时 app 也不稳定。判断是 ad-hoc 签名/LaunchServices/TCC 缓存的环境问题，不是 API 不存在。
-- 结论：**不把 Apple Speech 作为第一版 provider**；它需要用户从 Finder 启动一个正式签名的 app、手动授权一次，才能在别人的机器上稳定。先走 whisper.cpp，不碰 TCC。
+- 结论：**不把 Apple Speech 作为第一版 provider**；它需要用户从 Finder 启动一个正式签名的 app、手动授权一次，才能在别人的机器上稳定。先走 sherpa-onnx，不碰 TCC。
 
 ## 6. 借用和许可
 
 | 项目 | 许可 | 借什么 | 怎么标 |
 |---|---|---|---|
 | [AudioCap](https://github.com/insidegui/AudioCap) | BSD-2-Clause | CoreAudio process tap 的采集和权限处理（架构参考） | 第一版用独立 ObjC + ScreenCaptureKit，没有复制 AudioCap 代码；许可证文本仍保留 |
-| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | MIT | 本地转写 CLI/库 | 外部依赖，不 vendor；README/NOTICE 标 |
+| [k2-fsa/sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) | Apache-2.0 | 本地转写运行时（`sherpa-onnx-node`） | 外部依赖，不 vendor；README/NOTICE 标 |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | MIT | 本地转写备选 | 外部依赖，不 vendor；README/NOTICE 标 |
 | [SenseVoice](https://github.com/QwenAudio/SenseVoice) | MIT | 中文短语音转写（可选） | 外部模型/运行时；标来源和模型许可 |
 | [pyannote-audio](https://github.com/pyannote/pyannote-audio) | MIT | 以后做说话人分离 | 第二阶段再引 |
 | ShazamKit | Apple 系统框架 | 识歌 | 系统框架，不复制代码 |
@@ -184,7 +185,7 @@ ctx.get('ears').transcribe(buffer, { mime, source: 'voice' })
 | 阶段 | 交付 | 时间 | 验收 |
 |---|---|---|---|
 | 0 | 采集 helper 抓 15 秒系统声音，落 wav，能播放 | 0.5–1 天 | 放一首歌，wav 有声音；权限拒绝时不崩（**已完成**：5s 系统声音 + 3s 麦克风） |
-| 1 | 本地 whisper.cpp 转写，`listen_now` 工具，结果进她上下文 | 2–3 天 | 说一句话，5 秒内出文字；音乐段不乱转 |
+| 1 | sherpa-onnx + SenseVoice 转写，`listen_now` 工具，结果进她上下文 | 2–3 天 | 说一句话，5 秒内出文字；音乐段不乱转 |
 | 2 | 语音/音频上传，网页“听到了”卡片 | 1–2 天 | 发一条微信语音，她接得上话 |
 | 3 | ShazamKit 识歌 + 歌名卡片 | 1–2 天 | 放《晴天》能出歌名；没听出来明确说 |
 | 4 | 文档、NOTICE、测试、截图、发版 | 1–2 天 | `npm test` / `npm run check` 绿；CI 过 |
@@ -215,7 +216,7 @@ ctx.get('ears').transcribe(buffer, { mime, source: 'voice' })
 |---|---|
 | TCC 音频录制权限绑定 app/binary，CLI 可能反复弹窗 | helper 打成最小 `.app`，签名稳定；CLI 只做开发模式 |
 | CoreAudio tap 在 macOS 14.4 以下不可用 | 启动时检查版本，给出明确错误；不假装能听 |
-| 音乐被 whisper 转成奇怪歌词 | 先做音乐/人声分类；音乐段只识歌，不转写 |
+| 音乐被 SenseVoice 转成奇怪歌词 | 先做音乐/人声分类；音乐段只识歌，不转写 |
 | 云端 STT 隐私/账单 | 默认本地；云 provider 必须显式配置；VAD 过滤静音 |
 | 长音频把上下文撑爆 | 只回摘要/片段，原文字数上限；完整转写落文件 |
 | 许可污染 | 只借 BSD/MIT/Apache；GPL/商业项目只做参考，不复制 |
@@ -231,4 +232,4 @@ ctx.get('ears').transcribe(buffer, { mime, source: 'voice' })
 
 ## 11. 下一步
 
-阶段 0 已完成。下一步是阶段 1：装 whisper.cpp + 模型，跑 `listen_file` 转写；再把 `listen_now` 接进她的工具列表。
+阶段 0 已完成。下一步是阶段 1：装 sherpa-onnx-node + SenseVoice 模型，跑 `listen_file` 转写；再把 `listen_now` 接进她的工具列表。

@@ -18,6 +18,8 @@
   "files": [
     "index.js",
     "stt.js",
+    "sherpa.js",
+    "sherpa-worker.js",
     "wav.js",
     "capture.js",
     "cordis.patch.yml",
@@ -29,6 +31,9 @@
   ],
   "dependencies": {
     "@dsh-companion/core": "file:../core"
+  },
+  "optionalDependencies": {
+    "sherpa-onnx-node": "2.0.1"
   },
   "repository": {
     "type": "git",

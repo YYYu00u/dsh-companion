@@ -4,6 +4,7 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { readFile } from 'node:fs/promises'
 import { cleanTranscript } from './wav.js'
+import { transcribeSherpa } from './sherpa.js'
 
 const run = promisify(execFile)
 
@@ -57,8 +58,9 @@ export async function transcribeAssemblyAI({ file, apiKey, language = 'zh', time
   throw new Error('AssemblyAI 转写超时')
 }
 
-export async function transcribe({ provider = 'local', ...options }) {
+export async function transcribe({ provider = 'sherpa', ...options }) {
   if (provider === 'local') return transcribeLocal(options)
   if (provider === 'assemblyai') return transcribeAssemblyAI(options)
+  if (provider === 'sherpa') return transcribeSherpa({ ...(options.sherpa ?? {}), file: options.file, language: options.language })
   throw new Error(`不认识的 stt.provider：${provider}`)
 }

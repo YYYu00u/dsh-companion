@@ -1,16 +1,18 @@
-# 耳朵：按一下听 15–30 秒系统声音/麦克风/音频文件。默认本地 whisper.cpp。
-# 需要先装 whisper.cpp（或把 stt.provider 改成 assemblyai）和 Swift 采集 helper。
+# 耳朵：按一下听 15–30 秒系统声音/麦克风/音频文件。
+# 默认 sherpa-onnx + SenseVoiceSmall，用的时候才起 worker；模型需要自己下。
 - insert:
     - id: dsh-companion-ears
       name: '@dsh-companion/ears'
       config:
         home: ~/.dsh-companion
-        # Swift 采集程序，见 packages/ears/capture/README.md
+        # Swift/ObjC 采集程序，见 packages/ears/capture/README.md
         helper: ~/.dsh-companion/bin/EarsCapture.app/Contents/MacOS/ears-capture
         stt:
-          provider: local
-          binary: whisper-cli
-          model: ~/.dsh-companion/models/ggml-small.bin
+          provider: sherpa
+          sherpa:
+            model: ~/.dsh-companion/models/sensevoice/model.int8.onnx
+            tokens: ~/.dsh-companion/models/sensevoice/tokens.txt
+            threads: 2
           language: zh
         capture:
           maxSeconds: 30

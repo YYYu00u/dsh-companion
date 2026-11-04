@@ -91,7 +91,7 @@ The detailed component and data-flow docs are in [docs/architecture.md](docs/arc
 | [`@dsh-companion/web`](packages/web) | Web room, SSE, history, daily life, diary UI, 中文/English switch | Yes — daily use; demo server + unit tests |
 | [`@dsh-companion/window`](packages/window) | QQ-like standalone chat window, opened from the desktop pet | Page + Electron verified; pet menu is beta |
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | Keyless Bing search provider | Yes — parser tests, used in production |
-| [`@dsh-companion/ears`](packages/ears) | Push-to-talk system audio / mic / audio files → text | **Beta** — capture verified; STT needs whisper.cpp |
+| [`@dsh-companion/ears`](packages/ears) | Push-to-talk system audio / mic / audio files → text | **Beta** — capture verified; STT needs the SenseVoice model |
 | QQ / voice calls / TTS | Not in this release | No |
 
 The old in-DSH chat tab is deprecated and not shipped. The Chrome wrapper is [extras/chrome](extras/chrome) — a documented setup for someone else's MCP server, not a package. See [ROADMAP.md](ROADMAP.md).
@@ -165,7 +165,7 @@ The demo also doubles as a UI review harness: it serves the real `packages/web/p
 
 ## Listening (beta)
 
-`@dsh-companion/ears` records 15–30 seconds of system audio, the microphone, or an audio file and turns it into text. The capture helper is verified on macOS 15.1 / M2; ASR needs a local `whisper.cpp` install. There is no always-on listening. Plan and limits: [docs/plans/ears.md](docs/plans/ears.md).
+`@dsh-companion/ears` records 15–30 seconds of system audio, the microphone, or an audio file and turns it into text. The capture helper is verified on macOS 15.1 / M2; ASR needs a local sherpa-onnx + SenseVoiceSmall model. There is no always-on listening. Plan and limits: [docs/plans/ears.md](docs/plans/ears.md).
 
 ## Design notes
 
@@ -179,10 +179,10 @@ The demo also doubles as a UI review harness: it serves the real `packages/web/p
 
 What "verified" means here:
 
-- `npm test` — 41 unit/smoke tests over config bootstrap, notebook edits, levels, memory retrieval, delivery, life rollback, Bing parsing, UI i18n, and ears WAV/STT helpers.
+- `npm test` — 43 unit/smoke tests over config bootstrap, notebook edits, levels, memory retrieval, delivery, life rollback, Bing parsing, UI i18n, and ears WAV/STT helpers.
 - `npm run check` — syntax, package manifests, private paths, secrets, stale scopes.
 - `npm run demo` — the real web bundle against a mock backend, desktop + mobile.
-- The core/web/window/search packages are extracted from a setup that ran daily against DSH 0.2.1-rc.5; the window page and Electron app were exercised and screenshotted. `ears` is beta: its capture helper is verified, but ASR needs a local whisper.cpp install.
+- The core/web/window/search packages are extracted from a setup that ran daily against DSH 0.2.1-rc.5; the window page and Electron app were exercised and screenshotted. `ears` is beta: its capture helper is verified, but ASR needs the local SenseVoice model.
 - Not verified end-to-end in this repository: the compaction plugin after a fresh install, multi-persona `people`, and the optional exam. They are marked **beta** in [docs/verification.md](docs/verification.md), with the exact manual check to run.
 
 ## Privacy and safety

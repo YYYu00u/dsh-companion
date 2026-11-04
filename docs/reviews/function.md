@@ -109,12 +109,12 @@ All JSON responses are `no-store`; images are cached for an hour. The API has no
 | core apply smoke | 1 | real `apply()` with a fake ctx, expected tools |
 | web apply smoke | 1 | web `apply()` boots with no DSH session |
 | window apply smoke | 1 | window `apply()` boots with no DSH window |
-| ears helpers | 7 | WAV parse, clean transcript, whisper args, capture bounds, plugin boot |
+| ears helpers | 9 | WAV parse, clean transcript, whisper args, capture bounds, plugin boot |
 | delivery | 5 | split, sticker, gap, typo, ordered send |
 | life | 2 | own-time variety, rollback |
 | Bing | 2 | parse, empty page |
 | i18n | 7 | zh/en key parity, HTML/app.js key coverage, interpolation, detection, server errors |
-| **Total** | **41** | `npm test` |
+| **Total** | **43** | `npm test` |
 
 Not covered: HTTP routes (would need a DSH harness), session events, model calls, exam, hands, multi-persona, macOS senses.
 

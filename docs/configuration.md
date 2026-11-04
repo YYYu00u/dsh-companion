@@ -181,9 +181,11 @@ The window is optional. It has no API of its own; it reads `/companion/api/*` fr
     home: ~/.dsh-companion
     helper: ~/.dsh-companion/bin/EarsCapture.app/Contents/MacOS/ears-capture
     stt:
-      provider: local          # local | assemblyai
-      binary: whisper-cli
-      model: ~/.dsh-companion/models/ggml-small.bin
+      provider: sherpa         # sherpa | local | assemblyai
+      sherpa:
+        model: ~/.dsh-companion/models/sensevoice/model.int8.onnx
+        tokens: ~/.dsh-companion/models/sensevoice/tokens.txt
+        threads: 2
       language: zh
     capture:
       maxSeconds: 30
@@ -193,9 +195,11 @@ The window is optional. It has no API of its own; it reads `/companion/api/*` fr
 | Key | Default | Meaning |
 |---|---|---|
 | `helper` | `~/.dsh-companion/bin/ears-capture` | Built Objective-C capture helper. |
-| `stt.provider` | `local` | Local whisper.cpp or AssemblyAI. |
-| `stt.binary` | `whisper-cli` | Bare name = PATH; a path is expanded. |
-| `stt.model` | none | ggml model path; required for local. |
+| `stt.provider` | `sherpa` | `sherpa` (SenseVoiceSmall), `local` (whisper.cpp), or `assemblyai`. |
+| `stt.sherpa.model` / `.tokens` | none | SenseVoiceSmall int8 model + tokens; required for sherpa. |
+| `stt.sherpa.threads` | `2` | CPU threads. |
+| `stt.binary` | `whisper-cli` | Only for `local`; bare name = PATH. |
+| `stt.model` | none | whisper.cpp ggml path; only for `local`. |
 | `stt.apiKey` | `ASSEMBLYAI_API_KEY` | Only for the cloud provider. |
 | `stt.language` | `zh` | Language hint. |
 | `capture.maxSeconds` | `30` | Hard cap; the model can ask for less. |

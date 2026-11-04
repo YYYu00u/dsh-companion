@@ -31,13 +31,18 @@ export function createEars({ home, config = {}, log }) {
   const stt = config.stt ?? {}
   const binary = stt.binary ?? 'whisper-cli'
   const sttOptions = {
-    provider: stt.provider ?? 'local',
+    provider: stt.provider ?? 'sherpa',
     // A bare name stays on PATH; only paths get expanded.
     binary: binary.includes('/') || binary.startsWith('~') ? expandPath(binary) : binary,
     model: expandPath(stt.model),
     language: stt.language ?? 'zh',
     apiKey: stt.apiKey ?? process.env.ASSEMBLYAI_API_KEY,
     timeoutMs: stt.timeoutMs ?? 120_000,
+    sherpa: {
+      ...(stt.sherpa ?? {}),
+      model: expandPath(stt.sherpa?.model),
+      tokens: expandPath(stt.sherpa?.tokens),
+    },
   }
   const maxSeconds = Math.min(30, Math.max(1, Number(config.capture?.maxSeconds ?? 30)))
   const defaultSource = config.capture?.defaultSource === 'mic' ? 'mic' : 'system'

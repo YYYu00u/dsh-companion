@@ -33,3 +33,28 @@ test('transcribeLocal 会把 -of 交给 whisper-cli 并读回 txt', async () => 
     rmSync(dir, { recursive: true, force: true })
   }
 })
+
+test('sherpaArgs 带模型/tokens/文件，cleanSenseVoice 去标签', async () => {
+  const { cleanSenseVoice, sherpaArgs } = await import('../sherpa.js')
+  const args = sherpaArgs({ model: '/m/model.int8.onnx', tokens: '/m/tokens.txt', file: '/tmp/a.wav', language: 'zh', threads: 2 })
+  assert.ok(args.includes('/m/model.int8.onnx'))
+  assert.ok(args.includes('/m/tokens.txt'))
+  assert.ok(args.includes('/tmp/a.wav'))
+  assert.equal(cleanSenseVoice('<|zh|><|NEUTRAL|><|Speech|><|woitn|>你好，世界'), '你好，世界')
+})
+
+test('transcribeSherpa 解析 worker 的 JSON 并清理标签', async () => {
+  const { transcribeSherpa } = await import('../sherpa.js')
+  const { mkdtempSync, rmSync, writeFileSync } = await import('node:fs')
+  const { tmpdir } = await import('node:os')
+  const { join } = await import('node:path')
+  const dir = mkdtempSync(join(tmpdir(), 'dsh-ears-sherpa-'))
+  try {
+    const model = join(dir, 'model.int8.onnx'); writeFileSync(model, 'x')
+    const tokens = join(dir, 'tokens.txt'); writeFileSync(tokens, 'x')
+    const worker = join(dir, 'worker.js')
+    writeFileSync(worker, 'process.stdout.write(JSON.stringify({ok:true,text:"<|zh|><|NEUTRAL|>你好"})+"\\n")')
+    const text = await transcribeSherpa({ file: join(dir, 'a.wav'), model, tokens, worker, node: process.execPath })
+    assert.equal(text, '你好')
+  } finally { rmSync(dir, { recursive: true, force: true }) }
+})
