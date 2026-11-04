@@ -1,4 +1,4 @@
-<p align="right"><a href="#en">English</a> | <a href="#zh">简体中文</a></p>
+<p align="right"><a href="#english">English</a> | <a href="#简体中文">简体中文</a></p>
 
 # dsh-companion
 
@@ -6,7 +6,6 @@
 
 <sub>GitHub README 不能跑脚本；这一页同时放中英文，点上面的语言链接在同一页跳转，不换页面。<br>GitHub READMEs cannot run scripts; both languages live on this page, and the links jump to an anchor instead of opening another file.</sub>
 
-<a name="en"></a>
 ## English
 
 A local-first companion for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness). She has a persona, a notebook, moods, episodic memory, stickers, a web room, and a life of her own — and she runs entirely on your machine, against the model provider you already use.
@@ -209,7 +208,6 @@ Code is [MIT](LICENSE). The demo art is **not** MIT; see [NOTICE](NOTICE). The L
 
 ---
 
-<a name="zh"></a>
 ## 简体中文
 
 **大肥鱼住进了 DeepSeek Harness。**
