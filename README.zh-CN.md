@@ -121,6 +121,8 @@ npm run demo            # http://127.0.0.1:4319/companion/
 |---|---|---|
 | ![桌面](docs/images/home.jpg) | ![本子](docs/images/book.jpg) | ![手机](docs/images/mobile.jpg) |
 
+界面右上角可以切中英文，选择会记住；`?lang=en` / `?lang=zh` 可以直接打开对应语言。只翻译界面，她说过的话、日记、记忆原文保持原样。
+
 演示服务器同时也是一套 UI 审核工具：加载的就是 `packages/web/public`，每个接口的形状都走一遍。
 
 ## 设计笔记
@@ -135,7 +137,7 @@ npm run demo            # http://127.0.0.1:4319/companion/
 
 这里的“验证过”指：
 
-- `npm test`：26 个单元/冒烟测试，覆盖建家、本子修改、档位、记忆检索、发送层、日子回滚、必应解析。
+- `npm test`：33 个单元/冒烟测试，覆盖建家、本子修改、档位、记忆检索、发送层、日子回滚、必应解析、界面中英文。
 - `npm run check`：语法、包清单、私人路径、密钥、旧作用域。
 - `npm run demo`：真网页 bundles + 假后端，桌面和手机。
 - core / web / search 三个包来自一套在 DSH 0.2.1-rc.5 上日常跑的配置。

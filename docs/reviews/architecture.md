@@ -38,7 +38,7 @@ Package boundaries, dependency direction, configuration and first-run bootstrap,
 | ARCH-10 | S2 | The exam required a private corpus and a hardcoded judge model | `exam.js` | **Fixed**: opt-in `exam` config; skips with a clear reason |
 | ARCH-11 | S2 | `dsh-pet` was assumed; an absent pet caused a fetch every message | `petSay` | **Fixed**: `pet` unset by default, no-op without it |
 | ARCH-12 | S3 | Package `files` omitted new modules; publishing would drop them | `package.json` | **Fixed**: `config.js`, templates, `memory/README.md`; `check` enforces top-level JS |
-| ARCH-13 | S3 | No tests or CI | — | **Fixed**: 26 tests, CI workflow, demo server |
+| ARCH-13 | S3 | No tests or CI | — | **Fixed**: 33 tests, CI workflow, demo server |
 | ARCH-14 | S3 | Internal section names still used the old project name | `dsh-companion:memory`, etc. | **Fixed** |
 | ARCH-15 | S3 | No explicit DSH version compatibility | — | **Accepted**: documented target 0.2.1-rc.5; DSH plugins have no stable peer contract to declare |
 | ARCH-16 | S3 | Synchronous file I/O on every turn | `writeFileSync`/`appendFileSync` | **Accepted**: single user, small files; async would complicate the commit queue |

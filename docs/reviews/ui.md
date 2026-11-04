@@ -41,6 +41,8 @@ This is a coherent direction, not a component-library default. The main risk is 
 | Focus visibility | Pass — `:focus-visible` ring on all controls |
 | Contrast | Pass — Lighthouse accessibility 100 (desktop snapshot) |
 | Empty states | Pass — sections hide and collapse into "还空着：…" |
+| Language switch | Pass — header 中/EN toggle, remembered, `?lang=en`/`?lang=zh`; English layout checked at 390 px |
+| English layout | Pass — no overflow, tabs and composer fit; content (her words/diary) stays in its original language |
 | Loading state | Pass — "对方正在输入" + tank breathing speeds up |
 | Offline/reconnect | Pass — SSE error status, history reload |
 
@@ -62,14 +64,15 @@ This is a coherent direction, not a component-library default. The main risk is 
 | UI-12 | S4 | User-uploaded images use the alt text "图片" | `myPart`/`bubble` | **Deferred**: the image is decorative in context; could use "他发来的图片" |
 | UI-13 | S4 | No unread count in the tab title | — | **Deferred** |
 | UI-14 | S4 | The "她多活跃" label is jargon | drawer footer | **Accepted**: it is explained by the description and the tooltip |
+| UI-15 | S3 | UI was Chinese-only | all strings | **Fixed**: `i18n.js`, header toggle, persisted choice, English screenshots; 7 tests enforce key parity |
 
 ## Screenshots
 
-| Desktop | Notebook | Mobile | Mobile notebook |
+| English desktop | English notebook | English mobile | Chinese desktop |
 |---|---|---|---|
-| ![Desktop](../images/home.jpg) | ![Notebook](../images/book.jpg) | ![Mobile](../images/mobile.jpg) | ![Mobile notebook](../images/mobile-book.jpg) |
+| ![English desktop](../images/home-en.jpg) | ![English notebook](../images/book-en.jpg) | ![English mobile](../images/mobile-en.jpg) | ![Chinese desktop](../images/home.jpg) |
 
-All screenshots come from `npm run demo` with original demo data, not from a private home.
+All screenshots come from `npm run demo` with original demo data, not from a private home. The English images use `?lang=en`; the Chinese ones use `?lang=zh`. The character's own words remain Chinese in both because the demo persona is Chinese.
 
 ## What changed
 
@@ -82,6 +85,8 @@ All screenshots come from `npm run demo` with original demo data, not from a pri
 - Added security headers/CSP that do not require inline scripts (the page is a classic script, not inline).
 
 ## Still open
+
+The UI is now bilingual (中文/English) with a header switch; the accessibility audit still reports **100 / 100** in both languages.
 
 A desktop Lighthouse snapshot now reports **Accessibility 100 / Best Practices 100** (SEO and agentic-browsing audits are irrelevant for a loopback-only app and are deliberately not chased). The remaining gap is a screen-reader pass: the manual keyboard checks are real, but VoiceOver/NVDA coverage would make the drawer and tab flows a 1.0 claim.
 

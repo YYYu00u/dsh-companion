@@ -63,8 +63,11 @@ button { font: inherit; cursor: pointer; }
 
 .compose { display: flex; gap: 10px; padding: 12px 24px 18px; background: #fff; border-top: 1px solid #e3e9f6; }
 .compose textarea {
-  flex: 1; resize: none; height: 44px; max-height: 140px; padding: 11px 14px;
-  font: inherit; border: 1px solid #d5ddef; border-radius: 22px; background: #f6f8fd; outline: none;
+  /* 44px 里要塞得下一行：44 - 10*2(内边距) - 1*2(边框) = 22，正好是行高。
+     原来 padding 11 + 行高 24 = 46，比 42 的可用高度多 4px，空着也会冒滚动条。 */
+  flex: 1; resize: none; height: 44px; max-height: 140px; padding: 10px 14px;
+  /* line-height 要写在 font: inherit 后面，不然被 font 简写连行高一起盖掉 */
+  font: inherit; line-height: 22px; border: 1px solid #d5ddef; border-radius: 22px; background: #f6f8fd; outline: none;
 }
 .compose textarea:focus { border-color: var(--whale); background: #fff; }
 .compose button { padding: 0 20px; border: 0; border-radius: 22px; background: #3b56d8; color: #fff; }
@@ -285,4 +288,21 @@ body.plain .row.her.lead::before { content: var(--initial); color: #fff; font: 6
 /* 窄屏抽屉打开时，后面的内容不再被读屏念到（视觉上由遮罩挡住）。 */
 @media (max-width: 900px) {
   body.book-open .chat { visibility: hidden; }
+}
+
+/* ---------- 语言切换 ---------- */
+.lang-switch { margin-left: auto; display: flex; align-items: center; gap: 2px; font: 12px/1 var(--sans); color: var(--ink-soft); }
+.lang-switch .sep { opacity: .45; }
+.lang-switch button {
+  padding: 5px 7px; border: 1px solid transparent; border-radius: 10px;
+  background: none; color: var(--ink-soft); font: inherit; line-height: 1;
+}
+.lang-switch button:hover { background: #f2f5fc; color: var(--deep); }
+.lang-switch button[aria-pressed="true"] { background: #eef2fb; border-color: #d5ddef; color: var(--deep); font-weight: 600; }
+.lang-switch button:focus-visible { outline: 2px solid var(--whale); outline-offset: 2px; }
+
+/* 英文标签更长：窄屏时把标签间距收紧一点，别把「收起」挤出去 */
+@media (max-width: 900px) {
+  .tabs button { margin-right: 12px; }
+  .chat-head { gap: 8px; }
 }

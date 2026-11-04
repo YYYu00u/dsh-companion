@@ -89,7 +89,7 @@ packages/
     life.js             reminders, own time, nudges, reflection schedule
     senses.js           what app the user is in, idle/locked
     exam.js             optional Turing-style judge
-    public/             the real UI (no framework, no build)
+    public/             the real UI (no framework, no build; zh/en chrome)
   web-search-bing/      @dsh-companion/web-search-bing
 ```
 

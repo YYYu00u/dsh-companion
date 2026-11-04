@@ -5,7 +5,7 @@
 ## Automated
 
 ```bash
-npm test          # 26 tests
+npm test          # 33 tests
 npm run check     # syntax + package hygiene + secret/path scan
 npm run demo      # real UI, mock backend, no model calls
 ```
@@ -21,6 +21,7 @@ npm run demo      # real UI, mock backend, no model calls
 | Delivery | `delivery.test.js` | splitting, sticker handling, gap bounds, typo generation, ordered send |
 | Proactive | `life.test.js` | own-time prompt variety, failed-turn rollback |
 | Bing | `parse.test.js` | result extraction, URL unwrapping, dedupe, empty page |
+| UI language | `i18n.test.js` | zh/en key parity, every `data-i18n` and static `t()` key exists, interpolation, detection, server-error mapping |
 
 `npm run check` also fails on personal absolute paths, the old private scope, `sk-...` keys, private keys, and stale project names.
 
@@ -28,6 +29,7 @@ npm run demo      # real UI, mock backend, no model calls
 
 - Desktop and mobile screenshots are produced from the demo server with `scripts/screenshot.mjs` (Chrome DevTools Protocol).
 - Checked at 390×844 (mobile): no horizontal overflow (`scrollWidth === innerWidth`), drawer opens, composer fits.
+- Language switch: header toggle, remembered in `localStorage`, `?lang=en` / `?lang=zh` override; English layout checked at 1600×900 and 390×844.
 - Keyboard: image picker is a real button; tabs support arrows/Home/End; drawer traps Tab on narrow screens and returns focus on close; Esc closes.
 - Accessibility: closed drawer is `inert`; error region is `role=alert`; images can be opened in a new tab; reduced-motion media query covers breathing, bubbles, tank transition, drawer.
 - Lighthouse desktop snapshot: **Accessibility 100, Best Practices 100**. SEO/agentic-browsing fail only because the demo does not serve `robots.txt` / `llms.txt`; a loopback app is not a crawlable site.
@@ -66,16 +68,18 @@ If any beta item fails, it should be reported as a bug, not treated as "the repo
 - [ ] Screenshots regenerated from demo data, not the private deployment.
 - [ ] README links resolve.
 - [ ] `package.json` versions bumped together; CHANGELOG entry.
-- [ ] Tag `v0.1.0`.
+- [ ] Tag `v0.1.1`.
 
 ## Reproducing the screenshots
 
 ```bash
 npm run demo
-node scripts/screenshot.mjs --url http://127.0.0.1:4319/companion/ --out docs/images/home.jpg --width 1600 --height 900
-node scripts/screenshot.mjs --url http://127.0.0.1:4319/companion/ --out docs/images/book.jpg --width 1600 --height 900 --click .js-open-book
-node scripts/screenshot.mjs --url http://127.0.0.1:4319/companion/ --out docs/images/mobile.jpg --width 390 --height 844 --mobile
-node scripts/screenshot.mjs --url http://127.0.0.1:4319/companion/ --out docs/images/mobile-book.jpg --width 390 --height 844 --mobile --click .js-open-book
+node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=zh' --out docs/images/home.jpg --width 1600 --height 900
+node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=zh' --out docs/images/book.jpg --width 1600 --height 900 --click .js-open-book
+node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=zh' --out docs/images/mobile.jpg --width 390 --height 844 --mobile
+node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=zh' --out docs/images/mobile-book.jpg --width 390 --height 844 --mobile --click .js-open-book
+node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=en' --out docs/images/home-en.jpg --width 1600 --height 900
+# ...same for book-en / mobile-en / mobile-book-en with --click .js-open-book as needed
 ```
 
 The script needs Chrome at the default macOS path or `--chrome <path>`.

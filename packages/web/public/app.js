@@ -1,4 +1,19 @@
+import { applyStatic, detectLang, feelingLabel, getLang, LEVELS_EN, localizeError, setLang, t } from './i18n.js'
+
 const $ = (id) => document.getElementById(id)
+const LANG_KEY = 'dsh-companion-lang'
+
+// 语言：?lang= > 上次选的 > 浏览器。切换只换界面，她说过的话、日记、记忆原文不动。
+const langParams = new URLSearchParams(location.search)
+let savedLang
+try { savedLang = localStorage.getItem(LANG_KEY) } catch {}
+const initialLang = ['zh', 'en'].includes(langParams.get('lang'))
+  ? langParams.get('lang')
+  : ['zh', 'en'].includes(savedLang) ? savedLang : detectLang('', navigator.language)
+setLang(initialLang)
+if (langParams.has('lang')) { try { localStorage.setItem(LANG_KEY, initialLang) } catch {} }
+applyStatic()
+
 // 这一页是谁：主人格有立绘，人格库里的人还没有样子，用名字的第一个字当头像。
 let who = { name: '小鲤', main: true, modules: ['remind', 'reflect', 'own', 'nudge'] }
 const whoReady = fetch('api/who').then((r) => r.json()).then((w) => { if (w && w.name) who = w }).catch(() => {}).then(() => {
@@ -7,7 +22,7 @@ const whoReady = fetch('api/who').then((r) => r.json()).then((w) => { if (w && w
   document.body.classList.toggle('plain', !who.main)
   document.body.style.setProperty('--initial', JSON.stringify([...who.name][0]))
   if (!who.main) {
-    $('figure').alt = `${who.name}还没有样子`
+    $('figure').alt = t('plain.alt', { name: who.name })
     $('avatar').removeAttribute('src')
   }
 })
@@ -18,14 +33,17 @@ let lastTime = 0
 let lastSide = ''
 
 const pad = (n) => String(n).padStart(2, '0')
-function when(t) {
-  const d = new Date(t)
+const locale = () => (getLang() === 'zh' ? 'zh-CN' : 'en-US')
+const dateText = (d) => new Intl.DateTimeFormat(locale(), { month: 'long', day: 'numeric' }).format(d)
+const listSep = () => (getLang() === 'zh' ? '，' : ', ')
+function when(ts) {
+  const d = new Date(ts)
   const now = new Date()
   const hm = `${pad(d.getHours())}:${pad(d.getMinutes())}`
   if (d.toDateString() === now.toDateString()) return hm
   const y = new Date(now); y.setDate(now.getDate() - 1)
-  if (d.toDateString() === y.toDateString()) return `昨天 ${hm}`
-  return `${d.getMonth() + 1}月${d.getDate()}日 ${hm}`
+  if (d.toDateString() === y.toDateString()) return `${t('time.yesterday')} ${hm}`
+  return `${dateText(d)} ${hm}`
 }
 
 function setStatus(text, typing = false) {
@@ -43,7 +61,7 @@ function bubble(side, text, lead, fresh, img) {
     // 表情包 / 他发的图：显示成图，名字放在 alt 里；点一下在新标签打开原图。
     b.className = 'bubble pic'
     const a = document.createElement('a')
-    a.href = img.src; a.target = '_blank'; a.rel = 'noopener'; a.title = `${img.alt}（点开看大图）`
+    a.href = img.src; a.target = '_blank'; a.rel = 'noopener'; a.title = t('image.open', { alt: img.alt })
     const im = document.createElement('img')
     im.src = img.src; im.alt = img.alt; im.loading = 'lazy'; im.width = 160; im.height = 160
     im.addEventListener('load', scrollDown, { once: true })
@@ -74,20 +92,26 @@ function add(row, live) {
   }
   lastTime = row.time
   const img = row.sticker ? { src: `api/sticker/${encodeURIComponent(row.sticker)}`, alt: row.sticker }
-    : row.pic ? { src: `api/pic/${row.pic}`, alt: '图片' } : undefined
+    : row.pic ? { src: `api/pic/${row.pic}`, alt: t('image.alt') } : undefined
   bubble(row.side, row.sticker ? '' : row.text, row.side === 'her' && lastSide !== 'her', live, img)
   lastSide = row.side
   scrollDown()
 }
 
 let busy = false
+function resetHistory() {
+  list.replaceChildren()
+  seen.clear()
+  lastTime = 0
+  lastSide = ''
+}
 async function loadHistory() {
   const r = await fetch('api/history').then((r) => r.json())
-  if (r.error) return showError(`读聊天记录失败：${r.error}`)
-  if (!r.rows.length) list.innerHTML = '<div id="empty" class="empty">她在你电脑里打盹<br>先跟她打个招呼</div>'
+  if (r.error) return showError(t('error.history', { error: localizeError(r.error) }))
+  if (!r.rows.length) list.innerHTML = `<div id="empty" class="empty">${t('empty.chat')}</div>`
   r.rows.forEach((row) => add(row, false))
   busy = r.busy
-  setStatus(busy ? '对方正在输入' : '', busy)
+  setStatus(busy ? t('status.typing') : '', busy)
 }
 
 function listen() {
@@ -95,15 +119,15 @@ function listen() {
   es.onmessage = (e) => {
     const m = JSON.parse(e.data)
     if (m.type === 'row') add(m.row, true)
-    if (m.type === 'typing') { busy = true; setStatus('对方正在输入', true); $('tank').classList.add('typing') }
+    if (m.type === 'typing') { busy = true; setStatus(t('status.typing'), true); $('tank').classList.add('typing') }
     if (m.type === 'idle') {
       busy = false
       $('tank').classList.remove('typing')
-      setStatus(m.reason && m.reason !== 'completed' ? `她没说完（${m.reason}）` : '')
+      setStatus(m.reason && m.reason !== 'completed' ? t('status.incomplete', { reason: m.reason }) : '')
     }
     if (m.type === 'mind') loadMind()
   }
-  es.onerror = () => setStatus('连不上了，正在重连')
+  es.onerror = () => setStatus(t('status.reconnect'))
   es.onopen = () => { if (!busy) setStatus('') }
 }
 
@@ -117,7 +141,7 @@ const input = $('input')
 const send = $('send')
 async function post(body) {
   const r = await fetch('api/send', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }).then((r) => r.json())
-  if (!r.ok) throw new Error(r.error || '未知错误')
+  if (!r.ok) throw new Error(localizeError(r.error) || t('error.unknown'))
 }
 async function submit(e) {
   e?.preventDefault()
@@ -131,7 +155,7 @@ async function submit(e) {
     input.style.height = ''
     clearPic()
   } catch (err) {
-    showError(`没发出去：${err.message}。消息还在输入框里，可以再发一次。`)
+    showError(t('error.send', { msg: err.message }))
   } finally {
     send.disabled = false
     input.focus()
@@ -157,7 +181,7 @@ async function openStickers(open) {
   panel.replaceChildren()
   if (!r.stickers.length) {
     const n = document.createElement('div'); n.className = 'none'
-    n.textContent = '还没有表情包。点 ＋ 发她一张图，她喜欢就会存起来；也可以直接把图放进她家（home）的 stickers/ 目录，文件名就是名字。'
+    n.textContent = t('stickers.empty')
     return panel.appendChild(n)
   }
   for (const name of r.stickers) {
@@ -166,7 +190,7 @@ async function openStickers(open) {
     b.append(im, name)
     b.addEventListener('click', async () => {
       openStickers(false)
-      try { await post({ sticker: name }) } catch (err) { showError(`没发出去：${err.message}`) }
+      try { await post({ sticker: name }) } catch (err) { showError(t('error.sendShort', { msg: err.message })) }
     })
     panel.appendChild(b)
   }
@@ -189,8 +213,8 @@ function clearPic() {
   pendImg.removeAttribute('src')
 }
 async function stagePic(file) {
-  if (!file || !/^image\/(png|jpeg|webp|gif)$/.test(file.type)) return showError('只能发 png、jpg、webp、gif 图片')
-  if (file.size > 4 * 1024 * 1024) return showError('图太大了，4MB 以内')
+  if (!file || !/^image\/(png|jpeg|webp|gif)$/.test(file.type)) return showError(t('error.imageType'))
+  if (file.size > 4 * 1024 * 1024) return showError(t('error.imageSize'))
   showError('')
   const image = await new Promise((resolve, reject) => { const fr = new FileReader(); fr.onload = () => resolve(fr.result); fr.onerror = reject; fr.readAsDataURL(file) })
   pendingPic = image
@@ -241,7 +265,8 @@ function showHer() {
   $('tank').classList.toggle('night', night)
   setImg($('figure'), `art-half-${HALF.has(now) ? now : 'calm'}.webp`)
   $('avatar').src = `art-face-${now === 'shy' ? 'happy' : now}.jpg`
-  $('her').title = night ? '她睡了，轻点' : '戳她一下'
+  $('her').title = night ? t('poke.night') : t('poke.title')
+  $('figure').alt = t('figure.alt')
 }
 // 戳一下：害羞 3 秒。只是动画，不会发消息给她。
 $('her').addEventListener('click', () => { poked = Date.now() + 3000; showHer(); setTimeout(showHer, 3100) })
@@ -270,20 +295,19 @@ function li(text, time, cls) {
   el.appendChild(document.createTextNode(text))
   return el
 }
-const WEEK = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 function relDay(s) {
   const d = new Date(`${s}T00:00:00`)
   const n = new Date()
   const today = new Date(n.getFullYear(), n.getMonth(), n.getDate())
   const diff = Math.round((today - d) / 86400000)
-  if (diff === 0) return '今天'
-  if (diff === 1) return '昨天'
-  if (diff > 1 && diff < 7) return `${diff} 天前`
-  return `${d.getMonth() + 1} 月 ${d.getDate()} 日`
+  if (diff === 0) return t('time.today')
+  if (diff === 1) return t('time.yesterday')
+  if (diff > 1 && diff < 7) return t('time.daysAgo', { n: diff })
+  return dateText(d)
 }
 function dayLabel(s) {
   const d = new Date(`${s}T00:00:00`)
-  return `${d.getMonth() + 1} 月 ${d.getDate()} 日 ${WEEK[d.getDay()]}`
+  return new Intl.DateTimeFormat(locale(), { month: 'long', day: 'numeric', weekday: 'short' }).format(d)
 }
 function diaryLine(line) {
   const p = document.createElement('p')
@@ -306,29 +330,30 @@ async function loadMind() {
   const tank = $('tank')
   tank.style.setProperty('--mood', String(m.mood.score))
   tank.classList.toggle('sulk', m.mood.score < 45)
-  tank.title = `心情 ${m.mood.score} / 100${m.mood.base !== undefined && m.mood.base !== 65 ? `，这两天的底色 ${m.mood.base}` : ''}`
-  $('mood-word').textContent = m.mood.feeling
+  const baseNote = m.mood.base !== undefined && m.mood.base !== 65 ? t('mood.base', { base: m.mood.base }) : ''
+  tank.title = t('mood.title', { score: m.mood.score, base: baseNote })
+  $('mood-word').textContent = feelingLabel(m.mood.feeling)
   mood = faceOf(m.mood.feeling, m.mood.score)
   showHer()
-  $('mood-why').textContent = m.mood.why ? `因为${m.mood.why}` : '没什么特别的事'
-  $('doing').textContent = m.doing ? `她${m.doing}` : ''
+  $('mood-why').textContent = m.mood.why ? t('mood.why', { why: m.mood.why }) : t('mood.none')
+  $('doing').textContent = m.doing ? `${t('doing.prefix')}${m.doing}` : ''
   showToday(m.life)
-  fill('sensed', m.sensed ?? [], (o) => li(o.text, o.source), '她现在什么也没感觉到')
-  const WANT = { want: '想做', doing: '在做', done: '做完了', 'let-go': '不想做了' }
+  fill('sensed', m.sensed ?? [], (o) => li(o.text, o.source), t('empty.sensed'))
+  const wantLabel = (status) => t(`want.${status === 'let-go' ? 'letgo' : status}`)
   fill('wants', (m.wants ?? []).slice(0, 8), (w) => {
     const el = li(w.what, w.on.slice(5, 10), `lesson want-${w.status}`)
-    const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = WANT[w.status] ?? w.status
+    const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = wantLabel(w.status)
     el.insertBefore(tag, el.lastChild)
     const why = document.createElement('div'); why.className = 'why'; why.textContent = w.why
     el.appendChild(why)
     return el
-  }, '她自己想做的事会写在这里')
+  }, t('empty.wants'))
   fill('experiences', (m.experiences ?? []).slice(0, 8), (e) => {
     const el = li(e.what, e.date ? `${e.date.slice(5)} ${e.time}` : '')
     if (e.felt) { const f = document.createElement('div'); f.className = 'why'; f.textContent = e.felt; el.appendChild(f) }
     return el
-  }, '你不在的时候她做了什么，会记在这里')
-  fill('reminders', m.reminders, (r) => li(r.what, r.when.slice(5), r.done ? 'done' : ''), '你说以后要发生的事，她会记在这里，到时候来问你')
+  }, t('empty.experiences'))
+  fill('reminders', m.reminders, (r) => li(r.what, r.when.slice(5), r.done ? 'done' : ''), t('empty.reminders'))
   // 说说：她随手发的（post_moment）和晚上的日记混在一起，按时间倒着排。日记那条标一下「日记」。
   const posts = (m.moments ?? []).map((x) => ({ ...x, kind: 'moment' }))
   for (const d of (m.diary ?? [])) {
@@ -345,62 +370,62 @@ async function loadMind() {
     const main = document.createElement('div'); main.className = 'post-main'
     const meta = document.createElement('div'); meta.className = 'meta'
     const whoEl = document.createElement('b'); whoEl.textContent = who.name
-    const when = document.createElement('time'); when.textContent = `${relDay(p.date)}${p.time ? ` ${p.time}` : ''}${p.kind === 'diary' ? ' · 日记' : ''}`
+    const when = document.createElement('time'); when.textContent = `${relDay(p.date)}${p.time ? ` ${p.time}` : ''}${p.kind === 'diary' ? t('tag.diary') : ''}`
     meta.append(whoEl, when)
     const body = document.createElement('p'); body.textContent = p.text
     main.append(meta, body)
     if (p.text.length > 90) {
       body.classList.add('clamp')
-      const more = document.createElement('button'); more.type = 'button'; more.className = 'more'; more.textContent = '全文'
+      const more = document.createElement('button'); more.type = 'button'; more.className = 'more'; more.textContent = t('more')
       more.addEventListener('click', () => { body.classList.remove('clamp'); more.remove() })
       main.appendChild(more)
     }
     el.append(ava, main)
     return el
-  }, '她还没发过说说')
+  }, t('empty.moments'))
   fill('exams', m.exams ?? [], (e) => {
-    const el = li(`像机器 ${e.caught}/${e.total}`, e.date.slice(5), e.rate <= 30 ? 'up' : 'down')
+    const el = li(t('exam.caught', { caught: e.caught, total: e.total }), e.date.slice(5), e.rate <= 30 ? 'up' : 'down')
     for (const c of (e.caughtItems ?? []).slice(0, 2)) {
       const q = document.createElement('div'); q.className = 'why'; q.textContent = `「${c.b.replace(/\n+/g, ' ').slice(0, 40)}」${c.why}`
       el.appendChild(q)
     }
     return el
-  }, '每晚把她的话和真人闲聊混在一起，让旁观者猜哪句是 AI')
-  const STATUS = { trial: '试用', kept: '留下', dropped: '扔掉' }
+  }, t('empty.exams'))
+  const lessonStatus = (status) => t(`lesson.${status}`)
   fill('lessons', m.lessons ?? [], (l) => {
     const el = li(`${l.text}${l.good || l.bad ? `  👍${l.good ?? 0} 👎${l.bad ?? 0}` : ''}`, l.since.slice(5), `lesson ${l.status}`)
-    const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = STATUS[l.status] ?? l.status
+    const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = lessonStatus(l.status)
     el.insertBefore(tag, el.lastChild)
-    const why = document.createElement('div'); why.className = 'why'; why.textContent = l.verdict ? `结论：${l.verdict}` : `因为${l.why}`
+    const why = document.createElement('div'); why.className = 'why'; why.textContent = l.verdict ? t('lesson.verdict', { verdict: l.verdict }) : t('lesson.because', { why: l.why })
     el.appendChild(why)
     return el
-  }, '她每天晚上反思一次，学到的写在这里')
+  }, t('empty.lessons'))
   fill('wishes', m.wishes ?? [], (w) => {
     const [head, ...rest] = w.split('；')
     const el = li(head.slice(11) || head, head.slice(5, 10))
     if (rest.length) { const why = document.createElement('div'); why.className = 'why'; why.textContent = rest.join('；'); el.appendChild(why) }
     return el
-  }, '她做不到的事会记在这里，等你帮她装')
-  fill('skills', m.skills ?? [], (s) => li(`${s.id}：${s.one}`, ''), '她的手做成一件新事，就会把做法记在这里')
-  fill('body', m.body ?? [], (b) => li(`${b.title}：${b.one}`, ''), '')
+  }, t('empty.wishes'))
+  fill('skills', m.skills ?? [], (s) => li(getLang() === 'zh' ? `${s.id}：${s.one}` : `${s.id}: ${s.one}`, ''), t('empty.skills'))
+  fill('body', m.body ?? [], (b) => li(getLang() === 'zh' ? `${b.title}：${b.one}` : `${b.title}: ${b.one}`, ''), '')
   fill('proposals', m.proposals ?? [], (r) => {
     const el = li(r.what, r.on.slice(5))
-    const why = document.createElement('div'); why.className = 'why'; why.textContent = `因为${r.why}`
+    const why = document.createElement('div'); why.className = 'why'; why.textContent = t('lesson.because', { why: r.why })
     el.appendChild(why)
     return el
-  }, '她觉得自己性格哪里该改，会写在这里等你点头')
-  fill('owner', m.owner, dated, '聊着聊着她就记住了')
+  }, t('empty.proposals'))
+  fill('owner', m.owner, dated, t('empty.owner'))
   fill('knows', m.knows ?? [], (k) => {
     const wrap = document.createElement('div')
     const t = document.createElement('div'); t.className = 'date'; t.textContent = k.title
     const p = document.createElement('p'); p.textContent = k.text
     wrap.append(t, p)
     return wrap
-  }, '她每天晚上整理一次，觉得摸清你哪方面了就写在这里')
+  }, t('empty.knows'))
   for (const pane of document.querySelectorAll('.pane')) {
     const b = pane.querySelector('.blank')
     const names = blanks.get(pane) ?? []
-    if (b) b.textContent = names.length ? `还空着：${names.join('、')}` : ''
+    if (b) b.textContent = names.length ? t('blank.empty', { names: names.join(listSep()) }) : ''
   }
 }
 
@@ -480,7 +505,7 @@ function showLevel(n) {
 async function loadLevel() {
   const r = await fetch('api/level').then((x) => x.json()).catch(() => undefined)
   if (!r || r.error) return
-  levels = r.levels
+  levels = r.levels.map((l, i) => (getLang() === 'en' ? (LEVELS_EN[i] ?? l) : l))
   $('level').max = String(levels.length - 1)
   $('level').value = String(r.level)
   showLevel(r.level)
@@ -500,14 +525,28 @@ function showToday(l) {
   const el = $('level-today')
   if (!l) return (el.textContent = '')
   const hm = (t) => { const d = new Date(Math.max(t, Date.now())); return `${pad(d.getHours())}:${pad(d.getMinutes())}` }
-  const parts = [`今天主动找你 ${l.count}/${l.limit} 次`]
-  if (l.ownLimit === undefined) return (el.textContent = parts.join('，'))
-  parts.push(`自己的时间 ${l.own}/${l.ownLimit} 段`)
-  if (l.ownLimit === 0) parts.push('这一档没有自己的时间')
-  else if (l.own >= l.ownLimit) parts.push('今天的自己的时间用完了')
-  else parts.push('你不在的时候她会随机去做自己的事')
-  el.textContent = parts.join('，')
+  const parts = [t('level.today.nudge', { count: l.count, limit: l.limit })]
+  if (l.ownLimit === undefined) return (el.textContent = parts.join(listSep()))
+  parts.push(t('level.today.own', { own: l.own, limit: l.ownLimit }))
+  if (l.ownLimit === 0) parts.push(t('level.today.noOwn'))
+  else if (l.own >= l.ownLimit) parts.push(t('level.today.usedOwn'))
+  else parts.push(t('level.today.random'))
+  el.textContent = parts.join(listSep())
 }
+
+async function switchLang(next) {
+  if (!['zh', 'en'].includes(next) || next === getLang()) return
+  setLang(next)
+  try { localStorage.setItem(LANG_KEY, next) } catch {}
+  applyStatic()
+  if (!who.main) $('figure').alt = t('plain.alt', { name: who.name })
+  showHer()
+  resetHistory()
+  await loadHistory()
+  await Promise.all([loadLevel(), loadMind()])
+  if (busy) setStatus(t('status.typing'), true)
+}
+for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => switchLang(b.dataset.lang))
 
 whoReady.then(() => { if (!who.modules.length) document.querySelector('.drawer-foot').hidden = true })
 loadHistory().then(listen)

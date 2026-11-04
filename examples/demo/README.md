@@ -24,10 +24,12 @@ What it does not do:
 The repository's images are generated from this server:
 
 ```bash
-node scripts/screenshot.mjs --url http://127.0.0.1:4319/companion/ --out docs/images/home.jpg --width 1600 --height 900
-node scripts/screenshot.mjs --url http://127.0.0.1:4319/companion/ --out docs/images/book.jpg --width 1600 --height 900 --click .js-open-book
-node scripts/screenshot.mjs --url http://127.0.0.1:4319/companion/ --out docs/images/mobile.jpg --width 390 --height 844 --mobile
-node scripts/screenshot.mjs --url http://127.0.0.1:4319/companion/ --out docs/images/mobile-book.jpg --width 390 --height 844 --mobile --click .js-open-book
+node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=zh' --out docs/images/home.jpg --width 1600 --height 900
+node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=zh' --out docs/images/book.jpg --width 1600 --height 900 --click .js-open-book
+node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=zh' --out docs/images/mobile.jpg --width 390 --height 844 --mobile
+node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=zh' --out docs/images/mobile-book.jpg --width 390 --height 844 --mobile --click .js-open-book
+
+# English copies: same commands with ?lang=en and the *-en.jpg names.
 ```
 
 `scripts/screenshot.mjs` talks to Chrome over CDP; it needs Chrome installed and accepts `--chrome <path>`.

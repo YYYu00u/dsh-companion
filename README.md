@@ -8,7 +8,7 @@ A local-first companion for [DeepSeek Harness](https://github.com/deepseek-ai/de
 
 She is not a general assistant with a character prompt. She is a separate preset with no work tools: she only talks, remembers, and lives. The work stays in your normal DSH sessions.
 
-![The web room](docs/images/home.jpg)
+![The web room, English UI](docs/images/home-en.jpg)
 
 <sub>Chinese UI, demo data. The right side is her tank: the water colour follows her mood. The notebook tabs are "Today / Moments / You / Learning".</sub>
 
@@ -121,7 +121,9 @@ npm run demo            # http://127.0.0.1:4319/companion/
 
 | Desktop | Notebook | Mobile |
 |---|---|---|
-| ![Desktop](docs/images/home.jpg) | ![Notebook](docs/images/book.jpg) | ![Mobile](docs/images/mobile.jpg) |
+| ![Desktop](docs/images/home-en.jpg) | ![Notebook](docs/images/book-en.jpg) | ![Mobile](docs/images/mobile-en.jpg) |
+
+The UI switches between 中文 and English from the header. The choice is remembered, and `?lang=en` / `?lang=zh` gives you a direct link. Only the chrome is translated; her own words, diary, and memories stay in whatever language she wrote them.
 
 The demo also doubles as a UI review harness: it serves the real `packages/web/public` bundle and exercises every API shape.
 
@@ -137,7 +139,7 @@ The demo also doubles as a UI review harness: it serves the real `packages/web/p
 
 What "verified" means here:
 
-- `npm test` — 26 unit/smoke tests over config bootstrap, notebook edits, levels, memory retrieval, delivery, life rollback, Bing parsing.
+- `npm test` — 33 unit/smoke tests over config bootstrap, notebook edits, levels, memory retrieval, delivery, life rollback, Bing parsing, and UI i18n.
 - `npm run check` — syntax, package manifests, private paths, secrets, stale scopes.
 - `npm run demo` — the real web bundle against a mock backend, desktop + mobile.
 - The core/web/search packages are extracted from a setup that ran daily against DSH 0.2.1-rc.5.

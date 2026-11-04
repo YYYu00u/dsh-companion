@@ -2,6 +2,27 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.1.1 — 2026-11-04
+
+### Added
+
+- Web room language switch: 中文 / English in the header, remembered in `localStorage`, `?lang=en` / `?lang=zh` for direct links.
+- `public/i18n.js`: all UI chrome strings, East Asian date formatting, server-error mapping, English activity-level labels.
+- English screenshots (`home-en.jpg`, `book-en.jpg`, `mobile-en.jpg`, `mobile-book-en.jpg`) and README language notes.
+- 7 i18n tests: zh/en key parity, every `data-i18n` and static `t()` key, interpolation, detection, error mapping.
+
+### Changed
+
+- `app.js` is now an ES module and imports `i18n.js`; the page uses `<script type="module">`.
+- Language switching re-renders history, the notebook, the level slider, and the tank without duplicating rows.
+- The READMEs now link to each other at the top; `npm run check` enforces the link.
+- Package and root versions bumped to `0.1.1`.
+
+### Notes
+
+- Only the chrome is translated. Her own messages, diary, memories, and generated reasons stay in the language she wrote them; a Chinese persona still speaks Chinese in the English UI.
+- English labels are longer; the mobile header and drawer tabs were re-checked at 390 px with no horizontal overflow.
+
 ## 0.1.0 — 2026-11-04
 
 First public release. Three packages extracted from a working DSH 0.2.1-rc.5 setup, then hardened for open source.
