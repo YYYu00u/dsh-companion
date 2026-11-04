@@ -12,7 +12,7 @@ Thanks for taking a look. This project is small on purpose; the fastest way to h
 ## Development setup
 
 ```bash
-git clone https://github.com/<your-name>/dsh-companion.git
+git clone https://github.com/YYYu00u/dsh-companion.git
 cd dsh-companion
 node scripts/link-workspace.mjs   # links packages for tests without pnpm
 npm test                          # 24 tests

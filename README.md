@@ -67,7 +67,7 @@ We deliberately do **not** ship the desktop chat-window plugin, the old in-DSH c
 Requirements: DeepSeek Harness desktop **0.2.1-rc.5** or a compatible build, Node.js 20+, and a model provider configured in DSH.
 
 ```bash
-git clone https://github.com/<your-name>/dsh-companion.git
+git clone https://github.com/YYYu00u/dsh-companion.git
 cd dsh-companion
 node scripts/init-home.mjs --name 小鲤
 ```

@@ -50,5 +50,14 @@
     "bundle": {
       "patch": "./cordis.patch.yml"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YYYu00u/dsh-companion.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/YYYu00u/dsh-companion#readme",
+  "bugs": {
+    "url": "https://github.com/YYYu00u/dsh-companion/issues"
   }
 }

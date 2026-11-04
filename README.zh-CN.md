@@ -65,7 +65,7 @@ flowchart LR
 要求：DeepSeek Harness 桌面版 **0.2.1-rc.5** 或兼容版本，Node.js 20+，DSH 里配好模型。
 
 ```bash
-git clone https://github.com/<your-name>/dsh-companion.git
+git clone https://github.com/YYYu00u/dsh-companion.git
 cd dsh-companion
 node scripts/init-home.mjs --name 小鲤
 ```

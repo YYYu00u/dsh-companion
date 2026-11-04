@@ -15,5 +15,13 @@
     "check": "node scripts/check.mjs",
     "demo": "node examples/demo/server.mjs",
     "init-home": "node scripts/init-home.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YYYu00u/dsh-companion.git"
+  },
+  "homepage": "https://github.com/YYYu00u/dsh-companion#readme",
+  "bugs": {
+    "url": "https://github.com/YYYu00u/dsh-companion/issues"
   }
 }

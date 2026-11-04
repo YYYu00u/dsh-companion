@@ -10,7 +10,7 @@
 ## 1. Get the code and make a home
 
 ```bash
-git clone https://github.com/<your-name>/dsh-companion.git
+git clone https://github.com/YYYu00u/dsh-companion.git
 cd dsh-companion
 node scripts/init-home.mjs --name 小鲤
 ```
