@@ -98,6 +98,12 @@ First public release. Three packages extracted from a working DSH 0.2.1-rc.5 set
 
 ## Unreleased
 
+### Planned
+
+- Ears: push-to-talk system audio, microphone, voice messages, local ASR, ShazamKit song ID. See [docs/plans/ears.md](docs/plans/ears.md).
+- Third-party notices and BSD-2 license text for the AudioCap-derived capture helper.
+
+
 - Persona onboarding interview (she asks, writes `persona.md`, owner approves).
 - `schemaVersion` for the home.
 - History pagination and a retry affordance.
