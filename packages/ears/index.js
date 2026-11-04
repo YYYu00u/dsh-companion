@@ -10,10 +10,11 @@ import { parseWav } from './wav.js'
 import { expandPath, resolveHome } from '@dsh-companion/core/config'
 
 export const name = 'dsh-companion-ears'
-export const inject = ['tools']
+export const inject = []
 
 const AUDIO_EXT = new Set(['.wav', '.mp3', '.m4a', '.aac', '.flac', '.ogg', '.opus', '.mp4', '.mov', '.webm'])
 const MAX_URL_BYTES = 50 * 1024 * 1024
+const MAX_BODY_BYTES = 4096
 
 function textResult(text) {
   return { text }
@@ -122,13 +123,87 @@ export function createEars({ home, config = {}, log }) {
   return { listenNow, listenFile, transcribeBuffer }
 }
 
+function sendJson(res, status, value) {
+  res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
+  res.end(JSON.stringify(value))
+}
+
+async function readJson(req) {
+  const chunks = []
+  let size = 0
+  for await (const chunk of req) {
+    size += chunk.length
+    if (size > MAX_BODY_BYTES) throw new Error('请求太大')
+    chunks.push(chunk)
+  }
+  if (!chunks.length) return {}
+  return JSON.parse(Buffer.concat(chunks).toString('utf8'))
+}
+
+function sameOrigin(req) {
+  const site = req.headers['sec-fetch-site']
+  if (site && site !== 'same-origin' && site !== 'none') return false
+  return true
+}
+
+/** Pet menu: one top-level item under "More"; clicking records 5 s, then asks the pet's own chat. */
+export function registerPetMenu({ ctx, config, service, origin, log }) {
+  const owner = String(config.menuOwner ?? '大肥鱼·耳朵')
+  const label = String(config.menuLabel ?? '听我 5 秒')
+  const seconds = Math.min(30, Math.max(1, Number(config.menuSeconds ?? 5)))
+  const source = config.menuSource === 'mic' ? 'mic' : 'system'
+  const pet = (path, init) => fetch(`${origin()}/dsh-pet-7340${path}`, init).then((r) => r.json())
+  return ctx.effect(() => {
+    let stopped = false
+    ;(async () => {
+      let backoff = 2000
+      while (!stopped) {
+        try {
+          const reg = await pet('/menu/item', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ owner, labels: [label], target: 'desktop' }),
+          })
+          if (!reg.ok) throw new Error(reg.reason ?? 'register failed')
+          backoff = 2000
+          while (!stopped) {
+            const r = await pet(`/menu/events?owner=${encodeURIComponent(owner)}&wait=10000`)
+            if (!r.ok) break
+            const petId = r.events?.[label]
+            if (petId) {
+              const heard = await service.listenNow({ seconds, source })
+              if (heard.text) {
+                await pet(`/chat?pet=${encodeURIComponent(petId)}&surface=desktop`, {
+                  method: 'POST',
+                  headers: { 'content-type': 'application/json' },
+                  body: JSON.stringify({ text: heard.text }),
+                })
+              }
+            }
+          }
+        } catch (error) {
+          log.info?.('pet menu not ready', String(error?.message ?? error))
+          await new Promise((ok) => setTimeout(ok, backoff))
+          backoff = Math.min(60_000, backoff * 2)
+        }
+      }
+    })()
+    return () => {
+      stopped = true
+      pet(`/menu/item?owner=${encodeURIComponent(owner)}`, { method: 'DELETE' }).catch(() => {})
+    }
+  })
+}
+
 export function apply(ctx, config = {}) {
   const home = resolveHome(config)
   const log = typeof ctx.logger === 'function' ? ctx.logger('dsh-companion-ears') : (ctx.logger ?? console)
   const service = createEars({ home, config, log })
   if (typeof ctx.provide === 'function') ctx.provide('ears', service)
 
-  const reg = (toolName, description, properties, required, run) => ctx.tools.register({
+  const reg = (toolName, description, properties, required, run) => {
+    if (!ctx.tools?.register) return
+    ctx.tools.register({
     name: toolName,
     description,
     parameters: { type: 'object', properties, required, additionalProperties: false },
@@ -136,8 +211,9 @@ export function apply(ctx, config = {}) {
       schema: { type: 'object', properties: { text: { type: 'string' } }, required: ['text'], additionalProperties: false },
       render: (_args, value) => [{ type: 'text', text: value.text }],
     },
-    async execute(args) { return textResult(await run(args ?? {})) },
-  })
+      async execute(args) { return textResult(await run(args ?? {})) },
+    })
+  }
 
   reg('listen_now',
     '听你现在电脑里正在放的声音，或者你说话。只录一小段（默认 15 秒，最多 30 秒），转成文字后告诉你听到了什么。' +
@@ -156,6 +232,40 @@ export function apply(ctx, config = {}) {
       language: { type: 'string', description: '语言代码，默认 zh。' },
     }, [],
     async ({ path, url }) => format(await service.listenFile({ path, url })))
+
+  // The web page / pet menu use HTTP; the model-facing tools above are separate.
+  let webServer
+  try { webServer = typeof ctx.get === 'function' ? ctx.get('webServer') : ctx.webServer } catch { webServer = undefined }
+  if (webServer?.register) {
+    const origin = () => webServer.getOrigin()
+    const route = async (req, res) => {
+      const url = new URL(req.url, 'http://localhost')
+      if (url.pathname === '/ears/api/status' && req.method === 'GET') {
+        return sendJson(res, 200, {
+          ok: true,
+          helper: Boolean(config.helper && existsSync(expandPath(config.helper))),
+          model: Boolean(config.stt?.sherpa?.model && existsSync(expandPath(config.stt.sherpa.model))),
+          seconds: Math.min(30, Math.max(1, Number(config.capture?.maxSeconds ?? 30))),
+        })
+      }
+      if (url.pathname === '/ears/api/listen') {
+        if (req.method !== 'POST') return sendJson(res, 405, { ok: false, error: '只支持 POST' })
+        if (!sameOrigin(req)) return sendJson(res, 403, { ok: false, error: '跨站请求' })
+        try {
+          const body = await readJson(req)
+          const seconds = Math.min(30, Math.max(1, Number(body.seconds ?? 5)))
+          const source = body.source === 'mic' ? 'mic' : 'system'
+          const result = await service.listenNow({ seconds, source })
+          return sendJson(res, 200, { ok: true, ...result })
+        } catch (error) {
+          return sendJson(res, 200, { ok: false, error: String(error?.message ?? error) })
+        }
+      }
+      return sendJson(res, 404, { ok: false, error: 'not found' })
+    }
+    ctx.effect(() => webServer.register({ kind: 'prefix', path: '/ears', handler: route }))
+    if (config.menu !== false) registerPetMenu({ ctx, config, service, origin, log })
+  }
 
   return service
 }

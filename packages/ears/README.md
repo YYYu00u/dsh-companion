@@ -55,6 +55,16 @@ Push-to-talk listening for the companion: system audio, microphone, or an audio 
 
 Both return a short text block, never raw audio. The plugin does not listen on its own.
 
+## Pet menu and HTTP
+
+When `webServer` is available, the plugin registers:
+
+- `GET /ears/api/status` — whether the helper and SenseVoice model exist.
+- `POST /ears/api/listen` — `{seconds, source}` → `{ok, text, seconds, source}`; same-origin only.
+- A desktop-pet menu item (default `听我 5 秒`, owner `大肥鱼·耳朵`). Clicking it records system audio, sends the transcript to that pet's own `/chat`, and the pet answers in its bubble. Set `menu: false` if you do not have `dsh-pet`.
+
+The web listen button uses the same HTTP endpoint and puts the transcript into the composer instead of sending it automatically.
+
 ## Config
 
 | Key | Default | Meaning |
@@ -69,6 +79,10 @@ Both return a short text block, never raw audio. The plugin does not listen on i
 | `stt.language` | `zh` | Language hint. |
 | `capture.maxSeconds` | `30` | Hard cap. |
 | `capture.defaultSource` | `system` | Default source when the tool omits it. |
+| `menu` | `true` | Register the desktop-pet menu item. |
+| `menuLabel` | `听我 5 秒` | Menu label. |
+| `menuSeconds` | `5` | How long the pet listens. |
+| `menuSource` | `system` | `system` or `mic`. |
 
 ## License / attribution
 

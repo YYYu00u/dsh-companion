@@ -204,6 +204,10 @@ The window is optional. It has no API of its own; it reads `/companion/api/*` fr
 | `stt.language` | `zh` | Language hint. |
 | `capture.maxSeconds` | `30` | Hard cap; the model can ask for less. |
 | `capture.defaultSource` | `system` | `system` or `mic`. |
+| `menu` | `true` | Desktop-pet menu item (needs `dsh-pet`). |
+| `menuLabel` | `听我 5 秒` | Menu label. |
+| `menuSeconds` | `5` | Pet listening duration. |
+| `menuSource` | `system` | Pet listening source. |
 
 The helper needs "Screen & System Audio Recording" and/or Microphone permission. The plugin never listens without a tool call; there is no always-on mode.
 

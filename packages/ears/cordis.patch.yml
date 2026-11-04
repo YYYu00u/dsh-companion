@@ -17,3 +17,7 @@
         capture:
           maxSeconds: 30
           defaultSource: system
+        # 桌宠右键「更多 → 听我 5 秒」；没有桌宠就设 menu: false
+        menu: true
+        menuLabel: 听我 5 秒
+        menuSeconds: 5
