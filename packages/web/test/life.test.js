@@ -4,6 +4,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { ownPrompt } from '../life.js'
+import { dateOf } from '@dsh-companion/core/mind'
 
 test('自己的时间：随机冒一个念头，不是固定清单', () => {
   const a = ownPrompt(new Date('2026-01-01T15:00:00'), { wants: [{ id: 'w1', what: '听歌' }], random: () => 0 })
@@ -19,7 +20,7 @@ test('失败的一轮不算数：次数退回去，惦记的事重新挂上', as
   try {
     mkdirSync(join(home, '.data/mind'), { recursive: true })
     writeFileSync(join(home, '.data/mind/life.json'), JSON.stringify({
-      date: new Date().toISOString().slice(0, 10), count: 2, own: 1, unanswered: 1,
+      date: dateOf(), count: 2, own: 1, unanswered: 1,
       pending: { kind: 'nudge' },
     }))
     writeFileSync(join(home, 'reminders.json'), JSON.stringify([{ id: 'r1', what: '问他面试', when: '2026-01-01 10:00', done: true }]))
