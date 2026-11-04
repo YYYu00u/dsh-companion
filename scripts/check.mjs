@@ -65,6 +65,12 @@ for (const dir of readdirSync(join(root, 'packages'))) {
   }
 }
 
+// README 语言切换：两边都要能点到对方
+for (const [file, other] of [['README.md', 'README.zh-CN.md'], ['README.zh-CN.md', 'README.md']]) {
+  const text = readFileSync(join(root, file), 'utf8')
+  if (!text.includes(`href="${other}"`) && !text.includes(`](${other})`)) problems.push(`${file}: 顶部没有指向 ${other} 的语言链接`)
+}
+
 // 不该进仓库的运行数据
 for (const bad of ['.data', 'node_modules/.cache']) {
   if (existsSync(join(root, bad))) problems.push(`仓库里有 ${bad}`)

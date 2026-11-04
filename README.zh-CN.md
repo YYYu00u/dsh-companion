@@ -1,3 +1,5 @@
+<p align="right"><strong>简体中文</strong> | <a href="README.md">English</a></p>
+
 # dsh-companion
 
 给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 做的本地陪伴插件。她有人设、本子、心情、经历记忆、表情包、一个网页房间，还有自己的日子；所有东西都在你本机，模型用你自己配的。

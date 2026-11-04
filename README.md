@@ -1,3 +1,5 @@
+<p align="right"><a href="README.zh-CN.md">简体中文</a> | <strong>English</strong></p>
+
 # dsh-companion
 
 A local-first companion for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness). She has a persona, a notebook, moods, episodic memory, stickers, a web room, and a life of her own — and she runs entirely on your machine, against the model provider you already use.

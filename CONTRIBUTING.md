@@ -40,6 +40,10 @@ Good first issues:
 
 Please avoid drive-by refactors of the memory or compaction code. It is the part with the least test coverage and the most hidden state.
 
+## README languages
+
+`README.md` is English and `README.zh-CN.md` is Chinese. Keep both in sync when you change install steps, config, or the feature table. Each must link to the other at the top; `npm run check` enforces the link.
+
 ## Code style
 
 - ESM only, no build step for the server packages.

@@ -1,5 +1,7 @@
 # Documentation
 
+English is the primary README; the Chinese version is [../README.zh-CN.md](../README.zh-CN.md).
+
 | Doc | Read it when |
 |---|---|
 | [architecture.md](architecture.md) | You want the runtime topology, package boundaries, data model, and decisions. |
