@@ -139,6 +139,29 @@ function showError(text) {
 
 const input = $('input')
 const send = $('send')
+
+// Optional ears plugin: the button stays hidden until /ears/api/status says it is installed.
+const earsListen = $('ears-listen')
+if (earsListen) {
+  fetch('/ears/api/status').then((r) => r.json()).then((d) => { if (d.ok) earsListen.hidden = false }).catch(() => {})
+  earsListen.addEventListener('click', async () => {
+    earsListen.disabled = true
+    earsListen.textContent = t('ears.listening')
+    showError('')
+    try {
+      const r = await fetch('/ears/api/listen', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ seconds: 5, source: 'system' }) }).then((x) => x.json())
+      if (!r.ok) throw new Error(r.error || t('ears.empty'))
+      input.value = r.text || ''
+      input.dispatchEvent(new Event('input'))
+      input.focus()
+    } catch (err) {
+      showError(t('ears.failed', { msg: err.message }))
+    } finally {
+      earsListen.disabled = false
+      earsListen.textContent = t('ears.label')
+    }
+  })
+}
 async function post(body) {
   const r = await fetch('api/send', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }).then((r) => r.json())
   if (!r.ok) throw new Error(localizeError(r.error) || t('error.unknown'))
