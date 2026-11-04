@@ -92,7 +92,8 @@ The detailed component and data-flow docs are in [docs/architecture.md](docs/arc
 | [`@dsh-companion/window`](packages/window) | QQ-like standalone chat window, opened from the desktop pet | Page + Electron verified; pet menu is beta |
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | Keyless Bing search provider | Yes — parser tests, used in production |
 | [`@dsh-companion/ears`](packages/ears) | Push-to-talk system audio / mic / audio files → text | **Beta** — capture + SenseVoice verified; song ID/web UI pending |
-| QQ / voice calls / TTS | Not in this release | No |
+| [`@dsh-companion/voice`](packages/voice) | Local voice: ZipVoice zero-shot, click-to-play speech in the room | **Beta** — model/refs are local; 15–60 s per sentence |
+| QQ / voice calls | Not in this release | No |
 
 The old in-DSH chat tab is deprecated and not shipped. The Chrome wrapper is [extras/chrome](extras/chrome) — a documented setup for someone else's MCP server, not a package. See [ROADMAP.md](ROADMAP.md).
 
@@ -163,7 +164,7 @@ The demo also doubles as a UI review harness: it serves the real `packages/web/p
 
 `@dsh-companion/window` is a QQ-like standalone window: chat on the left, her mood and recent moments on the right, a profile card when you click her. It is served at `/companion-window/` and uses the same transcript as the web room. It opens from the desktop pet's right-click menu, or directly from the URL.
 
-## Listening (beta)
+## Voice and listening (beta)
 
 `@dsh-companion/ears` records 15–30 seconds of system audio, the microphone, or an audio file and turns it into text. The capture helper is verified on macOS 15.1 / M2; ASR was verified locally with the SenseVoice int8 model; song ID and the web voice UI are still pending. There is no always-on listening. Plan and limits: [docs/plans/ears.md](docs/plans/ears.md).
 

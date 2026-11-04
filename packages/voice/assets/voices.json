@@ -2,40 +2,10 @@
  "text": "这几天降温了，出门记得多穿一件。你那边现在忙不忙？要不要晚点再说？你怎么才回来呀，我等你好久了呢。真的吗！那太好了，我也想去看看。是不是有点困了，早点睡吧，明天还要早起。秋风一吹，院子里的叶子落了一地。",
  "voices": [
   {
-   "id": "zh_female_jiaochuannv_uranus_bigtts",
-   "name": "娇喘女声",
-   "file": "zh_female_jiaochuannv_uranus_bigtts.wav",
-   "duration": 33.1
-  },
-  {
-   "id": "zh_female_roumeinvyou_uranus_bigtts",
-   "name": "柔美女友",
-   "file": "zh_female_roumeinvyou_uranus_bigtts.wav",
-   "duration": 23.9
-  },
-  {
-   "id": "zh_female_tiexinnvsheng_uranus_bigtts",
-   "name": "贴心女声",
-   "file": "zh_female_tiexinnvsheng_uranus_bigtts.wav",
-   "duration": 18.9
-  },
-  {
-   "id": "zh_female_mengyatou_uranus_bigtts",
-   "name": "萌丫头",
-   "file": "zh_female_mengyatou_uranus_bigtts.wav",
-   "duration": 22.3
-  },
-  {
-   "id": "zh_female_wenroushunv_uranus_bigtts",
-   "name": "温柔淑女",
-   "file": "zh_female_wenroushunv_uranus_bigtts.wav",
-   "duration": 27.6
-  },
-  {
-   "id": "zh_female_lingling_uranus_bigtts",
-   "name": "玲玲姐姐",
-   "file": "zh_female_lingling_uranus_bigtts.wav",
-   "duration": 29.5
+   "id": "zh_female_jitangnv_uranus_bigtts",
+   "name": "鸡汤女",
+   "file": "zh_female_jitangnv_uranus_bigtts.wav",
+   "duration": 26.5
   },
   {
    "id": "zh_female_yingtaowanzi_uranus_bigtts",
@@ -44,22 +14,52 @@
    "duration": 22.5
   },
   {
-   "id": "zh_female_kailangjiejie_uranus_bigtts",
-   "name": "开朗姐姐",
-   "file": "zh_female_kailangjiejie_uranus_bigtts.wav",
-   "duration": 21.5
-  },
-  {
-   "id": "zh_female_jitangnv_uranus_bigtts",
-   "name": "鸡汤女",
-   "file": "zh_female_jitangnv_uranus_bigtts.wav",
-   "duration": 26.5
+   "id": "zh_female_wenroushunv_uranus_bigtts",
+   "name": "温柔淑女",
+   "file": "zh_female_wenroushunv_uranus_bigtts.wav",
+   "duration": 27.6
   },
   {
    "id": "zh_female_gufengshaoyu_uranus_bigtts",
    "name": "古风少御",
    "file": "zh_female_gufengshaoyu_uranus_bigtts.wav",
    "duration": 26.3
+  },
+  {
+   "id": "zh_female_mengyatou_uranus_bigtts",
+   "name": "萌丫头",
+   "file": "zh_female_mengyatou_uranus_bigtts.wav",
+   "duration": 22.3
+  },
+  {
+   "id": "zh_female_tiexinnvsheng_uranus_bigtts",
+   "name": "贴心女声",
+   "file": "zh_female_tiexinnvsheng_uranus_bigtts.wav",
+   "duration": 18.9
+  },
+  {
+   "id": "zh_female_kailangjiejie_uranus_bigtts",
+   "name": "开朗姐姐",
+   "file": "zh_female_kailangjiejie_uranus_bigtts.wav",
+   "duration": 21.5
+  },
+  {
+   "id": "zh_female_jiaochuannv_uranus_bigtts",
+   "name": "娇喘女声",
+   "file": "zh_female_jiaochuannv_uranus_bigtts.wav",
+   "duration": 33.1
+  },
+  {
+   "id": "zh_female_lingling_uranus_bigtts",
+   "name": "玲玲姐姐",
+   "file": "zh_female_lingling_uranus_bigtts.wav",
+   "duration": 29.5
+  },
+  {
+   "id": "zh_female_roumeinvyou_uranus_bigtts",
+   "name": "柔美女友",
+   "file": "zh_female_roumeinvyou_uranus_bigtts.wav",
+   "duration": 23.9
   }
  ]
 }

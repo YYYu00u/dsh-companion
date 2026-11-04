@@ -15,6 +15,8 @@ English is the primary README; the Chinese version is [../README.zh-CN.md](../RE
 | [design/persona.md](design/persona.md) | You are changing persona layers, editing tools, or approval rules. |
 | [reviews/README.md](reviews/README.md) | You want the audit method, scores, and the list of deliberate exclusions. |
 | [plans/ears.md](plans/ears.md) | The "listen to music/video/voice" plan: capture, ASR, ShazamKit, licensing, phases. |
+| [../packages/voice/README.md](../packages/voice/README.md) | Local voice: ZipVoice setup, resource cost, and why the wavs are not shipped. |
+| [releases/v0.3.0.md](releases/v0.3.0.md) | Release notes for v0.3.0: ears, voice, window, and verified numbers. |
 
 The five reviews are: [architecture](reviews/architecture.md), [UI](reviews/ui.md), [interaction](reviews/interaction.md), [function](reviews/function.md), [product](reviews/product.md).
 

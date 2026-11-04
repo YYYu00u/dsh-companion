@@ -30,7 +30,8 @@
     "scripts/*.mjs",
     "docs/**",
     "cordis.patch.yml",
-    "page/*"
+    "page/*",
+    "README.md"
   ],
   "scripts": {
     "models": "node scripts/download-models.mjs",

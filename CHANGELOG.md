@@ -2,19 +2,27 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
-## Unreleased
+## 0.3.0 — 2026-11-05
 
 ### Added
 
-- `@dsh-companion/voice`: a local voice package. Ten reference voices from a cloud TTS provider, cloned locally with ZipVoice (zero-shot, no training), served by a small Python process on `127.0.0.1`, and played in the web room on click.
-- `npm run models` downloads the int8 model and vocoder into `.models/` and verifies sha256; `npm run refs` regenerates the reference clips with the user's own key.
-- Reference audio and model weights are deliberately **not** shipped (provider terms, size); the manifest keeps the exact transcript, which cloning needs.
-- Docs: [docs/zh-CN/voice.md](docs/zh-CN/voice.md), [docs/en/voice.md](docs/en/voice.md), including measured synthesis times at 2/4/8 steps.
+- `@dsh-companion/ears` (beta): push-to-talk system audio / microphone / audio files → text. Objective-C ScreenCaptureKit helper, local sherpa-onnx + SenseVoiceSmall, optional AssemblyAI; `listen_now` / `listen_file`; pet menu and `/ears/api/*` when installed as a Host bundle.
+- `@dsh-companion/voice` (beta): local ZipVoice zero-shot voice, click-to-play; model and reference audio stay out of the repository.
+- Window: custom fish icon and app name for the Electron chat window; hold-to-talk voice messages with a WeChat-style bar and long-press transcript; history opens at the bottom.
+- Web: optional listen button (hidden unless the ears endpoint exists), voice-message upload/playback, TTS cache by text + voice.
+- Tests: 48 total, including ears WAV/STT/pet-menu and window boot.
 
 ### Notes
 
-- CPU-only and slow by design: 8 steps is the quality tier (15 s for a 1.3 s line), 4 steps halves it.
-- The web integration (play button, warm-up, cache) lives in the private deployment's web package; the audio API is `POST /api/say`.
+- `ears` and `voice` are beta; see [docs/verification.md](docs/verification.md).
+- TTS is CPU-only and not real-time (15–60 s per sentence); voice messages are transcribed in the background, not live captions.
+
+
+### Voice setup
+
+- `npm run models` downloads the int8 model and vocoder into `.models/` and verifies sha256; `npm run refs` regenerates the reference clips with the user's own key.
+- Reference audio and model weights are deliberately **not** shipped (provider terms, size); the manifest keeps the exact transcript, which cloning needs.
+- Docs: [packages/voice/README.md](packages/voice/README.md).
 
 ## 0.2.0 — 2026-11-04
 
@@ -110,7 +118,21 @@ First public release. Three packages extracted from a working DSH 0.2.1-rc.5 set
 - LCCC corpus data.
 - The Chrome wrapper and its `node_modules`.
 
-## Unreleased
+## 0.3.0 — 2026-11-05
+
+### Added
+
+- `@dsh-companion/ears` (beta): push-to-talk system audio / microphone / audio files → text. Objective-C ScreenCaptureKit helper, local sherpa-onnx + SenseVoiceSmall, optional AssemblyAI; `listen_now` / `listen_file`; pet menu and `/ears/api/*` when installed as a Host bundle.
+- `@dsh-companion/voice` (beta): local ZipVoice zero-shot voice, click-to-play; model and reference audio stay out of the repository.
+- Window: custom fish icon and app name for the Electron chat window; hold-to-talk voice messages with a WeChat-style bar and long-press transcript; history opens at the bottom.
+- Web: optional listen button (hidden unless the ears endpoint exists), voice-message upload/playback, TTS cache by text + voice.
+- Tests: 48 total, including ears WAV/STT/pet-menu and window boot.
+
+### Notes
+
+- `ears` and `voice` are beta; see [docs/verification.md](docs/verification.md).
+- TTS is CPU-only and not real-time (15–60 s per sentence); voice messages are transcribed in the background, not live captions.
+
 
 ### Planned
 

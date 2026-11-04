@@ -12,6 +12,7 @@ packages/ears/capture/EarsCapture.app/
 
 # voice: 模型和参考音频都不进仓库
 packages/voice/.models/
+packages/voice/.venv
 packages/voice/.venv/
 packages/voice/assets/*.wav
 packages/voice/assets/*.mp3

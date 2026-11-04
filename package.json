@@ -1,6 +1,6 @@
 {
   "name": "dsh-companion",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "A local-first companion for DeepSeek Harness: persona, notebook, mood, episodic memory, and a web room.",
