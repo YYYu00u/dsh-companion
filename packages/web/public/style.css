@@ -306,3 +306,4 @@ body.plain .row.her.lead::before { content: var(--initial); color: #fff; font: 6
   .tabs button { margin-right: 12px; }
   .chat-head { gap: 8px; }
 }
+.compose .icon-btn[hidden] { display: none; }
