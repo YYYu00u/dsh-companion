@@ -122,6 +122,7 @@
 | [`@dsh-companion/window`](packages/window) | 像 QQ 的独立聊天窗，从桌宠右键打开 | 页面和 Electron 已验证；桌宠菜单是 beta |
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | 不用 key 的必应搜索 | 已验证 |
 | [`@dsh-companion/ears`](packages/ears) | 按一下听系统声音/麦克风/音频文件，转文字 | **beta**：采集已验证；转写要装 SenseVoice 模型 |
+| [`@dsh-companion/voice`](packages/voice) | 本地嗓子：ZipVoice 零样本克隆，网页里点「▶ 语音」才念 | **beta**：8 步一句要等 15~60 秒；模型 197 MB、参考音频要自己生成 |
 | [extras/chrome](extras/chrome) | 接 Chrome DevTools MCP 的配置示例，不是我们的代码 | 可选 |
 
 **没有放进来**：旧的 DSH 内聊天 tab（已被网页取代）、她真实的人设/日记/记忆/表情包、LCCC 语料。理由在 [ROADMAP.md](ROADMAP.md)。

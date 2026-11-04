@@ -1,0 +1,11 @@
+# 本地嗓子：ZipVoice 零样本克隆 + 十来段参考音频，起一个只听 127.0.0.1 的合成服务。
+# 需要先跑 `npm run models`（下载 197 MB 模型）和 `npm run refs`（用自己的豆包 key 生成参考音频）。
+- insert:
+    - id: companion-voice
+      name: '@dsh-companion/voice'
+      config:
+        port: 4321
+        # 默认音色，留空用清单第一个
+        voice: ''
+        # 模型目录，默认 .models/
+        modelDir: ''

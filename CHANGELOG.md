@@ -2,6 +2,20 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## Unreleased
+
+### Added
+
+- `@dsh-companion/voice`: a local voice package. Ten reference voices from a cloud TTS provider, cloned locally with ZipVoice (zero-shot, no training), served by a small Python process on `127.0.0.1`, and played in the web room on click.
+- `npm run models` downloads the int8 model and vocoder into `.models/` and verifies sha256; `npm run refs` regenerates the reference clips with the user's own key.
+- Reference audio and model weights are deliberately **not** shipped (provider terms, size); the manifest keeps the exact transcript, which cloning needs.
+- Docs: [docs/zh-CN/voice.md](docs/zh-CN/voice.md), [docs/en/voice.md](docs/en/voice.md), including measured synthesis times at 2/4/8 steps.
+
+### Notes
+
+- CPU-only and slow by design: 8 steps is the quality tier (15 s for a 1.3 s line), 4 steps halves it.
+- The web integration (play button, warm-up, cache) lives in the private deployment's web package; the audio API is `POST /api/say`.
+
 ## 0.2.0 — 2026-11-04
 
 ### Added
