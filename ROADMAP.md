@@ -15,7 +15,14 @@ The rule for this repository: **a package ships only after it is verified.** Fea
 - Accessibility: axe run + screen-reader notes.
 - Documentation: a 60-second demo recording, a troubleshooting FAQ.
 
-## v0.2 — continuity and onboarding
+## v0.2 — window and bilingual UI (shipped)
+
+- `@dsh-companion/window`: standalone QQ-like window, Electron + page verified.
+- 中文/English switch in the web room, `?lang=` links, English screenshots.
+- Chinese README rewritten around memory/persona; `docs/zh-CN/` deep-dives.
+- `extras/chrome` setup for the optional browser MCP.
+
+## v0.3 — continuity and onboarding
 
 Candidates, in order of expected value:
 
@@ -23,11 +30,9 @@ Candidates, in order of expected value:
 2. **Memory quality** — supersession (`updates`), reflection reads today's episodes, two-hop links with a discount. Measure before adding embeddings.
 3. **Home schema version** — `schemaVersion` + a migration script before anyone has years of data.
 4. **History pagination** and a retry affordance that cannot double-send.
-5. **Locale layer** for the UI strings (Chinese-first today).
+5. **Window polish** — pet-menu registration, focus behavior, and an English UI for the window.
 
-## v0.3 — embodiment (only if verified)
-
-- Desktop window: shipped in 0.2.0; polish the pet-menu registration, focus behavior, and the Chinese-first UI.
+## v0.4 — embodiment (only if verified)
 - Pet animations tied to mood (the pet API supports `anim`).
 - Voice: macOS `say` or the pet's `/voice/speak` for her replies; STT only if it is local and reliable.
 - A user-supplied Live2D/3D skin. The repo's 2D art is a demo, not a platform.

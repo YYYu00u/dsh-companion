@@ -36,6 +36,34 @@ Most "AI girlfriend" stacks are cloud products: your conversations live on someo
 | **Hands (optional)** | A child session with browser access. She writes the task; the hands do the clicking and return a short result. |
 | **Web room (optional)** | Chat, SSE, her notebook, mood tank, diary, stickers, activity level. Desktop and mobile. |
 
+## How she remembers you
+
+Most companions keep the last N messages in context. When the window fills, they compress it into a paragraph, and the relationship becomes "they talked about some things". This project takes the harder path.
+
+| Layer | What it holds | When it is used |
+|---|---|---|
+| Short-term | The live chat | Every turn, until compaction |
+| Episodic | Episodes: one bout of conversation, summarized with title, gist, keywords, people, emotion, importance, open loops, links | Written on compaction; 2–3 relevant episodes are recalled each turn |
+| Long-term | Notebook, what she knows about you, her current self, her standard | In the system prompt every turn, no retrieval |
+
+A concrete example: you say "interview next Wednesday, a bit nervous." She notes it and asks on Wednesday. You say "done, it went okay"; she moves it to "past" and stops asking. A month later you say "interviews are annoying"; she remembers "last time you were nervous too, and it went better than you expected" — not the whole transcript.
+
+Why no vector DB yet: the corpus is small, the target environment may not have an embedding model, and BM25 over Chinese character bigrams is explainable. Revisit at ~500 episodes or when paraphrase recall starts failing. The formulas and the comparison are in [docs/design/memory.md](docs/design/memory.md).
+
+## Her persona is not one prompt
+
+| File | What it is | Who edits it |
+|---|---|---|
+| `persona.md` | The root: who she is, how she speaks, where her boundaries are | You; she can only propose |
+| `self.md` | The current her: habits, opinions, feelings | Her (`grow`) |
+| `standard.md` | Who she wants to become | Her (evening reflection) |
+| `owner.md` | What she knows about you, by section | Her (`know_him`) |
+| `notebook.md` | Concrete events, promises, preferences | Her (`take_note`) |
+
+She can grow, but she cannot become a different person overnight. Changing the root requires a `propose_change`; the web room shows it in "She wants to change — waiting for you". Editing a file directly works too and takes effect on the next reply.
+
+A practical workflow: write three sentences in "你们的开始" (how you met, what she calls you, where she lives on the computer); chat for a week; read what she wrote into `self.md` and `owner.md`; then adjust one line at a time. More in [docs/design/persona.md](docs/design/persona.md), and the Chinese deep-dive in [docs/zh-CN/persona.md](docs/zh-CN/persona.md).
+
 ## Architecture
 
 ```mermaid
