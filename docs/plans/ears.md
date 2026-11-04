@@ -146,6 +146,13 @@ ctx.get('ears').transcribe(buffer, { mime, source: 'voice' })
 - 权限被拒时给出人话：“系统设置 → 隐私与安全性 → 音频录制，把 DSH/终端打开”。
 - 默认不自动发送“听”的结果；你确认“发给她”才进对话。
 
+### Apple Speech 试过（2026-11-04）
+
+- `SFSpeechRecognizer` 能编译，`zh-CN` locale 也能创建；`SFSpeechURLRecognitionRequest` + `requiresOnDeviceRecognition` 的代码已写。
+- 直接跑 CLI 和临时 `.app` 都在 `SFSpeechRecognizer requestAuthorization` 处 `SIGABRT`；崩溃报告明确写 TCC 认为缺少 `NSSpeechRecognitionUsageDescription`，但 Info.plist 和代码签名里都有这个键。
+- `tccutil reset SpeechRecognition` 在当前沙箱里 `Operation not permitted`，`open` 启动临时 app 也不稳定。判断是 ad-hoc 签名/LaunchServices/TCC 缓存的环境问题，不是 API 不存在。
+- 结论：**不把 Apple Speech 作为第一版 provider**；它需要用户从 Finder 启动一个正式签名的 app、手动授权一次，才能在别人的机器上稳定。先走 whisper.cpp，不碰 TCC。
+
 ## 6. 借用和许可
 
 | 项目 | 许可 | 借什么 | 怎么标 |
