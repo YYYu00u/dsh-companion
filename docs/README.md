@@ -1,6 +1,6 @@
 # Documentation
 
-English is the primary README; the Chinese version is [../README.md#简体中文](../README.md#简体中文), with Chinese deep-dives in [zh-CN/](zh-CN/).
+English is the primary README; the Chinese version is [../README.zh-CN.md](../README.zh-CN.md), with Chinese deep-dives in [zh-CN/](zh-CN/).
 
 | Doc | Read it when |
 |---|---|

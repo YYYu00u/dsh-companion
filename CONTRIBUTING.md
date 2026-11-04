@@ -42,7 +42,7 @@ Please avoid drive-by refactors of the memory or compaction code. It is the part
 
 ## README languages
 
-`README.md` holds both languages on one page: English first, 简体中文 under the `#简体中文` anchor. Keep the two sections in sync when you change install steps, config, or the feature table. `README.zh-CN.md` is a small pointer to `README.md#简体中文` for old links; `npm run check` enforces the anchors and the pointer.
+`README.md` is English and `README.zh-CN.md` is Chinese. Keep both in sync when you change install steps, config, or the feature table. Each must link to the other at the top; `npm run check` enforces the link. Large projects use separate localized README files for a reason: it keeps each page readable and lets translators work independently.
 
 ## Code style
 

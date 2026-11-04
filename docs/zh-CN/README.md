@@ -1,6 +1,6 @@
 # 中文文档
 
-主 README：[../../README.md#简体中文](../../README.md#简体中文)
+主 README：[../../README.zh-CN.md](../../README.zh-CN.md)
 
 | 文档 | 什么时候看 |
 |---|---|
