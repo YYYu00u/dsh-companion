@@ -2,7 +2,8 @@
 // 用桌宠自带的 Electron（~/.dsh/electron/Electron.app）跑：
 //   Electron <本目录> --url=http://127.0.0.1:<DSH 端口>/companion-window/ --data=<她家>/.data/chat-window
 // 已经开着就把窗口叫到前面，不再开第二个。
-const { app, BrowserWindow, shell } = require('electron')
+const { app, BrowserWindow, shell, nativeImage } = require('electron')
+const { join } = require('node:path')
 
 const arg = (k) => (process.argv.find((a) => a.startsWith(`--${k}=`)) ?? '').slice(k.length + 3)
 const url = arg('url')
@@ -25,6 +26,7 @@ app.whenReady().then(() => {
     webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true },
   })
   win.setMenuBarVisibility(false)
+  win.setTitle('大肥鱼')
   win.once('ready-to-show', () => win.show())
   // 页面里「打开完整页面」这类新窗口链接：交给默认浏览器，不在这个窗口里开
   win.webContents.setWindowOpenHandler(({ url: u }) => { if (/^https?:/.test(u)) shell.openExternal(u); return { action: 'deny' } })

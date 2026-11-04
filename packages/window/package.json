@@ -27,6 +27,7 @@
     "icon.svg",
     "public/*",
     "app/main.js",
+    "app/icon.png",
     "app/package.json"
   ],
   "dependencies": {
