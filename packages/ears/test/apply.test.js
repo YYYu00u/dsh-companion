@@ -66,3 +66,15 @@ test('桌宠菜单：点一下听，把文字发到那只宠物的 /chat', async
     globalThis.fetch = realFetch
   }
 })
+
+test('Host 模式没有 ctx.tools 也能加载（只注册 web/菜单）', () => {
+  const services = new Map()
+  const ctx = {
+    provide(name, value) { services.set(name, value) },
+    logger: () => ({ info() {} }),
+    get() { return undefined },
+    effect(fn) { return fn() },
+  }
+  assert.doesNotThrow(() => apply(ctx, { home: '/tmp/dsh-ears-host', menu: false }))
+  assert.ok(services.has('ears'))
+})

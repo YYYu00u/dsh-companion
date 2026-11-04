@@ -5,7 +5,7 @@
 ## Automated
 
 ```bash
-npm test          # 47 tests
+npm test          # 48 tests
 npm run check     # syntax + package hygiene + secret/path scan
 npm run demo      # real UI, mock backend, no model calls
 ```

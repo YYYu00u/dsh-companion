@@ -179,7 +179,7 @@ The demo also doubles as a UI review harness: it serves the real `packages/web/p
 
 What "verified" means here:
 
-- `npm test` — 47 unit/smoke tests over config bootstrap, notebook edits, levels, memory retrieval, delivery, life rollback, Bing parsing, UI i18n, and ears WAV/STT helpers.
+- `npm test` — 48 unit/smoke tests over config bootstrap, notebook edits, levels, memory retrieval, delivery, life rollback, Bing parsing, UI i18n, and ears WAV/STT helpers.
 - `npm run check` — syntax, package manifests, private paths, secrets, stale scopes.
 - `npm run demo` — the real web bundle against a mock backend, desktop + mobile.
 - The core/web/window/search packages are extracted from a setup that ran daily against DSH 0.2.1-rc.5; the window page and Electron app were exercised and screenshotted. `ears` is beta: capture and SenseVoice ASR are verified locally, but song ID and the web voice UI are still pending.
