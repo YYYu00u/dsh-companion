@@ -172,6 +172,37 @@ Removing `nudge` and `own` makes her purely reactive and is a good way to reduce
 
 The window is optional. It has no API of its own; it reads `/companion/api/*` from the web plugin, so the two must point at the same home and base.
 
+## `@dsh-companion/ears` (beta)
+
+```yaml
+- id: dsh-companion-ears
+  name: '@dsh-companion/ears'
+  config:
+    home: ~/.dsh-companion
+    helper: ~/.dsh-companion/bin/EarsCapture.app/Contents/MacOS/ears-capture
+    stt:
+      provider: local          # local | assemblyai
+      binary: whisper-cli
+      model: ~/.dsh-companion/models/ggml-small.bin
+      language: zh
+    capture:
+      maxSeconds: 30
+      defaultSource: system    # system | mic
+```
+
+| Key | Default | Meaning |
+|---|---|---|
+| `helper` | `~/.dsh-companion/bin/ears-capture` | Built Objective-C capture helper. |
+| `stt.provider` | `local` | Local whisper.cpp or AssemblyAI. |
+| `stt.binary` | `whisper-cli` | Bare name = PATH; a path is expanded. |
+| `stt.model` | none | ggml model path; required for local. |
+| `stt.apiKey` | `ASSEMBLYAI_API_KEY` | Only for the cloud provider. |
+| `stt.language` | `zh` | Language hint. |
+| `capture.maxSeconds` | `30` | Hard cap; the model can ask for less. |
+| `capture.defaultSource` | `system` | `system` or `mic`. |
+
+The helper needs "Screen & System Audio Recording" and/or Microphone permission. The plugin never listens without a tool call; there is no always-on mode.
+
 ## `@dsh-companion/web-search-bing`
 
 No config. It registers a `bing` provider and the package patch overrides DSH's `web` row:

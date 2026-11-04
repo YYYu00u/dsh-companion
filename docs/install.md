@@ -105,7 +105,17 @@ Install `packages/window` after core and web. It serves `/companion-window/` on 
 
 Without them, `use_hands` reports that the hands are not connected and she can record a wish instead. She will not pretend to have clicked something.
 
-## 7. Optional: exam
+## 7. Optional: ears (listen to music/video/voice)
+
+1. Build the helper: `cd packages/ears/capture && ./build.sh`.
+2. Copy `EarsCapture.app` to `~/.dsh-companion/bin/`.
+3. Install `whisper.cpp` and a ggml model (for example `ggml-small.bin`); point `stt.model` at it.
+4. Install the `packages/ears` bundle and restart.
+5. Grant Screen & System Audio Recording / Microphone when macOS asks.
+
+`listen_now` and `listen_file` are the two tools. This is beta: capture is verified, but the first real STT run needs a model. See [packages/ears/README.md](../packages/ears/README.md).
+
+## 8. Optional: exam
 
 The evening exam compares her lines with human dialogue and asks a separate judge model which are AI. It is off by default because it needs:
 
@@ -123,7 +133,7 @@ exam:
 
 If either is missing, the reflection notes "没体检成" and continues. It never blocks the diary.
 
-## 8. Post-install checklist
+## 9. Post-install checklist
 
 - [ ] New session shows the **大肥鱼** preset.
 - [ ] Sending "你好" produces a reply; the web room shows both bubbles.
@@ -135,7 +145,7 @@ If either is missing, the reflection notes "没体检成" and continues. It neve
 - [ ] If you enabled the pet, a bubble appears when she speaks.
 - [ ] Optional: `/companion-window/` loads and the pet menu opens an Electron window (not a browser tab).
 
-## 9. Troubleshooting
+## 10. Troubleshooting
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
@@ -149,7 +159,7 @@ If either is missing, the reflection notes "没体检成" and continues. It neve
 | She talks like a generic assistant | persona not loaded | Confirm `persona.md` is non-empty and `home` points at the right directory. |
 | Notes are not saved | home not writable | Check permissions; the plugin logs the file error in the turn context. |
 
-## 10. Uninstall
+## 11. Uninstall
 
 1. Disable/remove the bundles in the Plugins page.
 2. Restart.
