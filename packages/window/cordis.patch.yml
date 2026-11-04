@@ -1,0 +1,12 @@
+# 大肥鱼的聊天窗（Host 级插件）：桌宠右键「更多 / 和她聊天」打开一个像 QQ 的独立窗口。
+# 聊天走网页插件（@dsh-companion/web）的 /companion/api/*，聊天记录是同一份。
+# 关掉这一行，网页和桌宠都不受影响。
+- insert:
+    - id: dsh-companion-window
+      name: '@dsh-companion/window'
+      config:
+        # 窗口自己的数据（窗口位置、缓存）放在 <家>/.data/chat-window
+        home: ~/.dsh-companion
+        name: 大肥鱼
+        # 网页插件挂的路径
+        chatBase: /companion

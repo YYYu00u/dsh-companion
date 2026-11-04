@@ -27,7 +27,7 @@ export default class CompanionCompaction extends BasicCompactionEngine {
     this.home = resolved
     // llm/stream 是全局的，别的 preset 的请求也会经过这里：只动 agentPreset 是自己的会话
     this.presetId = preset
-    this.who = who ?? '小鲤'
+    this.who = who ?? '大肥鱼'
     this.episodeTarget = episodeProvider && episodeModel ? { provider: episodeProvider, model: episodeModel } : undefined
     this.mem = openMemory(this.home)
     if (daily !== false) this._registerDaily(ctx)

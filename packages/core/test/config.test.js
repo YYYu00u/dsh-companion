@@ -35,7 +35,7 @@ test('ensureHome 只种一次，已有内容不覆盖', () => {
     writeFileSync(join(home, 'persona.md'), '# 我自己写的')
     ensureHome(home, { name: '测试鱼' })
     assert.equal(readFileSync(join(home, 'persona.md'), 'utf8'), '# 我自己写的')
-    assert.equal(DEFAULT_NAME, '小鲤')
+    assert.equal(DEFAULT_NAME, '大肥鱼')
   } finally {
     rmSync(home, { recursive: true, force: true })
   }

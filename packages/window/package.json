@@ -1,0 +1,49 @@
+{
+  "name": "@dsh-companion/window",
+  "version": "0.2.0",
+  "type": "module",
+  "description": "A QQ-like desktop chat window for dsh-companion: chat on the left, her mood and recent moments on the right, opened from the desktop pet.",
+  "license": "MIT",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "companion",
+    "desktop-window",
+    "electron"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./icon": "./icon.svg",
+    "./locale/*.json": "./locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "public/*",
+    "app/main.js",
+    "app/package.json"
+  ],
+  "dependencies": {
+    "@dsh-companion/core": "file:../core"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YYYu00u/dsh-companion.git",
+    "directory": "packages/window"
+  },
+  "homepage": "https://github.com/YYYu00u/dsh-companion#readme",
+  "bugs": {
+    "url": "https://github.com/YYYu00u/dsh-companion/issues"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

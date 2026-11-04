@@ -90,7 +90,11 @@ packages/
     senses.js           what app the user is in, idle/locked
     exam.js             optional Turing-style judge
     public/             the real UI (no framework, no build; zh/en chrome)
+  window/               @dsh-companion/window
+    index.js            /companion-window/ page, Electron launch, pet menu
+    public/             QQ-like standalone window
   web-search-bing/      @dsh-companion/web-search-bing
+extras/chrome/          optional Chrome DevTools MCP setup (not our code)
 ```
 
 Dependency rules:
@@ -101,7 +105,7 @@ Dependency rules:
 - Shared **data** is the home directory, not an in-process singleton. Two packages may read the same file; writes go through `writeFileAtomic`.
 - The only intentional in-process coupling is the in-memory memory store (`openMemory` caches one instance per home), because the chat side and the compaction side must see the same turns during a session.
 
-Why a monorepo and not five packages: the three packages are versioned together, share a release note and a test run, and are installed from one checkout. Splitting `mind.js`/`memory` into separate npm packages would add ceremony without a real boundary; they are a modular monolith with explicit exports. The web room is a separate package because users may want the brain without the web UI (and vice versa is not useful).
+Why a monorepo and not one package per module: the four packages are versioned together, share a release note and a test run, and are installed from one checkout. Splitting `mind.js`/`memory` into separate npm packages would add ceremony without a real boundary; they are a modular monolith with explicit exports. The web room is a separate package because users may want the brain without the web UI (and vice versa is not useful).
 
 ## 4. A message, end to end
 
@@ -238,7 +242,7 @@ Residual risks: a local process can read the home directory; the browser MCP has
 
 | # | Decision | Why |
 |---|---|---|
-| ADR-1 | Monorepo, three packages | One test run, one release note, one checkout; the boundary that matters is brain vs. web. |
+| ADR-1 | Monorepo, four packages | One test run, one release note, one checkout; the boundary that matters is brain vs. web. |
 | ADR-2 | Modular monolith for the brain | `mind`, `memory`, `body`, and tools share one home and one prompt; separate packages would add version skew without isolation. |
 | ADR-3 | Plain files, no database | User ownership, git history, and offline editing matter more than query speed at this scale. |
 | ADR-4 | Lexical recall before embeddings | The corpus is small; BM25 over bigrams is explainable and free. Revisit at ~500 episodes or when paraphrase recall fails. |

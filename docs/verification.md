@@ -5,7 +5,7 @@
 ## Automated
 
 ```bash
-npm test          # 33 tests
+npm test          # 34 tests
 npm run check     # syntax + package hygiene + secret/path scan
 npm run demo      # real UI, mock backend, no model calls
 ```
@@ -18,6 +18,7 @@ npm run demo      # real UI, mock backend, no model calls
 | Memory | `memory.test.js` | Chinese bigrams, 04:00 day boundary, bout splitting, BM25 ranking, recall strengthening |
 | Core boot | `core/test/apply.test.js` | the real `apply()` runs against a fake ctx and registers the expected tools/persona |
 | Web boot | `web/test/apply.test.js` | the web `apply()` boots with no DSH session |
+| Window boot | `window/test/apply.test.js` | the window `apply()` boots with no DSH window |
 | Delivery | `delivery.test.js` | splitting, sticker handling, gap bounds, typo generation, ordered send |
 | Proactive | `life.test.js` | own-time prompt variety, failed-turn rollback |
 | Bing | `parse.test.js` | result extraction, URL unwrapping, dedupe, empty page |
@@ -32,7 +33,7 @@ npm run demo      # real UI, mock backend, no model calls
 - Language switch: header toggle, remembered in `localStorage`, `?lang=en` / `?lang=zh` override; English layout checked at 1600×900 and 390×844.
 - Keyboard: image picker is a real button; tabs support arrows/Home/End; drawer traps Tab on narrow screens and returns focus on close; Esc closes.
 - Accessibility: closed drawer is `inert`; error region is `role=alert`; images can be opened in a new tab; reduced-motion media query covers breathing, bubbles, tank transition, drawer.
-- Lighthouse desktop snapshot: **Accessibility 100, Best Practices 100**. SEO/agentic-browsing fail only because the demo does not serve `robots.txt` / `llms.txt`; a loopback app is not a crawlable site.
+- Lighthouse desktop snapshot: **Accessibility 100, Best Practices 100** for the web room (Chinese and English) and for the window demo page. SEO/agentic-browsing fail only because the demo does not serve `robots.txt` / `llms.txt`; a loopback app is not a crawlable site.
 - Not done: a screen-reader pass on NVDA/VoiceOver, 200% zoom audit, high-contrast mode.
 
 ## What was used in production before extraction
@@ -54,6 +55,7 @@ That history is why the packages are called verified. It is not a claim that eve
 | `people` multi-companion | New config surface; no second character was tested in the extracted copy | Add one person, open `/p/<id>/`, send one message, confirm separate session/home |
 | `exam` | Needs a judge model + LCCC corpus (not shipped) | Configure both, set level ≥2, trigger `/api/reflect`, check `exams.md` |
 | Hands | Needs Chrome MCP + a child preset | Ask her to open a page; confirm `use_hands` returns a result and a skill can be saved |
+| Window pet menu | Needs dsh-pet and the metadata registration | Right-click the pet; confirm "More / Chat with her" opens the Electron window and a second click focuses it |
 | Sticker send/judge loop | Depends on the model emitting `[表情:name]` correctly | Chat until she sends one; check `.data/stickers/sent.jsonl` and `judged` |
 | Pet bubbles | Needs dsh-pet | Set `pet: main`, speak, confirm a bubble |
 | macOS senses | Uses `lsappinfo` / `ioreg` | On non-macOS, confirm the plugin does not throw and senses are empty |
@@ -68,7 +70,7 @@ If any beta item fails, it should be reported as a bug, not treated as "the repo
 - [ ] Screenshots regenerated from demo data, not the private deployment.
 - [ ] README links resolve.
 - [ ] `package.json` versions bumped together; CHANGELOG entry.
-- [ ] Tag `v0.1.1`.
+- [ ] Tag `v0.2.0`.
 
 ## Reproducing the screenshots
 
@@ -80,6 +82,7 @@ node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=zh' --o
 node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=zh' --out docs/images/mobile-book.jpg --width 390 --height 844 --mobile --click .js-open-book
 node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion/?lang=en' --out docs/images/home-en.jpg --width 1600 --height 900
 # ...same for book-en / mobile-en / mobile-book-en with --click .js-open-book as needed
+node scripts/screenshot.mjs --url 'http://127.0.0.1:4319/companion-window/' --out docs/images/window.jpg --width 780 --height 680
 ```
 
 The script needs Chrome at the default macOS path or `--chrome <path>`.

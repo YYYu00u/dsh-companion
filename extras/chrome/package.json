@@ -1,0 +1,8 @@
+{
+  "name": "dsh-companion-chrome-mcp",
+  "private": true,
+  "description": "Installs chrome-devtools-mcp next to this example; the DSH row below points at it.",
+  "dependencies": {
+    "chrome-devtools-mcp": "1.12.0"
+  }
+}

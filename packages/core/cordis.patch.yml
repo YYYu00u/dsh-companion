@@ -7,13 +7,13 @@
 # 家（home）默认 ~/.dsh-companion。想换地方就改下面的 home；第一次跑会自动种出
 # persona.md、notebook.md、standard.md、self.md、owner.md 和几个空状态文件。
 #
-# 装好以后在 DSH 里新建会话，选 preset「小鲤」。网页插件另装（@dsh-companion/web）。
+# 装好以后在 DSH 里新建会话，选 preset「大肥鱼」。网页插件另装（@dsh-companion/web）。
 - insert:
     - id: preset-dsh-companion
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: dsh-companion
-        name: 小鲤
+        name: 大肥鱼
         description: 只聊天的伙伴。不带任何干活工具，有自己的本子、心情和记忆。
         order: 50
         plugins:
@@ -29,7 +29,7 @@
             name: '@dsh-companion/core'
             config:
               home: ~/.dsh-companion
-              name: 小鲤
+              name: 大肥鱼
               # 想接浏览器上的手，就保留这一行；不要手就改成 hands: false。
               handsPreset: dsh-companion-hands
           # 聊天历史（短期记忆）到 2.4 万 token 就压，最近 6000 token 原样留着。
@@ -45,7 +45,7 @@
                 config:
                   home: ~/.dsh-companion
                   preset: dsh-companion
-                  name: 小鲤
+                  name: 大肥鱼
                   thresholdTokens: 24000
                   retainTokens: 6000
               - id: command-compact
@@ -58,8 +58,8 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: dsh-companion-hands
-        name: 小鲤的手
-        description: 小鲤用来动手的子会话：浏览器、上网、技能库。不用直接选它。
+        name: 大肥鱼的手
+        description: 大肥鱼用来动手的子会话：浏览器、上网、技能库。不用直接选它。
         order: 51
         plugins:
           - id: time-context
@@ -73,4 +73,4 @@
             name: '@dsh-companion/core/hands'
             config:
               home: ~/.dsh-companion
-              name: 小鲤
+              name: 大肥鱼

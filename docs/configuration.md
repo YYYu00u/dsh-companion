@@ -11,14 +11,14 @@ The preset row:
   name: '@dsh-companion/core'
   config:
     home: ~/.dsh-companion
-    name: 小鲤
+    name: 大肥鱼
     handsPreset: dsh-companion-hands
 ```
 
 | Key | Default | Meaning |
 |---|---|---|
 | `home` | `~/.dsh-companion` (or the notebook's directory) | The home. Everything she owns lives here. |
-| `name` | `小鲤` | Display name, notebook template, git author, hands prompt. |
+| `name` | `大肥鱼` | Display name, notebook template, git author, hands prompt. |
 | `notebook` | `<home>/notebook.md` | Override the notebook path. |
 | `persona` | `<home>/persona.md` | Override the persona path. |
 | `hands` | `true` | Set `false` to register no `use_hands` tool. |
@@ -33,7 +33,7 @@ The hands preset:
   name: '@dsh-companion/core/hands'
   config:
     home: ~/.dsh-companion
-    name: 小鲤
+    name: 大肥鱼
 ```
 
 It shares `home` and `name`; it has no other options.
@@ -46,7 +46,7 @@ The compaction row:
   config:
     home: ~/.dsh-companion
     preset: dsh-companion
-    name: 小鲤
+    name: 大肥鱼
     thresholdTokens: 24000
     retainTokens: 6000
     episodeProvider: your-provider
@@ -59,7 +59,7 @@ The compaction row:
 |---|---|---|
 | `home` | required | Must match the core home. |
 | `preset` | required for reasoning stripping | Only sessions with this preset are touched. |
-| `name` | `小鲤` | How the transcript is labeled when writing episodes. |
+| `name` | `大肥鱼` | How the transcript is labeled when writing episodes. |
 | `thresholdTokens` | `24000` | Compact when the live history exceeds this. |
 | `retainTokens` | `6000` | Keep this much recent raw text after compaction. |
 | `episodeProvider` / `episodeModel` | current routed model | The model that writes episodes. |
@@ -76,7 +76,7 @@ Unrecognized keys are passed to DSH's `BasicCompactionEngine`, which rejects unk
   config:
     base: /companion
     preset: dsh-companion
-    name: 小鲤
+    name: 大肥鱼
     home: ~/.dsh-companion
     port: 4318
     modules: [remind, reflect, own, nudge]
@@ -101,7 +101,7 @@ Unrecognized keys are passed to DSH's `BasicCompactionEngine`, which rejects unk
 |---|---|---|
 | `base` | `/companion` | URL prefix. Must start with `/`. |
 | `preset` | `dsh-companion` | Session preset created/used by the web plugin. |
-| `name` | `小鲤` | Name shown in the UI and `/api/who`. |
+| `name` | `大肥鱼` | Name shown in the UI and `/api/who`. |
 | `home` | `~/.dsh-companion` | Home. Must match core. |
 | `chatCwd` | `home` | Working directory for the session. |
 | `cwd` | process cwd | Base for relative paths. |
@@ -146,6 +146,31 @@ people:
 | `nudge` | She never initiates after silence. |
 
 Removing `nudge` and `own` makes her purely reactive and is a good way to reduce token spend.
+
+## `@dsh-companion/window`
+
+```yaml
+- id: dsh-companion-window
+  name: '@dsh-companion/window'
+  config:
+    home: ~/.dsh-companion
+    name: 大肥鱼
+    chatBase: /companion
+    # menuOwner: 大肥鱼
+    # menuLabel: 和她聊天
+    # electron: /path/to/Electron
+```
+
+| Key | Default | Meaning |
+|---|---|---|
+| `home` | `~/.dsh-companion` | Used for the Electron profile (`<home>/.data/chat-window`), not chat data. |
+| `name` | `大肥鱼` | Window title and pet-menu owner. |
+| `chatBase` | `/companion` | Must match the web plugin's `base`; the window page uses it for `api/*` and images. |
+| `menuOwner` | `name` | dsh-pet menu owner; change only if you know the pet API. |
+| `menuLabel` | `和她聊天` | Pet menu item label. |
+| `electron` | `~/.dsh/electron/...` | Electron binary; falls back to Chrome `--app` then the default browser. |
+
+The window is optional. It has no API of its own; it reads `/companion/api/*` from the web plugin, so the two must point at the same home and base.
 
 ## `@dsh-companion/web-search-bing`
 

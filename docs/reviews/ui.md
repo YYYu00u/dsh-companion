@@ -74,6 +74,8 @@ This is a coherent direction, not a component-library default. The main risk is 
 
 All screenshots come from `npm run demo` with original demo data, not from a private home. The English images use `?lang=en`; the Chinese ones use `?lang=zh`. The character's own words remain Chinese in both because the demo persona is Chinese.
 
+The desktop window (`packages/window`) was audited separately: Lighthouse reports **Accessibility 100 / Best Practices 100** on the demo page. The audit found a label-wrapped file input and low-contrast secondary text; both were fixed (real button, darker muted colors).
+
 ## What changed
 
 - Replaced the image label with a button and a visually-hidden input.

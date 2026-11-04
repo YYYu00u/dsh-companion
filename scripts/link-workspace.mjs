@@ -9,6 +9,7 @@ const packages = {
   '@dsh-companion/core': join(root, 'packages/core'),
   '@dsh-companion/web': join(root, 'packages/web'),
   '@dsh-companion/web-search-bing': join(root, 'packages/web-search-bing'),
+  '@dsh-companion/window': join(root, 'packages/window'),
 }
 
 for (const [name, dir] of Object.entries(packages)) {

@@ -3,7 +3,7 @@
 This is a filled-in version of `packages/core/templates/persona.md`. The plugin seeds the template on first run; this file shows what a finished character looks like so you can copy the shape.
 
 ```bash
-node scripts/init-home.mjs --home /tmp/my-companion --name 小鲤
+node scripts/init-home.mjs --home /tmp/my-companion --name 大肥鱼
 cp examples/persona/persona.md /tmp/my-companion/persona.md
 cp examples/persona/notebook.md /tmp/my-companion/notebook.md
 ```

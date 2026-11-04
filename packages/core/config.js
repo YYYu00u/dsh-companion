@@ -5,7 +5,7 @@ import { homedir } from 'node:os'
 import { dirname, isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-export const DEFAULT_NAME = '小鲤'
+export const DEFAULT_NAME = '大肥鱼'
 export const DEFAULT_HOME_DIR = '.dsh-companion'
 
 const TEMPLATES = join(dirname(fileURLToPath(import.meta.url)), 'templates')

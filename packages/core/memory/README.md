@@ -100,7 +100,7 @@
   config:
     home: ~/.dsh-companion    # 必填
     preset: dsh-companion     # 必填，去掉思考只管这个 preset 的会话
-    name: 小鲤                # 写经历时的称呼
+    name: 大肥鱼                # 写经历时的称呼
     thresholdTokens: 24000    # 短期装多少
     retainTokens: 6000        # 压完留多少原话
     episodeProvider: your-provider   # 写经历用的模型，不填就用聊天的模型

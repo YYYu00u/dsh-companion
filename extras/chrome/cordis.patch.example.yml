@@ -1,0 +1,20 @@
+# Copy this row into the DSH profile patch after `npm install` here.
+# Replace /ABSOLUTE/PATH and /path/to/node with your own.
+- insert:
+    - id: mcp-chrome
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: chrome
+        transport: stdio
+        command: /path/to/node
+        args:
+          - /ABSOLUTE/PATH/dsh-companion/extras/chrome/node_modules/chrome-devtools-mcp/build/src/bin/chrome-devtools-mcp.js
+          - --no-usage-statistics
+          - --no-performance-crux
+          - --category-performance=false
+          - --category-memory=false
+          - --category-emulation=false
+        env:
+          CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS: '1'
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false

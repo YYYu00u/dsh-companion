@@ -17,7 +17,7 @@ The package ships `cordis.patch.yml` with two presets (`dsh-companion`, `dsh-com
 
 ```yaml
 home: ~/.dsh-companion
-name: 小鲤
+name: 大肥鱼
 ```
 
 On first run, `ensureHome()` seeds the home from `templates/`. See [../../docs/install.md](../../docs/install.md).

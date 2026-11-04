@@ -44,7 +44,7 @@ const templates = new Map()
 function ensureFile(file) {
   if (existsSync(file)) return
   mkdirSync(dirname(file), { recursive: true })
-  writeFileSync(file, templates.get(file) ?? notebookTemplate('小鲤'), 'utf8')
+  writeFileSync(file, templates.get(file) ?? notebookTemplate('大肥鱼'), 'utf8')
 }
 
 const PAST = '## 过去的事'
@@ -149,7 +149,7 @@ function appendUnder(file, heading, line) {
 // 她的目录（home）如果是 git 仓库，就把这次改动提交一次，方便以后翻她哪天变了。
 // 多个工具可能同时提交，排成一队，免得 git 锁冲突。
 let queue = Promise.resolve()
-function committer(home, who = { name: '小鲤', email: 'persona@local' }) {
+function committer(home, who = { name: '大肥鱼', email: 'persona@local' }) {
   return (file, message) => {
     if (!existsSync(join(home, '.git'))) return
     const rel = relative(home, file)

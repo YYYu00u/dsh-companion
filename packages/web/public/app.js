@@ -15,7 +15,7 @@ if (langParams.has('lang')) { try { localStorage.setItem(LANG_KEY, initialLang) 
 applyStatic()
 
 // 这一页是谁：主人格有立绘，人格库里的人还没有样子，用名字的第一个字当头像。
-let who = { name: '小鲤', main: true, modules: ['remind', 'reflect', 'own', 'nudge'] }
+let who = { name: '大肥鱼', main: true, modules: ['remind', 'reflect', 'own', 'nudge'] }
 const whoReady = fetch('api/who').then((r) => r.json()).then((w) => { if (w && w.name) who = w }).catch(() => {}).then(() => {
   document.title = who.name
   document.querySelector('.who h1').textContent = who.name

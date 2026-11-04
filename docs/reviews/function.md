@@ -36,6 +36,7 @@ Every shipped tool, route, and scheduled behavior; edge cases; API contracts; pe
 |---|---|---|
 | Chat API | `POST /api/send`, SSE `/api/events`, `/api/history` | Verified |
 | UI language | 中/EN toggle, remembered, `?lang=` links, server-error mapping | Verified (tests + both layouts) |
+| Window | `/companion-window/`, same transcript, Electron window / Chrome fallback | Page + Electron verified; pet menu beta |
 | Mind API | `/api/mind`, `/api/level`, `/api/reflect` | Verified |
 | Images | `/api/sticker/<name>`, `/api/pic/<id>`, upload validation | Verified |
 | Delivery | debounce, split, rhythm, interruption, typo, sticker | Verified (tests) |
@@ -106,11 +107,12 @@ All JSON responses are `no-store`; images are cached for an hour. The API has no
 | memory | 4 | tokenize, day boundary, bouts, ranking/strength |
 | core apply smoke | 1 | real `apply()` with a fake ctx, expected tools |
 | web apply smoke | 1 | web `apply()` boots with no DSH session |
+| window apply smoke | 1 | window `apply()` boots with no DSH window |
 | delivery | 5 | split, sticker, gap, typo, ordered send |
 | life | 2 | own-time variety, rollback |
 | Bing | 2 | parse, empty page |
 | i18n | 7 | zh/en key parity, HTML/app.js key coverage, interpolation, detection, server errors |
-| **Total** | **33** | `npm test` |
+| **Total** | **34** | `npm test` |
 
 Not covered: HTTP routes (would need a DSH harness), session events, model calls, exam, hands, multi-persona, macOS senses.
 

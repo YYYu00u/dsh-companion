@@ -42,22 +42,22 @@ The defensible part is the **combination**: editable persona + episodic memory t
 Shipped and verified:
 
 - core preset (persona, notebook, mood, memory, stickers, body, optional hands)
-- web room (chat, SSE, notebook, mood tank, diary, activity)
+- web room (chat, SSE, notebook, mood tank, diary, activity, 中/EN)
+- desktop window (page + Electron verified; pet menu beta)
 - Bing search provider
 
 Excluded, with reasons:
 
 | Candidate | Why not in v0.1 |
 |---|---|
-| Desktop chat window | Built but not installed/verified at extraction; would weaken the "verified" claim |
 | Old in-DSH chat tab | Deprecated; the web room replaced it |
-| Chrome wrapper | 15 MB of someone else's MCP plus config; users should install the MCP themselves |
+| Chrome MCP | Documented as [extras/chrome](../../extras/chrome); it is someone else's MCP plus config, not a package |
 | QQ / OneBot | Security and identity work (admin users, tool hiding, cross-session context) is not done |
 | Voice / TTS | No verified path; belongs after the core is stable |
 | Live2D / 3D | Art pipeline is not part of the plugin; the current 2D art is a demo skin |
 | Vector memory | Not justified at this corpus size; see memory design |
 
-This is a small release on purpose. A repo that claims five verified plugins and ships two is worse than one that ships three honestly.
+This is a small release on purpose. A repo that claims a dozen verified plugins and ships two is worse than one that ships four honestly.
 
 ## Onboarding
 
@@ -65,7 +65,7 @@ Current funnel:
 
 1. See a screenshot / README.
 2. Clone, run `init-home`.
-3. Install two bundles, restart, pick a preset.
+3. Install core + web (window optional), restart, pick a preset.
 4. Edit persona, say hello.
 5. Open the web room.
 
@@ -97,7 +97,7 @@ Drop-off risks:
 3. **Show, don't tell** — a 60-second screen recording: send a message, open the notebook, change the mood, restart and continue. No claims that are not in the verification matrix.
 4. **Communities** — DSH plugin list, companion-dev communities, Chinese AI-tool circles. Lead with the architecture/memory write-up, not "AI girlfriend".
 5. **Feedback loop** — issues template asks for DSH version, install path, and logs; a `good first issue` set around UI/a11y and docs.
-6. **v0.1.x** — bug fixes only. v0.2 decides between persona onboarding, window plugin verification, and better memory retrieval based on issues.
+6. **v0.2** — persona onboarding, memory quality, and the window plugin; the window shipped in 0.2.0, so the next decision is polish vs. voice/avatar.
 
 ## Success metrics
 

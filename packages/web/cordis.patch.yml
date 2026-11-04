@@ -9,7 +9,7 @@
       config:
         base: /companion
         preset: dsh-companion
-        name: 小鲤
+        name: 大肥鱼
         # 她的家：本子、日记、学到的、惦记、心情都在这里。跟 core 的 home 是同一个。
         home: ~/.dsh-companion
         # 固定地址（DSH 自己的端口每次重启都变）。填 0 只挂 DSH 端口。

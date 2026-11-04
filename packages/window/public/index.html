@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="大肥鱼的独立聊天窗：左边聊天，右边她的心情和最近说说。">
+<title>大肥鱼</title>
+<base href="__CHAT_BASE__">
+<link rel="icon" href="fish.svg">
+<link rel="stylesheet" href="/companion-window/qq.css">
+</head>
+<body>
+<!-- 像 QQ 的单独聊天窗：桌宠右键「更多 / 和她聊天」打开（独立窗口）。插件 @dsh-companion/window。
+     <base> 指向网页插件（/companion/）：图和 api/* 都从那边拿。
+     左边聊天；右边她的形象、心情、最近的说说；点头像、名字、「资料」打开资料卡。 -->
+<div class="app" id="app">
+  <main class="main">
+    <header class="top">
+      <button class="who-btn" id="who-btn" type="button" title="看她的资料">
+        <span class="ava her-ava" id="her-ava"><img id="her-img" src="art-face-calm.jpg" alt=""></span>
+        <span class="title">
+          <b id="name">大肥鱼</b>
+          <span id="status" class="status"></span>
+        </span>
+      </button>
+      <div class="top-actions">
+        <button class="icon" id="card-btn" type="button" title="她的资料" aria-label="她的资料">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1.2-3.4 3.8-5 7-5s5.8 1.6 7 5"/></svg>
+        </button>
+        <a class="icon" href="./" target="_blank" title="打开完整页面（本子、日记）" aria-label="打开完整页面">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-8 8M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <div id="list" class="list" aria-live="polite"></div>
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <div class="foot" id="foot">
+      <div id="stickers" class="stickers" hidden></div>
+      <div id="pending" class="pending" hidden>
+        <img id="pending-img" alt="要发的图">
+        <button id="pending-x" type="button" aria-label="不发这张">×</button>
+      </div>
+      <div class="tools">
+        <button id="sticker-btn" type="button" title="表情包" aria-label="表情包" aria-controls="stickers" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.3 2.2 2 3.5 2s2.5-.7 3.5-2"/><circle cx="9" cy="10" r="1" class="dot"/><circle cx="15" cy="10" r="1" class="dot"/></svg>
+        </button>
+        <button id="pic-btn" type="button" title="发图片（也可以直接粘贴、拖进来）" aria-label="发图片">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-4.5 3.5 3 3-2.5 4.5 4"/></svg>
+        </button>
+        <input id="pic" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+      </div>
+      <form id="form" class="compose">
+        <textarea id="input" placeholder="" autocomplete="off" aria-label="跟她说的话"></textarea>
+        <div class="send-row">
+          <span class="hint">Enter 发送　Shift+Enter 换行</span>
+          <button id="send" disabled>发送</button>
+        </div>
+      </form>
+      <div class="drop" aria-hidden="true">松手发给她</div>
+    </div>
+  </main>
+
+  <aside class="show" id="show" aria-label="她现在">
+    <button class="stage" id="figure-btn" type="button" title="看她的资料">
+      <img id="figure" src="art-half-calm.webp" alt="她现在的样子">
+      <span class="note"><b id="mood-word">…</b><span id="mood-why"></span></span>
+    </button>
+    <section class="latest" aria-label="最近的说说">
+      <h2>最近的说说</h2>
+      <div id="latest"></div>
+      <button type="button" class="more" id="all-moments">全部说说</button>
+    </section>
+  </aside>
+</div>
+
+<div class="card-mask" id="card" hidden>
+  <section class="card" role="dialog" aria-modal="true" aria-label="她的资料">
+    <div class="cover" id="cover"></div>
+    <button class="card-x" id="card-x" type="button" aria-label="关上">×</button>
+    <header class="card-head">
+      <span class="ava big her-ava" id="card-ava"><img id="card-img" src="art-face-calm.jpg" alt=""></span>
+      <div class="card-who">
+        <b id="card-name">大肥鱼</b>
+        <div id="card-mood" class="card-mood"></div>
+      </div>
+    </header>
+    <nav class="card-tabs" role="tablist">
+      <button type="button" role="tab" data-tab="moments" aria-selected="true">说说</button>
+      <button type="button" role="tab" data-tab="thinking" aria-selected="false">她在想</button>
+    </nav>
+    <div class="card-body" id="card-moments" role="tabpanel"></div>
+    <div class="card-body" id="card-thinking" role="tabpanel" hidden></div>
+  </section>
+</div>
+<script src="/companion-window/qq.js"></script>
+</body>
+</html>

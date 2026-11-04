@@ -27,7 +27,7 @@ Candidates, in order of expected value:
 
 ## v0.3 — embodiment (only if verified)
 
-- Desktop window plugin: install it, verify focus/single-instance/fallback, then decide.
+- Desktop window: shipped in 0.2.0; polish the pet-menu registration, focus behavior, and the Chinese-first UI.
 - Pet animations tied to mood (the pet API supports `anim`).
 - Voice: macOS `say` or the pet's `/voice/speak` for her replies; STT only if it is local and reliable.
 - A user-supplied Live2D/3D skin. The repo's 2D art is a demo, not a platform.

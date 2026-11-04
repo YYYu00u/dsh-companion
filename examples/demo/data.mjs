@@ -2,7 +2,7 @@
 const now = Date.now()
 const min = 60_000
 
-export const who = { name: '小鲤', main: true, modules: ['remind', 'reflect', 'own', 'nudge'] }
+export const who = { name: '大肥鱼', main: true, modules: ['remind', 'reflect', 'own', 'nudge'] }
 
 export const rows = [
   { seq: 'd1', time: now - 42 * min, side: 'me', text: '今天下班好晚' },

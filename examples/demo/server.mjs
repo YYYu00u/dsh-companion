@@ -12,6 +12,7 @@ import * as demo from './data.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const PUBLIC = join(HERE, '../../packages/web/public')
+const WINDOW = join(HERE, '../../packages/window/public')
 const PORT = Number(process.env.PORT ?? 4319)
 const BASE = '/companion'
 
@@ -60,6 +61,19 @@ const server = createServer(async (req, res) => {
   if (path === '/' || path === '/companion') {
     res.writeHead(302, { location: `${BASE}/` })
     return res.end()
+  }
+
+  // 聊天窗页面的演示：同一个假后端，只把 <base> 指到 /companion/
+  if (path === '/companion-window' || path.startsWith('/companion-window/')) {
+    const rel = path.slice('/companion-window'.length + 1) || 'index.html'
+    const file = normalize(join(WINDOW, rel))
+    if (rel.includes('..') || !file.startsWith(WINDOW) || !existsSync(file)) return json(res, 404, { error: 'not found' })
+    const body = readFileSync(file)
+    res.writeHead(200, {
+      'content-type': TYPES[file.slice(file.lastIndexOf('.'))] ?? 'application/octet-stream',
+      'cache-control': 'no-cache', 'content-security-policy': CSP, ...SAFE,
+    })
+    return res.end(rel === 'index.html' ? body.toString('utf8').replace('__CHAT_BASE__', `${BASE}/`) : body)
   }
 
   if (path.startsWith(`${BASE}/api/`)) {

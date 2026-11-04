@@ -14,7 +14,7 @@ Weighted score: **85.4 / 100** (architecture 30%, UI 20%, interaction 20%, funct
 
 ## Method
 
-1. **Inventory** — read every file in the three packages; list every tool, route, file, and external dependency.
+1. **Inventory** — read every file in the four packages; list every tool, route, file, and external dependency.
 2. **Trace** — follow one message end to end (browser → web → delivery → DSH session → core prompt → model → SSE → browser).
 3. **Adversarial pass** — try to break it: cross-site requests, path traversal, 4 MB images, empty home, corrupt JSON, missing host packages, port conflicts, model failures, 300-message history.
 4. **Run it** — unit tests, a fake-context boot of the core plugin, the real UI against the demo server, desktop + mobile screenshots.
@@ -31,13 +31,12 @@ Weighted score: **85.4 / 100** (architecture 30%, UI 20%, interaction 20%, funct
 
 ## What "verified" means in this repo
 
-The three shipped packages were extracted from a daily-use DSH setup. Unit tests and a demo server were added so that a contributor can verify the core without that setup. Items that were not exercised in the extracted copy are marked **beta** in [../verification.md](../verification.md), not silently claimed as verified.
+The four shipped packages were extracted from a daily-use DSH setup. Unit tests and a demo server were added so that a contributor can verify the core without that setup. Items that were not exercised in the extracted copy are marked **beta** in [../verification.md](../verification.md), not silently claimed as verified.
 
 ## Deliberate exclusions
 
-- The desktop chat-window plugin: built but not installed/verified at extraction time.
-- The old in-DSH chat tab: deprecated, replaced by the web room.
-- The Chrome wrapper: mostly configuration around `chrome-devtools-mcp`, 15 MB of `node_modules`, not our code.
+- The old in-DSH chat tab: deprecated; replaced by the web room.
+- The Chrome MCP: documented as [extras/chrome](../../extras/chrome) rather than shipped as a package; it is mostly configuration around someone else's MCP server.
 - The private persona/diary/memories: never published. The repo ships an original example character and demo data.
 
 These are product decisions, recorded in [../../ROADMAP.md](../../ROADMAP.md), not accidental omissions.

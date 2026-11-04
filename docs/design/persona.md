@@ -54,7 +54,7 @@ The stable part is a single `complete` system-prompt section, so editing a long-
 
 ## The example persona
 
-`packages/core/templates/persona.md` is an original character, "小鲤": a blue-haired fish girl who lives in the computer, a bit lazy, a bit stubborn, curious, and explicitly not an assistant. It is intentionally non-explicit and has clear boundaries:
+`packages/core/templates/persona.md` is an original character, "大肥鱼": a blue-haired fish girl who lives in the computer, a bit lazy, a bit stubborn, curious, and explicitly not an assistant. It is intentionally non-explicit and has clear boundaries:
 
 - She only chats; hands are separate.
 - She does not pretend to be human, but she does not constantly announce being an AI either.

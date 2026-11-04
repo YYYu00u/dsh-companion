@@ -2,6 +2,30 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.2.0 — 2026-11-04
+
+### Added
+
+- `@dsh-companion/window`: a QQ-like standalone chat window at `/companion-window/`, using the web room's transcript. It launches the Electron bundled with DSH, falls back to Chrome `--app`, then the default browser; the pet menu is optional.
+- `extras/chrome`: a reproducible local setup for `chrome-devtools-mcp` (not our code), with an example DSH row.
+- Chinese deep-dives: [docs/zh-CN/memory.md](docs/zh-CN/memory.md), [docs/zh-CN/persona.md](docs/zh-CN/persona.md), and a Chinese docs index.
+- Window screenshot (`docs/images/window.jpg`), produced from demo data, not a private chat.
+- Window boot smoke test (`packages/window/test/apply.test.js`).
+
+### Changed
+
+- The default character is now **大肥鱼** everywhere: config, templates, locales, UI, demo, docs, and screenshots. The shipped persona remains an original, non-explicit example; the private deployment's persona and memories are still not included.
+- `README.zh-CN.md` was rewritten as an introduction to the ideas, not a translation: memory layers, a concrete example, persona layers, practical recipes, and a plugin inventory.
+- English README updated with the window package, Chrome extra, and test counts.
+- All screenshots regenerated with the new name; the English README shows the English UI, the Chinese README the Chinese UI.
+- Package and root versions bumped to `0.2.0`.
+
+### Notes
+
+- The window UI is Chinese-first; the web room has the 中/EN switch.
+- The pet menu registration is best-effort; without `dsh-pet`, open `/companion-window/` directly.
+- 34 tests pass; CI runs on Node 20 and 22.
+
 ## 0.1.1 — 2026-11-04
 
 ### Added
@@ -43,7 +67,7 @@ First public release. Three packages extracted from a working DSH 0.2.1-rc.5 set
 
 - Package scopes renamed from the private `@local/*` to `@dsh-companion/*`.
 - Web imports use `@dsh-companion/core/*` package exports instead of `../` paths.
-- Default character renamed to 小鲤; the private persona, diary, and memories are not included.
+- Default character renamed to 大肥鱼; the private persona, diary, and memories are not included.
 - Home defaults to `~/.dsh-companion`; all `/Users/...` paths removed.
 - Preset YAML reduced to the reference companion + hands; extra characters moved to `config.people`.
 - Timezone, pet, exam, and schedule are configurable; exam is opt-in.

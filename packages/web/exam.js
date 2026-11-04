@@ -44,7 +44,7 @@ async function ask(llm, text, signal, judge) {
  * @param pairs 她今天的 { a: 主人说的, b: 她回的 }
  * @returns 体检结果，同时写进 home/exams.md 和 .data/mind/exams/
  */
-export async function runExam({ llm, home, corpus, pairs, signal, judge, name = '小鲤' }) {
+export async function runExam({ llm, home, corpus, pairs, signal, judge, name = '大肥鱼' }) {
   const mine = pairs.slice(-10)
   if (mine.length < 3) return { skipped: `今天只有 ${mine.length} 句可以看，太少了` }
   const human = shuffle(JSON.parse(readFileSync(corpus, 'utf8'))).slice(0, Math.max(6, mine.length))

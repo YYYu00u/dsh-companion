@@ -60,11 +60,12 @@ The detailed component and data-flow docs are in [docs/architecture.md](docs/arc
 | Package | Role | Verified |
 |---|---|---|
 | [`@dsh-companion/core`](packages/core) | Chat-only preset: persona, notebook, mood, memory, stickers, body, hands | Yes — daily use before extraction; unit + fake-context smoke tests |
-| [`@dsh-companion/web`](packages/web) | Web room, SSE, history, daily life, diary UI | Yes — daily use; demo server + unit tests |
+| [`@dsh-companion/web`](packages/web) | Web room, SSE, history, daily life, diary UI, 中文/English switch | Yes — daily use; demo server + unit tests |
+| [`@dsh-companion/window`](packages/window) | QQ-like standalone chat window, opened from the desktop pet | Page + Electron verified; pet menu is beta |
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | Keyless Bing search provider | Yes — parser tests, used in production |
 | Window / QQ / voice / TTS | Not in this release | No |
 
-We deliberately do **not** ship the desktop chat-window plugin, the old in-DSH chat tab, or the Chrome wrapper in this repository. They were either unverified or mostly configuration around someone else's MCP server. See [ROADMAP.md](ROADMAP.md).
+The old in-DSH chat tab is deprecated and not shipped. The Chrome wrapper is [extras/chrome](extras/chrome) — a documented setup for someone else's MCP server, not a package. See [ROADMAP.md](ROADMAP.md).
 
 ## Quick start
 
@@ -73,7 +74,7 @@ Requirements: DeepSeek Harness desktop **0.2.1-rc.5** or a compatible build, Nod
 ```bash
 git clone https://github.com/YYYu00u/dsh-companion.git
 cd dsh-companion
-node scripts/init-home.mjs --name 小鲤
+node scripts/init-home.mjs --name 大肥鱼
 ```
 
 This creates `~/.dsh-companion/` with a persona, notebook, standard, self-model, empty state files, and body parts. Edit `persona.md` and the "主人给我的设定" section of `notebook.md` before the first chat.
@@ -81,9 +82,9 @@ This creates `~/.dsh-companion/` with a persona, notebook, standard, self-model,
 Then install the packages as DSH bundles:
 
 1. Open **Plugins** in the DSH sidebar.
-2. Install from a local path: `packages/core` first, then `packages/web` (and optionally `packages/web-search-bing`).
+2. Install from a local path: `packages/core` first, then `packages/web`; optionally `packages/window` (desktop chat window) and `packages/web-search-bing`.
 3. Restart DSH.
-4. Create a session and choose the **小鲤** preset. For the web room, open <http://127.0.0.1:4318/companion/>.
+4. Create a session and choose the **大肥鱼** preset. For the web room, open <http://127.0.0.1:4318/companion/>.
 
 The exact labels differ slightly between DSH builds; [docs/install.md](docs/install.md) has the manual profile fallback and troubleshooting.
 
@@ -95,7 +96,7 @@ The exact labels differ slightly between DSH builds; [docs/install.md](docs/inst
   name: '@dsh-companion/core'
   config:
     home: ~/.dsh-companion
-    name: 小鲤
+    name: 大肥鱼
 ```
 
 ```yaml
@@ -105,7 +106,7 @@ The exact labels differ slightly between DSH builds; [docs/install.md](docs/inst
   config:
     base: /companion
     preset: dsh-companion
-    name: 小鲤
+    name: 大肥鱼
     home: ~/.dsh-companion
     port: 4318
 ```
@@ -127,6 +128,12 @@ The UI switches between 中文 and English from the header. The choice is rememb
 
 The demo also doubles as a UI review harness: it serves the real `packages/web/public` bundle and exercises every API shape.
 
+## Desktop window
+
+![The desktop window](docs/images/window.jpg)
+
+`@dsh-companion/window` is a QQ-like standalone window: chat on the left, her mood and recent moments on the right, a profile card when you click her. It is served at `/companion-window/` and uses the same transcript as the web room. It opens from the desktop pet's right-click menu, or directly from the URL.
+
 ## Design notes
 
 - [Memory](docs/design/memory.md) — three layers, BM25 with character bigrams, a forgetting curve, why no vector DB yet.
@@ -139,10 +146,10 @@ The demo also doubles as a UI review harness: it serves the real `packages/web/p
 
 What "verified" means here:
 
-- `npm test` — 33 unit/smoke tests over config bootstrap, notebook edits, levels, memory retrieval, delivery, life rollback, Bing parsing, and UI i18n.
+- `npm test` — 34 unit/smoke tests over config bootstrap, notebook edits, levels, memory retrieval, delivery, life rollback, Bing parsing, and UI i18n.
 - `npm run check` — syntax, package manifests, private paths, secrets, stale scopes.
 - `npm run demo` — the real web bundle against a mock backend, desktop + mobile.
-- The core/web/search packages are extracted from a setup that ran daily against DSH 0.2.1-rc.5.
+- The core/web/window/search packages are extracted from a setup that ran daily against DSH 0.2.1-rc.5; the window page and Electron app were exercised and screenshotted.
 - Not verified end-to-end in this repository: the compaction plugin after a fresh install, multi-persona `people`, and the optional exam. They are marked **beta** in [docs/verification.md](docs/verification.md), with the exact manual check to run.
 
 ## Privacy and safety
