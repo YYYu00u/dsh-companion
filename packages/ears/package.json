@@ -1,0 +1,47 @@
+{
+  "name": "@dsh-companion/ears",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Push-to-talk listening for dsh-companion: system audio, microphone, and audio files turned into text.",
+  "license": "MIT",
+  "keywords": ["dsh-plugin", "deepseek-harness", "companion", "speech-to-text", "whisper"],
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./stt": "./stt.js",
+    "./wav": "./wav.js",
+    "./capture": "./capture.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "stt.js",
+    "wav.js",
+    "capture.js",
+    "cordis.patch.yml",
+    "capture/main.m",
+    "capture/Info.plist",
+    "capture/build.sh",
+    "capture/README.md",
+    "README.md"
+  ],
+  "dependencies": {
+    "@dsh-companion/core": "file:../core"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YYYu00u/dsh-companion.git",
+    "directory": "packages/ears"
+  },
+  "homepage": "https://github.com/YYYu00u/dsh-companion#readme",
+  "bugs": {
+    "url": "https://github.com/YYYu00u/dsh-companion/issues"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

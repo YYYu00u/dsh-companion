@@ -6,7 +6,7 @@ Our code is MIT (see [LICENSE](LICENSE)). The "ears" feature is planned to borro
 
 | Component | License | Used for | How it is used |
 |---|---|---|---|
-| [insidegui/AudioCap](https://github.com/insidegui/AudioCap) | BSD-2-Clause | macOS CoreAudio process-tap system audio capture | Small adapted Swift helper; copyright header retained. Full text: [LICENSES/BSD-2-Clause-AudioCap.txt](LICENSES/BSD-2-Clause-AudioCap.txt) |
+| [insidegui/AudioCap](https://github.com/insidegui/AudioCap) | BSD-2-Clause | Reference for macOS system-audio capture | The shipped helper is independent Objective-C using ScreenCaptureKit; no AudioCap code was copied. The license text is kept in [LICENSES/BSD-2-Clause-AudioCap.txt](LICENSES/BSD-2-Clause-AudioCap.txt) for the reference. |
 | [ggml-org/whisper.cpp](https://github.com/ggml-org/whisper.cpp) | MIT | Local speech-to-text | External CLI/library; not vendored |
 | [QwenAudio/SenseVoice](https://github.com/QwenAudio/SenseVoice) | MIT | Optional Chinese short-audio ASR | External model/runtime; not vendored |
 | [pyannote/pyannote-audio](https://github.com/pyannote/pyannote-audio) | MIT | Speaker diarization (later phase) | External dependency; not vendored |

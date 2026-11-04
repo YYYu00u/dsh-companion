@@ -1,6 +1,13 @@
 # 耳朵：让大肥鱼听见音乐、视频和语音
 
-状态：方案，未开工。目标是把“听”做成一个可选插件，不是把整个人的注意力一直挂在麦克风上。
+状态：阶段 0 已开工并跑通采集；转写待装模型。目标是把“听”做成一个可选插件，不是把整个人的注意力一直挂在麦克风上。
+
+## 0. 当前进展（2026-11-04）
+
+- `packages/ears/capture/` 的 Objective-C helper 已编译通过，在本机 macOS 15.1 / M2 上抓到 **5 秒系统声音**和 **3 秒麦克风**；`ffprobe` 时长正确，`volumedetect` 最大 -2.7 dB，不是静音。
+- 采集没有用原计划的 CoreAudio process tap，而是 ScreenCaptureKit：本机 Command Line Tools 的 Swift 编译器和 SDK 版本对不上，Swift 编不了；Objective-C 能编，且 macOS 15 上可用。代价是要“屏幕与系统音频录制”权限，不是纯音频权限。后续可加 CoreAudio tap 后端，CLI 参数不变。
+- 转写代码（whisper.cpp CLI / AssemblyAI）已写，但本机没有 whisper 模型，网络下载被重置，**没有端到端验过**。第一次跑会明确报“找不到模型/找不到 whisper-cli”。
+- 网页语音上传、ShazamKit 识歌还没做。
 
 ## 1. 这一版做什么
 
@@ -53,11 +60,11 @@ flowchart LR
   F[音频文件/链接] -->|ffmpeg / yt-dlp| E
 ```
 
-### 采集：CoreAudio process tap
+### 采集：ScreenCaptureKit（第一版）/ CoreAudio tap（后续）
 
-macOS 14.4 起可以用 CoreAudio 的 process tap 抓系统声音，不需要装 BlackHole，也不需要屏幕录制权限；需要的是“音频录制”权限和 Info.plist 里的 `NSAudioCaptureUsageDescription`。
+第一版用 ScreenCaptureKit：macOS 13+，能抓系统声音，Objective-C 可以直接编；需要“屏幕与系统音频录制”权限。helper 的 CLI 是 `--source system|mic --seconds N --out file.wav`。
 
-参考实现：`insidegui/AudioCap`（BSD-2-Clause，macOS 14.4+，专门演示这个 API）。
+原计划是 CoreAudio process tap（macOS 14.4+，只要“音频录制”权限，不要屏幕录制），参考 `insidegui/AudioCap`（BSD-2）。本机 Swift 编译器/SDK 不匹配，Swift 编不过，所以先用 Objective-C + ScreenCaptureKit 把闭环跑通；后续再加一个 CoreAudio tap 后端，不动上层工具接口。
 
 - 系统声音：`CATapDescription` + `AudioHardwareCreateProcessTap`，输出 16 kHz 单声道 PCM。
 - 麦克风：`AVAudioEngine`，同样 16 kHz 单声道。
@@ -111,7 +118,7 @@ ctx.get('ears').transcribe(buffer, { mime, source: 'voice' })
   name: '@dsh-companion/ears'
   config:
     home: ~/.dsh-companion
-    helper: /absolute/path/to/ears-helper
+    helper: ~/.dsh-companion/bin/EarsCapture.app/Contents/MacOS/ears-capture
     stt:
       provider: local        # local | assemblyai | deepgram
       model: large-v3-turbo
@@ -143,7 +150,7 @@ ctx.get('ears').transcribe(buffer, { mime, source: 'voice' })
 
 | 项目 | 许可 | 借什么 | 怎么标 |
 |---|---|---|---|
-| [AudioCap](https://github.com/insidegui/AudioCap) | BSD-2-Clause | CoreAudio process tap 的采集和权限处理 | 文件头保留版权；`LICENSES/BSD-2-Clause-AudioCap.txt` |
+| [AudioCap](https://github.com/insidegui/AudioCap) | BSD-2-Clause | CoreAudio process tap 的采集和权限处理（架构参考） | 第一版用独立 ObjC + ScreenCaptureKit，没有复制 AudioCap 代码；许可证文本仍保留 |
 | [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | MIT | 本地转写 CLI/库 | 外部依赖，不 vendor；README/NOTICE 标 |
 | [SenseVoice](https://github.com/QwenAudio/SenseVoice) | MIT | 中文短语音转写（可选） | 外部模型/运行时；标来源和模型许可 |
 | [pyannote-audio](https://github.com/pyannote/pyannote-audio) | MIT | 以后做说话人分离 | 第二阶段再引 |
@@ -169,7 +176,7 @@ ctx.get('ears').transcribe(buffer, { mime, source: 'voice' })
 
 | 阶段 | 交付 | 时间 | 验收 |
 |---|---|---|---|
-| 0 | Swift helper 抓 15 秒系统声音，落 wav，能播放 | 0.5–1 天 | 放一首歌，wav 有声音；权限拒绝时不崩 |
+| 0 | 采集 helper 抓 15 秒系统声音，落 wav，能播放 | 0.5–1 天 | 放一首歌，wav 有声音；权限拒绝时不崩（**已完成**：5s 系统声音 + 3s 麦克风） |
 | 1 | 本地 whisper.cpp 转写，`listen_now` 工具，结果进她上下文 | 2–3 天 | 说一句话，5 秒内出文字；音乐段不乱转 |
 | 2 | 语音/音频上传，网页“听到了”卡片 | 1–2 天 | 发一条微信语音，她接得上话 |
 | 3 | ShazamKit 识歌 + 歌名卡片 | 1–2 天 | 放《晴天》能出歌名；没听出来明确说 |
@@ -217,4 +224,4 @@ ctx.get('ears').transcribe(buffer, { mime, source: 'voice' })
 
 ## 11. 下一步
 
-先做阶段 0：`packages/ears/capture/` 的 Swift helper，抓 15 秒系统声音到 wav；用 `ffprobe` 验证有声音，再进阶段 1。
+阶段 0 已完成。下一步是阶段 1：装 whisper.cpp + 模型，跑 `listen_file` 转写；再把 `listen_now` 接进她的工具列表。

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleIdentifier</key><string>local.dsh-companion.ears-capture</string>
+  <key>CFBundleName</key><string>EarsCapture</string>
+  <key>CFBundleExecutable</key><string>ears-capture</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>NSAudioCaptureUsageDescription</key><string>大肥鱼需要听一小段你正在播放的声音。</string>
+  <key>NSMicrophoneUsageDescription</key><string>大肥鱼需要听你说一小段话。</string>
+  <key>NSScreenCaptureUsageDescription</key><string>大肥鱼需要录一小段系统声音。</string>
+</dict>
+</plist>

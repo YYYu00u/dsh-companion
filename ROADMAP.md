@@ -32,10 +32,11 @@ Candidates, in order of expected value:
 4. **History pagination** and a retry affordance that cannot double-send.
 5. **Window polish** — pet-menu registration, focus behavior, and an English UI for the window.
 
-## v0.3.5 — ears (planned)
+## v0.3.5 — ears (in progress)
 
-- A `@dsh-companion/ears` package: push-to-talk system audio + mic + voice messages.
-- Local `whisper.cpp` / SenseVoice ASR; ShazamKit song ID; no always-on listening by default.
+- `@dsh-companion/ears`: capture helper verified (system audio + mic), plugin tools and selection logic in place.
+- Local `whisper.cpp` / SenseVoice ASR: code written, model install pending; song ID and voice-message UI next.
+- No always-on listening by default.
 - Borrow only permissively licensed code; `THIRD_PARTY_NOTICES.md` and per-file SPDX headers are part of the deliverable.
 - Detailed plan: [docs/plans/ears.md](docs/plans/ears.md).
 

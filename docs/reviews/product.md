@@ -45,6 +45,7 @@ Shipped and verified:
 - web room (chat, SSE, notebook, mood tank, diary, activity, 中/EN)
 - desktop window (page + Electron verified; pet menu beta)
 - Bing search provider
+- `ears` beta: push-to-talk capture is verified; ASR needs a local model
 
 Excluded, with reasons:
 

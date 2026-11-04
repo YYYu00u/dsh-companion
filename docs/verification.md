@@ -5,7 +5,7 @@
 ## Automated
 
 ```bash
-npm test          # 34 tests
+npm test          # 41 tests
 npm run check     # syntax + package hygiene + secret/path scan
 npm run demo      # real UI, mock backend, no model calls
 ```
@@ -19,6 +19,7 @@ npm run demo      # real UI, mock backend, no model calls
 | Core boot | `core/test/apply.test.js` | the real `apply()` runs against a fake ctx and registers the expected tools/persona |
 | Web boot | `web/test/apply.test.js` | the web `apply()` boots with no DSH session |
 | Window boot | `window/test/apply.test.js` | the window `apply()` boots with no DSH window |
+| Ears WAV/STT | `ears/test/*.test.js` | WAV parsing, whisper CLI args, capture bounds, clean transcript, plugin boot |
 | Delivery | `delivery.test.js` | splitting, sticker handling, gap bounds, typo generation, ordered send |
 | Proactive | `life.test.js` | own-time prompt variety, failed-turn rollback |
 | Bing | `parse.test.js` | result extraction, URL unwrapping, dedupe, empty page |
@@ -56,6 +57,8 @@ That history is why the packages are called verified. It is not a claim that eve
 | `exam` | Needs a judge model + LCCC corpus (not shipped) | Configure both, set level ≥2, trigger `/api/reflect`, check `exams.md` |
 | Hands | Needs Chrome MCP + a child preset | Ask her to open a page; confirm `use_hands` returns a result and a skill can be saved |
 | Window pet menu | Needs dsh-pet and the metadata registration | Right-click the pet; confirm "More / Chat with her" opens the Electron window and a second click focuses it |
+| Ears STT | Needs `whisper-cli` + a ggml model; the build environment could not download one | Install model, set `stt.model`, call `listen_file` on a known WAV, confirm text |
+| Ears song ID / web voice UI | Not implemented yet | See [plans/ears.md](plans/ears.md) |
 | Sticker send/judge loop | Depends on the model emitting `[表情:name]` correctly | Chat until she sends one; check `.data/stickers/sent.jsonl` and `judged` |
 | Pet bubbles | Needs dsh-pet | Set `pet: main`, speak, confirm a bubble |
 | macOS senses | Uses `lsappinfo` / `ioreg` | On non-macOS, confirm the plugin does not throw and senses are empty |

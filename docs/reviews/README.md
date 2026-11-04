@@ -31,7 +31,7 @@ Weighted score: **85.4 / 100** (architecture 30%, UI 20%, interaction 20%, funct
 
 ## What "verified" means in this repo
 
-The four shipped packages were extracted from a daily-use DSH setup. Unit tests and a demo server were added so that a contributor can verify the core without that setup. Items that were not exercised in the extracted copy are marked **beta** in [../verification.md](../verification.md), not silently claimed as verified.
+The four stable packages were extracted; the fifth, `ears`, is a beta from a daily-use DSH setup. Unit tests and a demo server were added so that a contributor can verify the core without that setup. Items that were not exercised in the extracted copy are marked **beta** in [../verification.md](../verification.md), not silently claimed as verified.
 
 ## Deliberate exclusions
 

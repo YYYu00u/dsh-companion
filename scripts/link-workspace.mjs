@@ -10,6 +10,7 @@ const packages = {
   '@dsh-companion/web': join(root, 'packages/web'),
   '@dsh-companion/web-search-bing': join(root, 'packages/web-search-bing'),
   '@dsh-companion/window': join(root, 'packages/window'),
+  '@dsh-companion/ears': join(root, 'packages/ears'),
 }
 
 for (const [name, dir] of Object.entries(packages)) {

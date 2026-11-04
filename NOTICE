@@ -24,3 +24,6 @@ this repository. Download it yourself and comply with its license.
 
 DeepSeek Harness is a separate product. This repository only contains plugins
 that run inside it; it does not redistribute the host application.
+
+Optional borrowed components, licenses, and attribution are listed in
+THIRD_PARTY_NOTICES.md. The project code itself remains MIT.
