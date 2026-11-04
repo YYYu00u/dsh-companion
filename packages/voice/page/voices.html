@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>她的嗓子</title>
+<style>
+  :root{color-scheme:light dark;--fg:#1c1b1a;--muted:#7a7570;--line:#e6e2dc;--bg:#faf8f5;--card:#fff;--accent:#c2410c}
+  @media (prefers-color-scheme:dark){:root{--fg:#ece9e4;--muted:#9a938b;--line:#332f2b;--bg:#171513;--card:#201d1a;--accent:#fb923c}}
+  *{box-sizing:border-box}
+  body{margin:0;padding:34px 18px 60px;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,"PingFang SC",sans-serif}
+  .wrap{max-width:760px;margin:0 auto}
+  h1{font-size:21px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:12.5px;margin-bottom:20px}
+  .row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 13px;margin-bottom:7px}
+  .row.on{border-color:var(--accent)}
+  .name{min-width:150px;font-weight:550}
+  .name small{display:block;font-weight:400;color:var(--muted);font-size:11px}
+  audio{flex:1;height:32px;min-width:0}
+  .pick{font:inherit;font-size:12px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
+  .row.on .pick{border-color:var(--accent);color:var(--accent)}
+  .note{margin-top:22px;font-size:12.5px;color:var(--muted);line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>她的嗓子</h1>
+  <div class="sub">同一句「你回来啦？我今天一直等你呢。快跟我说说，今天过得怎么样。」· 本地合成，断网也能用</div>
+  <div id="list"></div>
+  <div class="note">点「用这个」只是本机记一下，真正换默认音色要改插件配置（`dsh-dafeiyu-voice/cordis.patch.yml` 的 `voice`）。</div>
+</div>
+<script>
+const list = document.getElementById('list')
+fetch('api/voices').then(r => r.json()).then((d) => {
+  const cur = localStorage.getItem('dafeiyu-voice') || d.default
+  for (const v of d.voices) {
+    const row = document.createElement('div')
+    row.className = 'row' + (v.id === cur ? ' on' : '')
+    row.innerHTML = `<div class="name">${v.name}<small>${v.id} · 参考 ${v.duration}s</small></div>
+      <audio controls preload="none" src="api/voice/${v.id}"></audio>`
+    const b = document.createElement('button')
+    b.className = 'pick'; b.textContent = v.id === cur ? '正在用' : '用这个'
+    b.onclick = () => { localStorage.setItem('dafeiyu-voice', v.id); location.reload() }
+    row.appendChild(b)
+    list.appendChild(row)
+  }
+}).catch((e) => { list.textContent = '读不到音色清单：' + e.message })
+</script>
+</body>
+</html>

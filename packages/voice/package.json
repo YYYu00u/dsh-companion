@@ -4,8 +4,17 @@
   "type": "module",
   "description": "Local voice for a companion: zero-shot cloning (ZipVoice) over a small set of reference voices, exposed as click-to-play speech in the web room.",
   "license": "MIT",
-  "keywords": ["dsh-plugin", "deepseek-harness", "companion", "tts", "voice", "zipvoice"],
-  "engines": { "node": ">=20" },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "companion",
+    "tts",
+    "voice",
+    "zipvoice"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "exports": {
     ".": "./index.js",
     "./voices": "./src/voices.js",
@@ -20,13 +29,18 @@
     "assets/voices.json",
     "scripts/*.mjs",
     "docs/**",
-    "cordis.patch.yml"
+    "cordis.patch.yml",
+    "page/*"
   ],
   "scripts": {
     "models": "node scripts/download-models.mjs",
     "refs": "node scripts/make-refs.mjs"
   },
-  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/YYYu00u/dsh-companion.git",
