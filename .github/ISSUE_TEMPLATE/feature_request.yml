@@ -1,0 +1,37 @@
+name: Feature request
+description: A behavior, integration, or design change.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: Who hits it, and what do they do today instead?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would change
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - persona / notebook
+        - memory / compaction
+        - proactive life
+        - web UI / a11y
+        - install / config
+        - new integration (QQ, voice, avatar, ...)
+        - docs / tests
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This keeps the local-first, plain-files model.
+        - label: This does not require shipping an unverified package.
+        - label: I searched existing issues.

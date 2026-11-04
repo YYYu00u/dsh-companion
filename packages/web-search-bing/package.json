@@ -1,0 +1,19 @@
+{
+  "name": "@dsh-companion/web-search-bing",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Bing (cn.bing.com) web search provider for DeepSeek Harness. No API key required.",
+  "license": "MIT",
+  "keywords": ["dsh-plugin", "deepseek-harness", "web-search", "bing"],
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./icon": "./icon.svg",
+    "./locale/*.json": "./locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "files": ["index.js", "cordis.patch.yml", "locale/*.json", "icon.svg"],
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
+}

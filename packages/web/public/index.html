@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="小鲤：住在本地的陪伴角色，有自己的本子、心情、记忆和日子。">
+<title>小鲤</title>
+<link rel="icon" href="fish.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="fish" viewBox="6 14 56 34">
+    <path d="M10 36c0-11 10-19 23-19 11 0 19 6 21 14 1 4-1 9-6 11-6 3-14 4-21 3-10-1-17-4-17-9z" fill="#4d6bfe"/>
+    <path d="M50 30c3-6 7-8 10-8-1 4-3 7-6 9 3 1 5 4 6 8-4 0-8-3-10-6z" fill="#4d6bfe"/>
+    <path d="M14 40c5 3 12 4 20 3" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="22" cy="31" r="2.6" fill="#fff"/>
+    <circle cx="22.6" cy="31.4" r="1.3" fill="#1b2a5e"/>
+    <ellipse cx="18" cy="36" rx="2.4" ry="1.3" fill="#ff9fb5" opacity=".8"/>
+  </symbol>
+</svg>
+
+<main class="chat">
+  <header class="chat-head">
+    <span class="avatar-wrap"><img class="avatar" id="avatar" src="art-face-calm.jpg" alt="" width="40" height="40"></span>
+    <div class="who"><h1>小鲤</h1><span id="status" class="status"></span></div>
+    <button id="open-book" class="book-toggle" type="button" aria-controls="book" aria-expanded="false">她的小本子</button>
+  </header>
+  <div id="list" class="list" aria-live="polite"></div>
+  <div id="error" class="error" role="alert" hidden></div>
+  <div id="stickers" class="sticker-panel" hidden></div>
+  <div id="pending" class="pending" hidden>
+    <img id="pending-img" alt="要发的图">
+    <button id="pending-x" type="button" aria-label="不发这张">×</button>
+  </div>
+  <form id="form" class="compose">
+    <button id="sticker-btn" class="icon-btn" type="button" aria-controls="stickers" aria-expanded="false" title="表情包">☺</button>
+    <button id="pic-btn" class="icon-btn" type="button" title="发图片" aria-label="发图片">＋</button>
+    <input id="pic" class="sr-only" type="file" tabindex="-1" aria-hidden="true" accept="image/png,image/jpeg,image/webp,image/gif">
+    <textarea id="input" rows="1" placeholder="跟她说点什么…" title="回车发送，Shift+回车换行" autocomplete="off" aria-label="跟她说的话"></textarea>
+    <button id="send">发送</button>
+  </form>
+</main>
+
+<aside class="side" id="stage" aria-label="她">
+  <div class="tank" id="tank">
+    <div class="water"></div>
+    <button class="figure" id="her" type="button" title="戳她一下"><img id="figure" src="art-half-calm.webp" alt="她现在的样子" width="700" height="900"></button>
+    <div class="rise" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="sand"></div>
+    <div class="mood">
+      <span id="mood-word" class="mood-word">…</span>
+      <span id="mood-why" class="mood-why"></span>
+      <span id="doing" class="doing"></span>
+    </div>
+    <button class="open-book js-open-book" type="button" aria-controls="book" aria-expanded="false">翻开她的本子</button>
+  </div>
+</aside>
+
+<aside class="drawer" id="book" tabindex="-1" aria-labelledby="book-title" inert>
+  <h2 id="book-title" class="sr-only">她的小本子</h2>
+  <div class="drawer-head">
+    <nav class="tabs" role="tablist">
+      <button type="button" role="tab" id="tab-today" aria-controls="pane-today" aria-selected="true" data-pane="today" class="on">今天</button>
+      <button type="button" role="tab" id="tab-diary" aria-controls="pane-diary" aria-selected="false" data-pane="diary">说说</button>
+      <button type="button" role="tab" id="tab-you" aria-controls="pane-you" aria-selected="false" data-pane="you">你</button>
+      <button type="button" role="tab" id="tab-learn" aria-controls="pane-learn" aria-selected="false" data-pane="learn">她在学</button>
+    </nav>
+    <button id="close-book" class="close-book" type="button">收起</button>
+  </div>
+  <div class="paper" id="paper">
+    <div class="pane" id="pane-today" role="tabpanel" aria-labelledby="tab-today" data-pane="today">
+      <section data-sec="sensed"><h2>她感觉到的</h2><ul id="sensed"></ul></section>
+      <section data-sec="reminders"><h2>她惦记着</h2><ul id="reminders"></ul></section>
+      <section data-sec="wants"><h2>她想做的事</h2><ul id="wants"></ul></section>
+      <section data-sec="experiences"><h2>她的经历</h2><ul id="experiences"></ul></section>
+      <p class="blank"></p>
+    </div>
+    <div class="pane" id="pane-diary" role="tabpanel" aria-labelledby="tab-diary" data-pane="diary" hidden>
+      <section data-sec="diary"><h2>她的说说</h2><div id="diary" class="diary"></div></section>
+      <p class="blank"></p>
+    </div>
+    <div class="pane" id="pane-you" role="tabpanel" aria-labelledby="tab-you" data-pane="you" hidden>
+      <section data-sec="proposals" class="ask"><h2>她想改自己，等你点头</h2><ul id="proposals"></ul></section>
+      <section data-sec="knows"><h2>她了解的你</h2><div id="knows" class="knows"></div></section>
+      <section data-sec="owner"><h2>她记得你</h2><ul id="owner"></ul></section>
+      <p class="blank"></p>
+    </div>
+    <div class="pane" id="pane-learn" role="tabpanel" aria-labelledby="tab-learn" data-pane="learn" hidden>
+      <section data-sec="wishes" class="ask"><h2>她想长的新本事</h2><ul id="wishes"></ul></section>
+      <section data-sec="skills"><h2>她的手学会的</h2><ul id="skills"></ul></section>
+      <section data-sec="lessons"><h2>她学到的</h2><ul id="lessons"></ul></section>
+      <section data-sec="body"><h2>她的身体</h2><ul id="body"></ul></section>
+      <section data-sec="exams"><h2>她的体检</h2><ul id="exams"></ul></section>
+      <p class="blank"></p>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <label class="level" title="越往右她自己做的事越多，花的 token 也越多">
+      <span class="level-label">她多活跃</span>
+      <input id="level" type="range" min="0" max="4" step="1">
+      <b id="level-name"></b>
+      <span id="level-desc" class="level-desc"></span>
+      <span id="level-today" class="level-desc level-today"></span>
+    </label>
+  </div>
+</aside>
+<script src="app.js"></script>
+</body>
+</html>

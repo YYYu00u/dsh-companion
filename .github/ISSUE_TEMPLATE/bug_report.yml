@@ -1,0 +1,55 @@
+name: Bug report
+description: Something broke, or the install did not work.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not paste your persona, diary, chat log, or API keys. A minimal description is enough.
+  - type: input
+    id: dsh
+    attributes:
+      label: DSH version
+      placeholder: 0.2.1-rc.5
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS and Node
+      placeholder: macOS 15.1, Node 22
+    validations:
+      required: true
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - "@dsh-companion/core"
+        - "@dsh-companion/web"
+        - "@dsh-companion/web-search-bing"
+        - demo / docs / tests
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Steps, expected, actual. Screenshots are welcome if they contain no personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log lines
+      description: Remove paths with your username and anything from .data/config.json.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I removed personal data, keys, and private paths from this report.
+          required: true
+        - label: I checked docs/verification.md for beta items.
+          required: false

@@ -1,0 +1,26 @@
+dsh-companion
+=============
+
+Code is licensed under the MIT License (see LICENSE).
+
+Demo character art
+------------------
+The files under packages/web/public/art-* and the screenshots under docs/images/
+are AI-generated illustrations made for this project's demo character.
+
+They are NOT covered by the MIT license. You may keep them for personal
+evaluation of the UI. If you redistribute the project or use it commercially,
+replace them with artwork you have the rights to, or check the license of the
+generation model you use.
+
+The example persona in packages/core/templates/ is original text and is covered
+by the MIT license. It is not anyone's real persona or chat history.
+
+Third-party data
+----------------
+The optional "exam" feature expects a local copy of the LCCC corpus
+(https://github.com/thu-coai/CDial-GPT). No corpus data is distributed with
+this repository. Download it yourself and comply with its license.
+
+DeepSeek Harness is a separate product. This repository only contains plugins
+that run inside it; it does not redistribute the host application.

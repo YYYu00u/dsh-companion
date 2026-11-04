@@ -1,0 +1,11 @@
+# 给 web_search 换一个不用 key 的后端：必应网页搜索。
+# 1) 插入 bing 搜索提供方；2) 覆盖 dsh-base 的 web 行，把 searchProvider 从 deepseek-official 改成 bing。
+# 覆盖会整段替换 config，所以 fetchProvider 也要照抄原值 http。
+- insert:
+    - id: web-search-bing
+      name: '@dsh-companion/web-search-bing'
+- id: web
+  name: '@deepseek-ai/dsh-web'
+  config:
+    searchProvider: bing
+    fetchProvider: http

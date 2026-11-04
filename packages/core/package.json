@@ -1,0 +1,54 @@
+{
+  "name": "@dsh-companion/core",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A chat-only companion preset for DeepSeek Harness: persona, notebook, mood, episodic memory, stickers, and optional hands.",
+  "license": "MIT",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "companion",
+    "persona",
+    "memory"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./config": "./config.js",
+    "./mind": "./mind.js",
+    "./level": "./level.js",
+    "./stickers": "./stickers.js",
+    "./body": "./body.js",
+    "./hands": "./hands-entry.js",
+    "./compact": "./memory/compact.js",
+    "./icon": "./icon.svg",
+    "./locale/*.json": "./locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "config.js",
+    "cordis.patch.yml",
+    "templates/*.md",
+    "locale/*.json",
+    "icon.svg",
+    "mind.js",
+    "level.js",
+    "surf.js",
+    "pics.js",
+    "stickers.js",
+    "social.js",
+    "body.js",
+    "hands.js",
+    "hands-entry.js",
+    "memory/*.js",
+    "memory/README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,288 @@
+/* 伙伴的页面。
+   左边是聊天，右边是她：上面一个小鱼缸（水色跟着她的心情变），下面是她的作业本。
+   颜色都从她自己身上来：鲸鱼蓝、深水、腮红。 */
+:root {
+  --whale: #4d6bfe;
+  --deep: #1b2a5e;
+  --shallow: #e9f0ff;
+  --line: #c9d8f5;
+  --paper: #fdfdfb;
+  --blush: #e0607e;
+  --ink: #1f2433;
+  --ink-soft: #5f677a;
+  --mood: 65;
+  --serif: "Songti SC", "STSong", serif;
+  --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  color: var(--ink);
+  font: 15px/1.6 var(--sans);
+  background: var(--deep) url(art-bg-desk.jpg) center / cover fixed;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 440px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+:focus-visible { outline: 2px solid var(--whale); outline-offset: 2px; }
+button { font: inherit; cursor: pointer; }
+
+/* ---------- 聊天 ---------- */
+.chat { position: relative; display: flex; flex-direction: column; height: 100vh; background: #f6f8fd; min-width: 0; }
+.chat-head { display: flex; align-items: center; gap: 12px; padding: 14px 24px; background: #fff; border-bottom: 1px solid #e3e9f6; }
+.avatar { width: 40px; height: 40px; flex: none; border-radius: 50%; object-fit: cover; border: 2px solid var(--shallow); }
+.who { display: flex; flex-direction: column; line-height: 1.2; }
+.chat-head h1 { margin: 0; font: 600 17px/1.2 var(--sans); }
+.status { font-size: 12px; color: var(--ink-soft); min-height: 1.2em; }
+.status.typing { color: var(--whale); }
+.status.typing::after { content: ""; animation: dots 1.2s steps(4) infinite; }
+@keyframes dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
+
+.list { flex: 1; overflow-y: auto; padding: 20px 24px 10px; display: flex; flex-direction: column; gap: 4px;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 18px);
+  mask-image: linear-gradient(180deg, transparent 0, #000 18px); }
+.gap { align-self: center; font-size: 12px; color: var(--ink-soft); margin: 14px 0 6px; }
+.row { display: flex; gap: 8px; max-width: min(72%, 560px); }
+.row.her { align-self: flex-start; padding-left: 44px; }
+.row.her.lead { padding-left: 0; }
+.row.her.lead::before {
+  content: ""; flex: none; width: 36px; height: 36px; border-radius: 50%;
+  background: url(art-avatar.jpg) center / cover;
+}
+.row.me { align-self: flex-end; }
+.row.me + .row.her, .row.her + .row.me { margin-top: 8px; }
+.bubble { padding: 8px 13px; border-radius: 4px 16px 16px 16px; background: #fff; border: 1px solid #e3e9f6; white-space: pre-wrap; word-break: break-word; }
+.me .bubble { background: var(--deep); border-color: var(--deep); color: #eef2ff; border-radius: 16px 4px 16px 16px; }
+/* 她的小动作（括号里的）写小一点、淡一点，像旁白 */
+.bubble.aside { background: transparent; border: 0; padding: 2px 13px; color: var(--ink-soft); font-size: 13px; font-style: italic; }
+.row.fresh .bubble { animation: pop .2s ease-out; }
+@keyframes pop { from { transform: translateY(4px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.empty { margin: auto; text-align: center; color: var(--ink-soft); }
+
+.compose { display: flex; gap: 10px; padding: 12px 24px 18px; background: #fff; border-top: 1px solid #e3e9f6; }
+.compose textarea {
+  flex: 1; resize: none; height: 44px; max-height: 140px; padding: 11px 14px;
+  font: inherit; border: 1px solid #d5ddef; border-radius: 22px; background: #f6f8fd; outline: none;
+}
+.compose textarea:focus { border-color: var(--whale); background: #fff; }
+.compose button { padding: 0 20px; border: 0; border-radius: 22px; background: #3b56d8; color: #fff; }
+.compose button:disabled { background: #b5c2f5; cursor: default; }
+.compose .icon-btn { flex: none; width: 40px; padding: 0; display: grid; place-items: center; border-radius: 50%; background: #eef2fb; color: var(--deep); font-size: 20px; cursor: pointer; }
+.compose .icon-btn:hover { background: #e1e8f8; }
+/* 表情包浮在输入框上方，不挤聊天区，也不把最后一句挤没 */
+.sticker-panel {
+  position: absolute; left: 24px; right: 24px; bottom: 86px; z-index: 6;
+  display: flex; flex-wrap: wrap; gap: 8px; max-height: 268px; overflow-y: auto; padding: 12px;
+  background: #fff; border: 1px solid #dfe6f5; border-radius: 16px;
+  box-shadow: 0 14px 36px rgba(27,42,94,.18);
+}
+.sticker-panel[hidden] { display: none; }
+.sticker-panel button { width: 76px; padding: 4px; border: 1px solid transparent; border-radius: 10px; background: none; cursor: pointer; font-size: 11px; color: var(--ink-soft); }
+.sticker-panel button:hover { border-color: #e3e9f6; background: #f6f8fd; }
+.sticker-panel img { display: block; width: 66px; height: 66px; object-fit: contain; margin: 0 auto 2px; }
+.sticker-panel .none { font-size: 13px; color: var(--ink-soft); padding: 6px 0; }
+/* 图先挂在输入框上方，等她把字打完一起发 */
+.pending {
+  position: absolute; left: 24px; bottom: 86px; z-index: 5;
+  display: flex; align-items: flex-start; gap: 2px; padding: 6px;
+  background: #fff; border: 1px solid #dfe6f5; border-radius: 14px;
+  box-shadow: 0 10px 26px rgba(27,42,94,.16);
+}
+.pending[hidden] { display: none; }
+.pending img { display: block; width: 64px; height: 64px; object-fit: cover; border-radius: 10px; background: #eef2fb; }
+.pending button { width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%; background: #eef2fb; color: var(--deep); font-size: 14px; line-height: 1; }
+.pending button:hover { background: #e1e8f8; }
+
+.bubble.pic { padding: 4px; background: transparent; border: 0; }
+.me .bubble.pic { background: transparent; }
+.bubble.pic img { display: block; max-width: 160px; max-height: 160px; border-radius: 8px; }
+.bubble.pic .cap { padding: 4px 9px 2px; }
+.error { color: var(--blush); font-size: 13px; padding: 0 24px 8px; background: #fff; }
+
+.book-toggle { display: none; }
+
+/* ---------- 她：鱼缸 ---------- */
+/* 右栏只有她，一整幅 */
+.side { position: relative; height: 100vh; overflow: hidden; background: var(--deep); box-shadow: inset 14px 0 30px -18px rgba(4,10,30,.6); }
+/* 心情 0–100 映射到水色：低的时候水发灰发暗，高的时候清亮。鱼也跟着沉下去或浮上来。 */
+.tank {
+  --t: calc(var(--mood) / 100);
+  position: absolute; inset: 0; overflow: hidden;
+  background: linear-gradient(180deg,
+    hsl(calc(205 + 15 * var(--t)) calc(25% + 55% * var(--t)) calc(58% + 22% * var(--t))),
+    hsl(calc(215 + 10 * var(--t)) calc(30% + 45% * var(--t)) calc(32% + 26% * var(--t))));
+  transition: background 1.2s ease;
+}
+/* 鱼缸照片叠在水色上：心情低时照片更暗更灰 */
+.tank::before { content: ""; position: absolute; inset: 0; background: url(art-bg-tank.jpg) center / cover; mix-blend-mode: luminosity; opacity: calc(.35 + .4 * var(--t)); }
+.figure {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 100%;
+  padding: 0; border: 0; background: none; cursor: pointer;
+  transform-origin: 50% 100%; animation: breathe 5s ease-in-out infinite;
+}
+.figure img { width: 100%; height: 100%; object-fit: contain; object-position: bottom; display: block; transition: opacity .35s ease, filter 1.2s ease; filter: saturate(calc(.6 + .4 * var(--t))) brightness(calc(.85 + .15 * var(--t))); }
+.figure img.swap { opacity: 0; }
+@keyframes breathe { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-5px) scale(1.008); } }
+.tank.typing .figure { animation-duration: 2.2s; }
+.tank.night .figure img { filter: brightness(.6) saturate(.7); }
+.tank.night::after { content: ""; position: absolute; inset: 0; background: rgba(10,18,50,.35); pointer-events: none; }
+.water { position: absolute; inset: 0; background: repeating-linear-gradient(100deg, transparent 0 38px, rgba(255,255,255,.05) 38px 40px); }
+.sand { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; background: #e8dcc0; border-top: 2px solid #d9c9a3; }
+.rise i { position: absolute; bottom: 20px; width: 7px; height: 7px; border: 1.5px solid rgba(255,255,255,.75); border-radius: 50%; animation: rise 6s linear infinite; opacity: calc(.3 + .7 * var(--t)); }
+.rise i:nth-child(1) { left: 58%; }
+.rise i:nth-child(2) { left: 61%; width: 5px; height: 5px; animation-delay: 2s; }
+.rise i:nth-child(3) { left: 56%; width: 4px; height: 4px; animation-delay: 4s; }
+@keyframes rise { from { transform: translateY(0); } to { transform: translateY(-200px); opacity: 0; } }
+/* 她在下面站着，上面是水；心情写在水那边，不压在她脸上 */
+.mood {
+  position: absolute; left: 0; right: 0; top: 0; z-index: 1; pointer-events: none;
+  padding: 22px 24px 70px; color: #fff;
+  background: linear-gradient(112deg, rgba(6,12,32,.86) 0%, rgba(6,12,32,.46) 40%, rgba(6,12,32,0) 72%);
+  text-shadow: 0 1px 6px rgba(0,0,0,.35);
+}
+.mood-word { display: block; font: 600 30px/1.1 var(--serif); letter-spacing: .1em; }
+.mood-why { display: block; font-size: 13px; margin-top: 4px; opacity: .92; max-width: 15em; }
+.doing { display: block; font-size: 12px; margin-top: 6px; opacity: .8; max-width: 16em; }
+.knows p { white-space: pre-line; margin: 2px 0 10px; }
+@media (prefers-reduced-motion: reduce) {
+  .figure, .rise i { animation: none; }
+  .figure img { transition: none; }
+  .tank { transition: none; }
+}
+
+/* ---------- 活跃度 ---------- */
+.level { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 4px 10px; padding: 12px 22px; font-size: 12px; color: var(--ink-soft); border-bottom: 1px solid #e6ecf8; }
+.level input { width: 100%; accent-color: var(--whale); }
+.level b { font-weight: 600; color: var(--deep); min-width: 3em; text-align: right; }
+.level-desc { grid-column: 1 / -1; line-height: 1.5; }
+.level-today { color: var(--deep); opacity: .75; }
+
+/* ---------- 她的作业本 ---------- */
+.paper {
+  flex: 1; overflow-y: auto; padding: 16px 26px 40px 40px; position: relative;
+  font-family: var(--serif); line-height: 28px;
+  background: repeating-linear-gradient(var(--paper) 0 27px, var(--line) 27px 28px);
+  background-position: 0 6px;
+}
+.paper::before { content: ""; position: absolute; top: 0; bottom: 0; left: 28px; width: 1px; background: #f0b6c2; }
+.paper section[hidden] { display: none; }
+.paper h2 { margin: 0; font: 600 15px/28px var(--sans); color: var(--deep); }
+.paper ul { list-style: none; margin: 0; padding: 0; }
+.paper li { font-size: 15px; }
+.paper time { color: var(--ink-soft); font: 12px var(--sans); margin-right: 8px; }
+.paper .why { font-size: 13px; color: var(--ink-soft); }
+.blank { margin: 28px 0 0; font: 13px/28px var(--sans); color: var(--ink-soft); }
+
+/* 她在等你点头的事放最上面，用腮红色框起来 */
+.ask { margin: 22px -10px 0 -18px; padding: 0 10px 0 18px; border-left: 3px solid var(--blush); background: rgba(224,96,126,.06); }
+.ask h2 { color: var(--blush); }
+
+.trail .up::before { content: "↑ "; color: var(--whale); font-family: var(--sans); }
+.trail .down::before { content: "↓ "; color: var(--blush); font-family: var(--sans); }
+.trail li { font-size: 14px; }
+.diary .date { font: 12px/28px var(--sans); color: var(--ink-soft); }
+.diary p { margin: 0; font-size: 15px; white-space: pre-wrap; }
+.done { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: #b9c3d9; }
+
+.tag { display: inline-block; font: 11px/16px var(--sans); padding: 0 5px; margin-right: 6px; border-radius: 3px; border: 1px solid currentColor; vertical-align: 1px; }
+.lesson.trial .tag, .lesson.want-want .tag { color: #b07a1f; }
+.lesson.kept .tag, .lesson.want-done .tag { color: #3d7a4a; }
+.lesson.want-doing .tag { color: var(--whale); }
+.lesson.dropped, .lesson.want-let-go { opacity: .45; }
+.lesson.dropped { text-decoration: line-through; }
+
+/* ---------- 窄屏：小本子变成从右边拉出来的抽屉 ---------- */
+@media (max-width: 900px) {
+  body { grid-template-columns: 1fr; }
+  .side { display: none; }
+  .book-toggle { display: block; margin-left: auto; padding: 6px 12px; border: 1px solid #d5ddef; border-radius: 16px; background: #fff; color: var(--deep); font-size: 13px; }
+  .drawer { width: 100%; }
+  .row { max-width: 86%; }
+  .chat-head, .compose { padding-left: 16px; padding-right: 16px; }
+  .sticker-panel { left: 12px; right: 12px; bottom: 78px; }
+  .pending { left: 12px; bottom: 78px; }
+  .list { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawer { transition: none; }
+  .figure, .rise i { animation: none; }
+}
+.paper section:not([hidden]) ~ section { margin-top: 28px; }
+.paper section { margin-top: 0; }
+
+/* ---------- 她的本子：从右边拉出来的抽屉 ---------- */
+.drawer:focus { outline: none; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(620px, 92vw); z-index: 20;
+  display: flex; flex-direction: column; background: var(--paper);
+  box-shadow: -16px 0 48px rgba(10,20,45,.28);
+  transform: translateX(102%); transition: transform .25s ease;
+}
+body.book-open .drawer { transform: none; }
+body.book-open::after { content: ""; position: fixed; inset: 0; background: rgba(12,20,40,.32); z-index: 15; }
+.drawer-head { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #fff; border-bottom: 1px solid #e3e9f6; }
+.tabs { display: flex; gap: 4px; flex: 1; }
+.tabs button { padding: 6px 1px; margin-right: 20px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--ink-soft); font-size: 13px; }
+.tabs button.on { border-bottom-color: var(--blush); color: var(--deep); font-weight: 600; }
+.close-book { padding: 5px 12px; border: 1px solid #d5ddef; border-radius: 14px; background: #fff; color: var(--deep); font-size: 13px; }
+.pane[hidden] { display: none; }
+.drawer-foot { background: #fff; border-top: 1px solid #e3e9f6; }
+
+/* 人像底下的一个按钮 */
+.open-book {
+  position: absolute; left: 0; right: 0; bottom: 18px; z-index: 2;
+  padding: 6px 0; border: 0; background: none; color: rgba(255,255,255,.82);
+  font-size: 13px; letter-spacing: .16em; text-shadow: 0 1px 6px rgba(0,0,0,.4);
+}
+.open-book:hover { color: #fff; }
+
+/* 日记：一天一张卡，长的折起来 */
+/* 说说：像朋友圈，不铺横线 */
+body[data-tab="diary"] .paper { background: #fff; }
+body[data-tab="diary"] .paper::before { display: none; }
+body[data-tab="diary"] .paper h2 { display: none; }
+.post { display: grid; grid-template-columns: 40px 1fr; gap: 10px; padding: 14px 0; border-bottom: 1px solid #eef1f8; }
+.post:last-child { border-bottom: 0; }
+.post .ava { width: 40px; height: 40px; border-radius: 8px; background: url(art-avatar.jpg) center / cover; }
+.post .meta { display: flex; align-items: baseline; gap: 8px; line-height: 1.2; }
+.post .meta b { font: 600 14px var(--sans); color: var(--deep); }
+.post .meta time { font: 12px var(--sans); color: var(--ink-soft); }
+.post p { margin: 4px 0 0; font: 15px/26px var(--sans); white-space: pre-wrap; }
+.post p.clamp { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.post .more { margin-top: 4px; padding: 0; border: 0; background: none; color: var(--whale); font: 13px var(--sans); }
+
+/* ---------- 人格库里的人：还没有立绘和头像，用名字第一个字 ---------- */
+body.plain .figure img, body.plain .rise, body.plain .sand { display: none; }
+body.plain .figure::after {
+  content: var(--initial); position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%);
+  font: 600 128px/1 var(--serif); color: rgba(255,255,255,.9); text-shadow: 0 6px 28px rgba(0,0,0,.25);
+}
+.avatar-wrap { display: contents; }
+body.plain .avatar { display: none; }
+body.plain .avatar-wrap { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--deep); }
+body.plain .avatar-wrap::after { content: var(--initial); color: #fff; font: 600 17px/1 var(--serif); }
+body.plain .row.her.lead::before { background: var(--deep); }
+body.plain .post .ava { background: var(--deep); display: grid; place-items: center; }
+body.plain .post .ava::after { content: var(--initial); color: #fff; font: 600 17px/1 var(--serif); }
+body.plain .row.her.lead::before { content: var(--initial); color: #fff; font: 600 15px/36px var(--serif); text-align: center; }
+.drawer-foot[hidden] { display: none; }
+
+/* ---------- 可访问性 ---------- */
+/* 只给读屏看的字：视觉上不占地方，但仍在无障碍树里。 */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.bubble.pic a { display: block; border-radius: 8px; }
+.bubble.pic a:focus-visible { outline: 3px solid var(--whale); outline-offset: 2px; }
+.compose .icon-btn:focus-visible, .tabs button:focus-visible, .close-book:focus-visible,
+.book-toggle:focus-visible, .open-book:focus-visible, .figure:focus-visible {
+  outline: 2px solid var(--whale); outline-offset: 2px;
+}
+.level input:focus-visible { outline: 2px solid var(--whale); outline-offset: 3px; }
+/* 窄屏抽屉打开时，后面的内容不再被读屏念到（视觉上由遮罩挡住）。 */
+@media (max-width: 900px) {
+  body.book-open .chat { visibility: hidden; }
+}

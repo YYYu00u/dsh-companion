@@ -1,0 +1,76 @@
+# dsh-companion 的参考 preset。
+#
+# 两条 preset：
+#   - dsh-companion       她本人：人设、本子、心情、记忆、压缩、身体索引。
+#   - dsh-companion-hands 她的手：单独的子会话，只有浏览器、上网、技能库。
+#
+# 家（home）默认 ~/.dsh-companion。想换地方就改下面的 home；第一次跑会自动种出
+# persona.md、notebook.md、standard.md、self.md、owner.md 和几个空状态文件。
+#
+# 装好以后在 DSH 里新建会话，选 preset「小鲤」。网页插件另装（@dsh-companion/web）。
+- insert:
+    - id: preset-dsh-companion
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: dsh-companion
+        name: 小鲤
+        description: 只聊天的伙伴。不带任何干活工具，有自己的本子、心情和记忆。
+        order: 50
+        plugins:
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          # 她自己的上网：晚上反思时可以查东西，看到的记成经历。
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: notebook
+            name: '@dsh-companion/core'
+            config:
+              home: ~/.dsh-companion
+              name: 小鲤
+              # 想接浏览器上的手，就保留这一行；不要手就改成 hands: false。
+              handsPreset: dsh-companion-hands
+          # 聊天历史（短期记忆）到 2.4 万 token 就压，最近 6000 token 原样留着。
+          # 被压掉的原话按「隔 30 分钟」切成几阵，一次调用写成经历（中期记忆）。
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+            config:
+              - id: compaction-dsh-companion
+                name: '@dsh-companion/core/compact'
+                config:
+                  home: ~/.dsh-companion
+                  preset: dsh-companion
+                  name: 小鲤
+                  thresholdTokens: 24000
+                  retainTokens: 6000
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+
+# 她的手：单独跑的子会话，用 use_hands 把事交给它，它只回一段结果。
+# 浏览器是 Host 级的（@deepseek-ai/dsh-mcp-client 配 chrome-devtools-mcp），不在这一行里。
+- insert:
+    - id: preset-dsh-companion-hands
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: dsh-companion-hands
+        name: 小鲤的手
+        description: 小鲤用来动手的子会话：浏览器、上网、技能库。不用直接选它。
+        order: 51
+        plugins:
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: hands
+            name: '@dsh-companion/core/hands'
+            config:
+              home: ~/.dsh-companion
+              name: 小鲤

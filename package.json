@@ -1,0 +1,19 @@
+{
+  "name": "dsh-companion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A local-first companion for DeepSeek Harness: persona, notebook, mood, episodic memory, and a web room.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "pretest": "node scripts/link-workspace.mjs",
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "check": "node scripts/check.mjs",
+    "demo": "node examples/demo/server.mjs",
+    "init-home": "node scripts/init-home.mjs"
+  }
+}

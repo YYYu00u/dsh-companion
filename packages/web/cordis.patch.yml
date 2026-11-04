@@ -1,0 +1,43 @@
+# dsh-companion 的网页（Host 级插件）。
+#
+# 打开 http://127.0.0.1:4318/companion/ 就能和她聊（DSH 自己端口上的 /companion/ 也行）。
+# 消息进的是 preset 的会话，人设、本子、心情和 DSH 里是同一份。
+# 她的日子（到点问惦记的事、很久没来就找你、22:30 写日记反思）也在这一行里跑。
+- insert:
+    - id: dsh-companion-web
+      name: '@dsh-companion/web'
+      config:
+        base: /companion
+        preset: dsh-companion
+        name: 小鲤
+        # 她的家：本子、日记、学到的、惦记、心情都在这里。跟 core 的 home 是同一个。
+        home: ~/.dsh-companion
+        # 固定地址（DSH 自己的端口每次重启都变）。填 0 只挂 DSH 端口。
+        port: 4318
+        # 装了 dsh-pet 才开：她说话时桌宠冒气泡。
+        # pet: main
+        #
+        # 日子模块，默认四个全开。只聊天就写 []。
+        # modules: [remind, reflect, own, nudge]
+        #
+        # 作息：23:00–08:00 不打扰，22:30 后反思。
+        # schedule:
+        #   quietStart: 23
+        #   quietEnd: 8
+        #   reflectAt: "22:30"
+        #
+        # 体检默认不开：要一份真人语料和一个单独的裁判模型。
+        # exam:
+        #   enabled: true
+        #   corpus: ~/.dsh-companion/.data/corpus/human-pairs.json
+        #   judge:
+        #     provider: your-provider
+        #     model: your-judge-model
+        #
+        # 多个人格共用一套插件：一人一个 /p/<id>/、一个家、一个 preset。
+        # people:
+        #   - id: laoge
+        #     name: 阿岚
+        #     home: ~/.dsh-companion-people/laoge
+        #     preset: persona-laoge
+        #     life: []
