@@ -15,7 +15,7 @@ All notable changes to the open-source release. The private deployment's day-by-
 ### Changed
 
 - The default character is now **大肥鱼** everywhere: config, templates, locales, UI, demo, docs, and screenshots. The shipped persona remains an original, non-explicit example; the private deployment's persona and memories are still not included.
-- `README.zh-CN.md` was rewritten as an introduction to the ideas, not a translation: memory layers, a concrete example, persona layers, practical recipes, and a plugin inventory.
+- The Chinese README was rewritten as an introduction to the ideas, not a translation: memory layers, a concrete example, persona layers, practical recipes, and a plugin inventory. It now lives in `README.md` under the `#zh` anchor; `README.zh-CN.md` is a pointer for old links.
 - English README updated with the window package, Chrome extra, and test counts.
 - All screenshots regenerated with the new name; the English README shows the English UI, the Chinese README the Chinese UI.
 - Package and root versions bumped to `0.2.0`.

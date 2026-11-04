@@ -65,11 +65,13 @@ for (const dir of readdirSync(join(root, 'packages'))) {
   }
 }
 
-// README 语言切换：两边都要能点到对方
-for (const [file, other] of [['README.md', 'README.zh-CN.md'], ['README.zh-CN.md', 'README.md']]) {
-  const text = readFileSync(join(root, file), 'utf8')
-  if (!text.includes(`href="${other}"`) && !text.includes(`](${other})`)) problems.push(`${file}: 顶部没有指向 ${other} 的语言链接`)
+// README 语言切换：中英文在同一页，用锚点跳转；旧的中文文件只做指路
+const readme = readFileSync(join(root, 'README.md'), 'utf8')
+for (const [needle, label] of [['href="#en"', 'English 锚点链接'], ['name="en"', 'English 锚点'], ['href="#zh"', '中文锚点链接'], ['name="zh"', '中文锚点']]) {
+  if (!readme.includes(needle)) problems.push(`README.md: 缺少${label}`)
 }
+const zhReadme = readFileSync(join(root, 'README.zh-CN.md'), 'utf8')
+if (!zhReadme.includes('README.md#zh')) problems.push('README.zh-CN.md: 没有指回 README.md#zh')
 
 // 不该进仓库的运行数据
 for (const bad of ['.data', 'node_modules/.cache']) {
