@@ -8,6 +8,8 @@
 
 ## English
 
+<p align="right"><strong>English</strong> | <a href="#简体中文">简体中文</a></p>
+
 A local-first companion for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness). She has a persona, a notebook, moods, episodic memory, stickers, a web room, and a life of her own — and she runs entirely on your machine, against the model provider you already use.
 
 She is not a general assistant with a character prompt. She is a separate preset with no work tools: she only talks, remembers, and lives. The work stays in your normal DSH sessions.
@@ -209,6 +211,8 @@ Code is [MIT](LICENSE). The demo art is **not** MIT; see [NOTICE](NOTICE). The L
 ---
 
 ## 简体中文
+
+<p align="right"><a href="#english">English</a> | <strong>简体中文</strong></p>
 
 **大肥鱼住进了 DeepSeek Harness。**
 
