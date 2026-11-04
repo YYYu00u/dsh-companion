@@ -2,6 +2,17 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.2 — 2026-11-05
+
+### Added
+
+- History pagination in the public web package: the API returns the recent 30 rows by default and accepts `before=<seq>`; the client loads older pages when scrolled to the top and preserves scroll position.
+- [docs/integrations/ears-voice.md](docs/integrations/ears-voice.md): the cross-plugin contract for ears, voice, the `[语音 v-...]` marker, TTS cache, and history pagination.
+
+### Notes
+
+- The private host still owns the live voice-message and TTS-cache UI; the public package documents the contract but does not ship that host integration.
+
 ## 0.3.1 — 2026-11-05
 
 ### Fixed

@@ -66,7 +66,11 @@ flowchart TB
 
 The companion session is created by the web plugin (`sessionController.create({ agentPreset })`) or by the user picking the preset in DSH. It is a normal DSH session; the web plugin only sends prompts and listens to session events.
 
-## 3. Package boundaries
+## 3. Ears + voice
+
+When ears, voice, and the chat window are used together, their contracts are documented in [integrations/ears-voice.md](integrations/ears-voice.md): capture → transcript, TTS before history, the `[语音 v-...]` marker, and history pagination.
+
+## 4. Package boundaries
 
 ```
 packages/
@@ -111,7 +115,7 @@ Dependency rules:
 
 Why a monorepo and not one package per module: the five packages are versioned together, share a release note and a test run, and are installed from one checkout. Splitting `mind.js`/`memory` into separate npm packages would add ceremony without a real boundary; they are a modular monolith with explicit exports. The web room is a separate package because users may want the brain without the web UI (and vice versa is not useful).
 
-## 4. A message, end to end
+## 5. A message, end to end
 
 ```mermaid
 sequenceDiagram
@@ -145,7 +149,7 @@ Key details:
 - History reconstruction (`/api/history`) re-splits stored assistant messages, so a refresh shows the same bubbles as the live stream.
 - The web plugin stores only the session id in `.data/web-session.json`; the transcript belongs to DSH.
 
-## 5. Home directory
+## 6. Home directory
 
 ```
 ~/.dsh-companion/
@@ -179,7 +183,7 @@ Key details:
 
 Everything except `.data/` is human-editable Markdown/JSON and is meant to be committed by the owner. The core plugin will `git add/commit` changes if the home is a git repository, using the companion's name as the author. That is why `persona.md` requires owner approval: it is the stable root, and its history matters.
 
-## 6. Memory
+## 7. Memory
 
 Three layers, one write path:
 
@@ -191,7 +195,7 @@ Recall runs before each model step: the user's current message is the cue; episo
 
 The design rationale, formulas, and comparison with Mem0/Letta/Graphiti/Generative Agents are in [design/memory.md](design/memory.md).
 
-## 7. Proactive life
+## 8. Proactive life
 
 A single 60-second tick in `life.js` checks four optional modules:
 
@@ -204,7 +208,7 @@ A single 60-second tick in `life.js` checks four optional modules:
 
 All four send a `（旁白）` prompt. The web layer hides narration from the transcript; if she replies `[沉默]`, nothing is delivered. If the turn fails (provider error, timeout), `onTurnEnd` rolls the counters back and re-arms the reminder, so a network outage does not consume her budget.
 
-## 8. Configuration and first run
+## 9. Configuration and first run
 
 `config.home` is the only required path. `~` is expanded, relative paths resolve against the DSH process's working directory, and if nothing is given the default is `~/.dsh-companion`.
 
@@ -217,7 +221,7 @@ The preset patch in `packages/core/cordis.patch.yml` declares two presets:
 
 The web patch is a separate host row. Disabling it leaves the brain fully functional.
 
-## 9. Security model
+## 10. Security model
 
 - The web server binds to `127.0.0.1`; the fixed port is a convenience, not a public service.
 - State-changing requests are rejected when `Sec-Fetch-Site` is `cross-site` or `same-site`. `curl` (no header) still works for local scripting.
@@ -229,7 +233,7 @@ The web patch is a separate host row. Disabling it leaves the brain fully functi
 
 Residual risks: a local process can read the home directory; the browser MCP has whatever logins the user's Chrome profile has; the web UI has no login. These are documented, not solved, because the threat model is a single-user laptop.
 
-## 10. Failure modes
+## 11. Failure modes
 
 | Failure | Behavior |
 |---|---|

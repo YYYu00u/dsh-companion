@@ -360,10 +360,20 @@ ${senses.hisMoodOn(dateOf()) || '（今天没说话）'}`
       const unsent = delivery.unsent()
       // 他连发的几条在她那里合成了一条（换行连着），这里拆回去；她的回复拆成几条，没发出去的不显示。
       const has = (name) => Boolean(findSticker(home, name))
-      const rows = events.map(rowOf).filter(Boolean).slice(-300).flatMap((row) => (row.side === 'her'
+      const all = events.map(rowOf).filter(Boolean).flatMap((row) => (row.side === 'her'
         ? splitReply(row.text).slice(0, unsent[row.seq] ?? Infinity).map((t) => partOf(t, has))
         : row.text.split(/\n+/).filter((t) => t.trim()).map(myPart)).map((part, i) => part && ({ ...row, ...part, seq: `${row.seq}.${i}` })).filter(Boolean))
-      return sendJson(res, 200, { rows, busy: chat.busy || delivery.sending() })
+      // Recent page by default; `before` is the oldest seq already loaded.
+      const limit = Math.max(1, Math.min(100, Number(url.searchParams.get('limit')) || 30))
+      const before = url.searchParams.get('before')
+      let end = all.length
+      if (before) {
+        const at = all.findIndex((row) => row.seq === before)
+        if (at >= 0) end = at
+      }
+      const start = Math.max(0, end - limit)
+      const rows = all.slice(start, end)
+      return sendJson(res, 200, { rows, busy: chat.busy || delivery.sending(), hasMore: start > 0, before: rows[0]?.seq })
     }
 
     if (path === '/api/mind' && req.method === 'GET') {

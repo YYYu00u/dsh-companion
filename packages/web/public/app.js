@@ -31,6 +31,9 @@ const statusEl = $('status')
 const seen = new Set()
 let lastTime = 0
 let lastSide = ''
+let historyRows = []
+let historyMore = false
+let historyLoading = false
 
 const pad = (n) => String(n).padStart(2, '0')
 const locale = () => (getLang() === 'zh' ? 'zh-CN' : 'en-US')
@@ -82,6 +85,7 @@ function scrollDown() { list.scrollTop = list.scrollHeight }
 function add(row, live) {
   if (seen.has(row.seq)) return
   seen.add(row.seq)
+  if (live) historyRows.push(row)
   $('empty')?.remove()
   if (row.time - lastTime > 5 * 60_000) {
     const g = document.createElement('div')
@@ -105,13 +109,43 @@ function resetHistory() {
   lastTime = 0
   lastSide = ''
 }
+function renderHistory() {
+  list.replaceChildren()
+  seen.clear()
+  lastTime = 0
+  lastSide = ''
+  if (!historyRows.length) list.innerHTML = `<div id="empty" class="empty">${t('empty.chat')}</div>`
+  historyRows.forEach((row) => add(row, false))
+}
+
 async function loadHistory() {
-  const r = await fetch('api/history').then((r) => r.json())
-  if (r.error) return showError(t('error.history', { error: localizeError(r.error) }))
-  if (!r.rows.length) list.innerHTML = `<div id="empty" class="empty">${t('empty.chat')}</div>`
-  r.rows.forEach((row) => add(row, false))
+  list.style.visibility = 'hidden'
+  const r = await fetch('api/history?limit=30').then((r) => r.json())
+  if (r.error) { list.style.visibility = ''; return showError(t('error.history', { error: localizeError(r.error) })) }
+  historyRows = r.rows
+  historyMore = Boolean(r.hasMore)
+  renderHistory()
   busy = r.busy
   setStatus(busy ? t('status.typing') : '', busy)
+  requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; list.style.visibility = '' })
+  setTimeout(() => { list.scrollTop = list.scrollHeight }, 250)
+}
+
+async function loadOlder() {
+  if (historyLoading || !historyMore || !historyRows.length) return
+  historyLoading = true
+  const first = historyRows[0].seq
+  try {
+    const r = await fetch(`api/history?limit=30&before=${encodeURIComponent(first)}`).then((x) => x.json())
+    if (!r.error && r.rows?.length) {
+      const prevHeight = list.scrollHeight
+      const prevTop = list.scrollTop
+      historyRows = [...r.rows, ...historyRows]
+      historyMore = Boolean(r.hasMore)
+      renderHistory()
+      list.scrollTop = prevTop + (list.scrollHeight - prevHeight)
+    } else if (!r.error) historyMore = false
+  } finally { historyLoading = false }
 }
 
 function listen() {
@@ -573,6 +607,7 @@ async function switchLang(next) {
 for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => switchLang(b.dataset.lang))
 
 whoReady.then(() => { if (!who.modules.length) document.querySelector('.drawer-foot').hidden = true })
+list.addEventListener('scroll', () => { if (list.scrollTop < 60) void loadOlder() })
 loadHistory().then(listen)
 loadMind()
 setInterval(loadMind, 60_000)

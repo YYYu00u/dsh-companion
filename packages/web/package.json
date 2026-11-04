@@ -1,6 +1,6 @@
 {
   "name": "@dsh-companion/web",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "type": "module",
   "description": "Local web chat UI for dsh-companion: same brain as the preset, plus her notebook, mood, diary, stickers, and daily life.",
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "@dsh-companion/window",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "type": "module",
   "description": "A QQ-like desktop chat window for dsh-companion: chat on the left, her mood and recent moments on the right, opened from the desktop pet.",
   "license": "MIT",
