@@ -45,10 +45,10 @@
 
 ```json
 {"id":"e7","from":…,"to":…,"day":"2026-11-02","turnIds":["t40","t41",…],
- "title":"鬼屋排队","gist":"他说……我……","keywords":["鬼屋","排队","排一小时","欢乐谷"],
+ "title":"展馆排队","gist":"他说……我……","keywords":["展馆","排队","排一小时","展览"],
  "people":[],"his_mood":"松","her_mood":"开心","emotion":1,"importance":2,
  "open":["他说下次带我去"],"said":[],"new_terms":[],
- "links":[{"id":"e3","why":"他上次说去欢乐谷"}],"recalled":0,"lastRecalled":…}
+ "links":[{"id":"e3","why":"他上次说去展览"}],"recalled":0,"lastRecalled":…}
 ```
 
 另外两个辅助文件：`recalls.jsonl` 记每次想起了哪段、线索是什么（以后调参数用）；`checkpoints.jsonl` 记压缩检查点里列了哪几段，检查点再被压时带上它们，想起来时不重复拿。

@@ -57,9 +57,9 @@ test('fixLine 改错不会把原文弄丢', () => {
   try {
     const file = join(dir, 'notebook.md')
     writeFileSync(file, BOOK)
-    fixLine(file, '下周三面试', '他下周三去欢乐谷，没有面试', '他说没有面试')
+    fixLine(file, '下周三面试', '他下周三去展览，没有面试', '他说没有面试')
     const text = readFileSync(file, 'utf8')
-    assert.match(text.split('## 过去的事')[0], /去欢乐谷/)
+    assert.match(text.split('## 过去的事')[0], /去展览/)
     assert.match(text.split('## 过去的事')[1], /下周三面试.*记错了/)
   } finally {
     rmSync(dir, { recursive: true, force: true })
