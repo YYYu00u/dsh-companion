@@ -201,9 +201,13 @@ export function apply(ctx, config = {}) {
   const service = createEars({ home, config, log })
   if (typeof ctx.provide === 'function') ctx.provide('ears', service)
 
+  // `ctx.tools` is a guarded Cordis property: reading it without inject throws.
+  // Host mode has no tools; preset mode gets the service here.
+  let toolService
+  try { toolService = typeof ctx.get === 'function' ? ctx.get('tools') : undefined } catch { toolService = undefined }
   const reg = (toolName, description, properties, required, run) => {
-    if (!ctx.tools?.register) return
-    ctx.tools.register({
+    if (!toolService?.register) return
+    toolService.register({
     name: toolName,
     description,
     parameters: { type: 'object', properties, required, additionalProperties: false },

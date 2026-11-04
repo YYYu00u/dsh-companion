@@ -7,6 +7,7 @@ test('ears apply 注册 listen_now / listen_file 和 ears 服务', () => {
   const services = new Map()
   const ctx = {
     tools: { register(tool) { tools.set(tool.name, tool) } },
+    get(name) { return name === 'tools' ? this.tools : undefined },
     provide(name, value) { services.set(name, value) },
     logger: () => ({ info() {}, warn() {} }),
   }
