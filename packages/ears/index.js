@@ -10,7 +10,7 @@ import { parseWav } from './wav.js'
 import { expandPath, resolveHome } from '@dsh-companion/core/config'
 
 export const name = 'dsh-companion-ears'
-export const inject = []
+export const inject = ['webServer']
 
 const AUDIO_EXT = new Set(['.wav', '.mp3', '.m4a', '.aac', '.flac', '.ogg', '.opus', '.mp4', '.mov', '.webm'])
 const MAX_URL_BYTES = 50 * 1024 * 1024
@@ -239,7 +239,7 @@ export function apply(ctx, config = {}) {
 
   // The web page / pet menu use HTTP; the model-facing tools above are separate.
   let webServer
-  try { webServer = typeof ctx.get === 'function' ? ctx.get('webServer') : ctx.webServer } catch { webServer = undefined }
+  try { webServer = ctx.webServer ?? (typeof ctx.get === 'function' ? ctx.get('webServer') : undefined) } catch { webServer = undefined }
   if (webServer?.register) {
     const origin = () => webServer.getOrigin()
     const route = async (req, res) => {
