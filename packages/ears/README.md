@@ -34,7 +34,8 @@ Push-to-talk listening for the companion: system audio, microphone, or an audio 
    The tarball is about 1 GB because it also contains the float32 model and test audio; keep only the int8 model.
    `whisper.cpp` is still supported via `stt.provider: local`.
 
-3. Install this bundle in DSH, and point `helper` at the binary and `stt.model` at the model:
+3. Install this bundle in DSH. The top-level bundle gives you the pet menu and `/ears/api/*`; it does **not** add `listen_now` to the model tools by itself. To also give her the tools, add a preset row with the same package and config.
+4. Point `helper` at the binary and `stt.sherpa.*` at the model:
 
    ```yaml
    helper: ~/.dsh-companion/bin/EarsCapture.app/Contents/MacOS/ears-capture
@@ -46,7 +47,7 @@ Push-to-talk listening for the companion: system audio, microphone, or an audio 
        threads: 2
    ```
 
-4. Restart DSH. Grant **Screen & System Audio Recording** and/or **Microphone** when prompted.
+5. Restart DSH. Grant **Screen & System Audio Recording** and/or **Microphone** when prompted.
 
 ## Tools
 

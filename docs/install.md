@@ -110,7 +110,7 @@ Without them, `use_hands` reports that the hands are not connected and she can r
 1. Build the helper: `cd packages/ears/capture && ./build.sh`.
 2. Copy `EarsCapture.app` to `~/.dsh-companion/bin/`.
 3. Install `sherpa-onnx-node` (`cd packages/ears && npm install`) and download the SenseVoiceSmall int8 model + `tokens.txt`; point `stt.sherpa.model` / `.tokens` at them.
-4. Install the `packages/ears` bundle and restart.
+4. Install the `packages/ears` bundle and restart. The bundle alone gives you the pet menu + `/ears/api/*`; add a preset row if you also want `listen_now` in her tool list.
 5. Grant Screen & System Audio Recording / Microphone when macOS asks.
 
 `listen_now` and `listen_file` are the two tools. This is beta: capture is verified, but the first real STT run needs the SenseVoice model. See [packages/ears/README.md](../packages/ears/README.md).
