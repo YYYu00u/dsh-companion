@@ -167,7 +167,8 @@ input.addEventListener('keydown', (e) => {
 })
 input.addEventListener('input', () => {
   input.style.height = ''
-  input.style.height = Math.min(140, input.scrollHeight) + 'px'
+  // scrollHeight 不含边框，直接拿它当 height 会永远差 2px，滚动条就赖着不走
+  input.style.height = Math.min(140, input.scrollHeight + 2) + 'px'
 })
 
 // ---------- 表情包和图片 ----------
