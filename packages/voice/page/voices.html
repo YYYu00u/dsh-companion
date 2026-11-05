@@ -37,7 +37,7 @@ fetch('api/voices').then(r => r.json()).then((d) => {
     const row = document.createElement('div')
     row.className = 'row' + (v.id === cur ? ' on' : '')
     row.innerHTML = `<div class="name">${v.name}<small>${v.id} · 参考 ${v.duration}s</small></div>
-      <audio controls preload="none" src="api/voice/${v.id}"></audio>`
+      <audio controls preload="metadata" src="api/voice/${v.id}"></audio>`
     const b = document.createElement('button')
     b.className = 'pick'; b.textContent = v.id === cur ? '正在用' : '用这个'
     b.onclick = () => { localStorage.setItem('dsh-companion-voice', v.id); location.reload() }

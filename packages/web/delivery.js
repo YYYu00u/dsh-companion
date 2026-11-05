@@ -8,8 +8,8 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { STICKER_LINE, writeFileAtomic } from '@dsh-companion/core/mind'
 
-export const QUIET_MS = 3000
-export const MAX_WAIT_MS = 8000
+export const QUIET_MS = 4200
+export const MAX_WAIT_MS = 12000
 const TYPO_CHANCE = 0.04
 // 拼音输入法常见的错字：打错的那个字 ← 想打的字。
 const TYPOS = { 的: '得', 在: '再', 再: '在', 做: '作', 那: '哪', 哪: '那', 吗: '嘛', 已: '以', 象: '像', 到: '道', 得: '的', 吧: '把', 呢: '哪', 么: '没', 想: '像', 是: '事', 就: '旧' }
@@ -59,7 +59,9 @@ export function createDelivery({ home, deliver, toHer, hasSticker = () => false,
     sending = true
     while (outbox.length) {
       const item = outbox[0]
-      if (item.i > 0) await sleep(gapBefore(item.text, random))
+      // 第一条也给她一点“看到消息、想一下”的时间；后面按字数加随机间隔。
+      if (item.i === 0) await sleep(450 + 900 * random())
+      else await sleep(gapBefore(item.text, random))
       if (outbox[0] !== item) continue // 等的时候被他打断了
       outbox.shift()
       const part = partOf(item.text, hasSticker)
@@ -119,7 +121,8 @@ export function createDelivery({ home, deliver, toHer, hasSticker = () => false,
       held.push(text)
       if (image) heldImages.push(image)
       clearTimeout(timer)
-      const wait = Math.min(QUIET_MS, Math.max(0, firstAt + MAX_WAIT_MS - now()))
+      const quiet = QUIET_MS + 1400 * random()
+      const wait = Math.min(quiet, Math.max(0, firstAt + MAX_WAIT_MS - now()))
       timer = setTimeout(flush, wait)
     },
     /** 他还有话没交给她（life 不要这时候去打扰）。 */

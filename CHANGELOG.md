@@ -2,6 +2,13 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.8 — 2026-11-05
+
+### Changed
+
+- Input debounce is now 4.2–5.6 s (capped at 12 s) instead of a fixed 3 s, so a second or third message sent within the window merges into one turn.
+- The first delivered reply waits an additional 0.45–1.35 s; later lines keep the existing per-character random gap.
+
 ## 0.3.7 — 2026-11-05
 
 ### Changed
