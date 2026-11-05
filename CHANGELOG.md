@@ -2,6 +2,12 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.3 — 2026-11-05
+
+### Fixed
+
+- Window history no longer animates from the top to the bottom: `.list` uses `scroll-behavior: auto`; the first page is positioned at the bottom before it becomes visible.
+
 ## 0.3.2 — 2026-11-05
 
 ### Added

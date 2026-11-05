@@ -14,7 +14,7 @@ function pythonPath() {
   return existsSync(venv) ? venv : 'python3'
 }
 
-export function createVoiceEngine({ log = console, port = 4321, modelDir = '' } = {}) {
+export function createVoiceEngine({ log = console, port = 4321, modelDir = '', steps = 8 } = {}) {
   const url = `http://127.0.0.1:${port}`
   const script = join(PKG, 'runtime', 'tts-server.py')
   let child
@@ -30,7 +30,7 @@ export function createVoiceEngine({ log = console, port = 4321, modelDir = '' } 
 
   async function start() {
     if (await healthy()) { ready = true; return }
-    const args = [script, '--port', String(port)]
+    const args = [script, '--port', String(port), '--steps', String(steps)]
     if (modelDir) args.push('--model', modelDir)
     child = spawn(pythonPath(), args, { cwd: PKG, stdio: ['ignore', 'pipe', 'pipe'] })
     child.stdout.on('data', (d) => log.info?.(String(d).trimEnd()))
