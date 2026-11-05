@@ -1,6 +1,6 @@
 {
   "name": "@dsh-companion/core",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "type": "module",
   "description": "A chat-only companion preset for DeepSeek Harness: persona, notebook, mood, episodic memory, stickers, and optional hands.",
   "license": "MIT",

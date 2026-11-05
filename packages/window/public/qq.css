@@ -171,3 +171,11 @@ body.plain .show { display: none; }
 .more, .side-book { color: #bcd3ff; }
 .side-book { display: block; margin-top: 8px; font-size: 12.5px; text-decoration: none; }
 .side-book:hover { text-decoration: underline; }
+
+/* 侧栏固定住，长说说/长消息不把立绘顶掉 */
+.app { overflow: hidden; }
+.main { overflow: hidden; }
+.list { overflow-x: hidden; }
+.show { overflow: hidden; }
+.stage { min-height: 0; }
+.latest { max-height: 42%; overflow-y: auto; }

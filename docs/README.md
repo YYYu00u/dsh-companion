@@ -22,6 +22,7 @@ English is the primary README; the Chinese version is [../README.zh-CN.md](../RE
 | [releases/v0.3.3.md](releases/v0.3.3.md) | v0.3.3: instant bottom position in the Electron window. |
 | [releases/v0.3.4.md](releases/v0.3.4.md) | v0.3.4: thinking indicator in the web chat. |
 | [releases/v0.3.5.md](releases/v0.3.5.md) | v0.3.5: aligned 320 px sidebars. |
+| [releases/v0.3.6.md](releases/v0.3.6.md) | v0.3.6: long posts no longer displace the figure. |
 | [integrations/ears-voice.md](integrations/ears-voice.md) | Cross-plugin contract for ears, voice, history pagination, and the Electron window. |
 
 The five reviews are: [architecture](reviews/architecture.md), [UI](reviews/ui.md), [interaction](reviews/interaction.md), [function](reviews/function.md), [product](reviews/product.md).

@@ -2,6 +2,12 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.6 — 2026-11-05
+
+### Fixed
+
+- The window and web sidebars now keep the figure in place when the latest-post text is long: the shell clips overflow, the figure area can shrink, and the latest block scrolls within a capped height.
+
 ## 0.3.5 — 2026-11-05
 
 ### Changed
