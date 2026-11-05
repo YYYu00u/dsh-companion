@@ -438,6 +438,7 @@ async function loadMind() {
     }
   }
   posts.sort((a, b) => `${b.date} ${b.time}`.localeCompare(`${a.date} ${a.time}`))
+  $('side-latest').textContent = posts[0]?.text || t('side.none')
   fill('diary', posts.slice(0, 12), (p) => {
     const el = document.createElement('article'); el.className = 'post'
     const ava = document.createElement('div'); ava.className = 'ava'

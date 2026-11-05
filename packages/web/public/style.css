@@ -21,7 +21,7 @@ body {
   font: 15px/1.6 var(--sans);
   background: var(--deep) url(art-bg-desk.jpg) center / cover fixed;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 440px;
+  grid-template-columns: minmax(0, 1fr) 320px;
   max-width: 1240px;
   margin: 0 auto;
 }
@@ -314,3 +314,10 @@ body.plain .row.her.lead::before { content: var(--initial); color: #fff; font: 6
 .typing-bubble i:nth-child(3) { animation-delay: .3s; }
 .typing-bubble em { font-style: normal; font-size: 12px; margin-left: 4px; }
 @keyframes thinking-dot { 50% { opacity: .25; transform: translateY(-2px); } }
+
+/* 侧边栏统一：和 QQ 窗同宽、同字段 */
+.side-latest { position: absolute; left: 18px; right: 18px; bottom: 48px; z-index: 2; padding: 10px 12px; border-radius: 10px; background: rgba(5,12,28,.58); color: #fff; backdrop-filter: blur(4px); }
+.side-latest h2 { margin: 0 0 4px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,.6); }
+.side-latest div { font-size: 12.5px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.side-latest a { display: inline-block; margin-top: 5px; font-size: 12px; color: #bcd3ff; text-decoration: none; }
+.side-latest a:hover { text-decoration: underline; }

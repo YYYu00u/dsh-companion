@@ -153,3 +153,21 @@ body.plain .show { display: none; }
 .card-body .none { color: var(--muted); padding: 40px 0; text-align: center; }
 
 @media (prefers-reduced-motion: reduce) { .fresh .bubble, .card, .typing-row i { animation: none; } .list { scroll-behavior: auto; } }
+
+/* 和网页侧边栏统一：320px、水色、心情/正在干嘛/最近说说/本子 */
+.show { width: 320px; background: #0b1630; border-left: 0; box-shadow: inset 14px 0 30px -18px rgba(4,10,30,.6); }
+.stage { background: linear-gradient(180deg, rgba(233,243,255,.10), rgba(110,170,235,.24)), url(art-bg-tank.jpg) center / cover; }
+.stage::before { content: ""; position: absolute; inset: 0; background: linear-gradient(112deg, rgba(6,12,32,.88) 0%, rgba(6,12,32,.42) 44%, rgba(6,12,32,0) 74%); pointer-events: none; }
+.stage img { position: relative; z-index: 1; }
+.note { left: 18px; right: 18px; top: 18px; max-width: none; padding: 0; background: none; border-radius: 0; box-shadow: none; transform: none; color: #fff; font-family: var(--serif); text-shadow: 0 1px 6px rgba(0,0,0,.45); }
+.note b { font-size: 30px; letter-spacing: .1em; line-height: 1.15; }
+.note span { font-size: 13px; color: rgba(255,255,255,.86); }
+.note .doing { font-size: 12px; opacity: .78; margin-top: 5px; }
+.latest { background: rgba(5,12,28,.62); border-top: 1px solid rgba(255,255,255,.12); color: #fff; padding: 12px 18px 14px; }
+.latest h2 { color: rgba(255,255,255,.62); }
+.latest p { color: rgba(255,255,255,.92); }
+.latest time { color: rgba(255,255,255,.52); }
+.latest .none { color: rgba(255,255,255,.55); }
+.more, .side-book { color: #bcd3ff; }
+.side-book { display: block; margin-top: 8px; font-size: 12.5px; text-decoration: none; }
+.side-book:hover { text-decoration: underline; }

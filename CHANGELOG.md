@@ -2,6 +2,13 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.5 — 2026-11-05
+
+### Changed
+
+- Aligned the web and window sidebars: both are 320 px, use the same tank/figure treatment, and show the same fields: mood, what she is doing, the latest post, and a book/全部说说 entry.
+- The public window now has the `doing` field and a book link; the public web room now has a compact latest-post block.
+
 ## 0.3.4 — 2026-11-05
 
 ### Added

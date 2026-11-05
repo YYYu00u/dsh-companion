@@ -41,6 +41,7 @@ async function loadMind() {
   mind = m
   $('mood-word').textContent = m.mood?.feeling ?? ''
   $('mood-why').textContent = m.mood?.why ? `因为${m.mood.why}` : ''
+  $('doing').textContent = m.doing ? `她${m.doing}` : ''
   if (!busy) setStatus(m.doing ? `她${m.doing}` : '')
   $('card-mood').textContent = [m.mood?.feeling && `${m.mood.feeling}${m.mood.why ? `，因为${m.mood.why}` : ''}`, m.doing && `她${m.doing}`].filter(Boolean).join('　')
   if (who.main && m.mood) {
