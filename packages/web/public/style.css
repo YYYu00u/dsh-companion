@@ -325,3 +325,10 @@ body.plain .row.her.lead::before { content: var(--initial); color: #fff; font: 6
 /* 侧栏固定住，长说说不把立绘顶掉 */
 .side { overflow: hidden; }
 .side-latest { max-height: 38%; overflow-y: auto; }
+
+/* 视觉收口：无系统蓝框、心情文字限高 */
+button:focus:not(:focus-visible), .book-toggle:focus:not(:focus-visible) { outline: none; }
+.mood { max-height: 220px; overflow: hidden; background: linear-gradient(180deg, rgba(6,12,32,.94) 0%, rgba(6,12,32,.58) 50%, rgba(6,12,32,0) 100%); }
+.mood-why { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.side-latest { max-height: 34%; }
+.side-latest div { -webkit-line-clamp: 2; }

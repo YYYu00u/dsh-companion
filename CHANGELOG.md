@@ -2,6 +2,12 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.7 — 2026-11-05
+
+### Changed
+
+- Sidebar polish: no system-blue focus ring when the window opens, a stronger top gradient so mood text does not sit on the figure's face, and a capped/scrollable latest-post block so long posts cannot displace the figure.
+
 ## 0.3.6 — 2026-11-05
 
 ### Fixed
