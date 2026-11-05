@@ -81,9 +81,23 @@ function bubble(side, text, lead, fresh, img) {
 
 function scrollDown() { list.scrollTop = list.scrollHeight }
 
+let typingEl
+function showTyping(on) {
+  if (on && !typingEl) {
+    const stick = list.scrollHeight - list.scrollTop - list.clientHeight < 80
+    typingEl = document.createElement('div')
+    typingEl.className = 'row her typing-row'
+    typingEl.innerHTML = '<div class="bubble typing-bubble"><i></i><i></i><i></i><em></em></div>'
+    typingEl.querySelector('em').textContent = t('status.thinking')
+    list.appendChild(typingEl)
+    if (stick) scrollDown()
+  } else if (!on && typingEl) { typingEl.remove(); typingEl = undefined }
+}
+
 
 function add(row, live) {
   if (seen.has(row.seq)) return
+  showTyping(false)
   seen.add(row.seq)
   if (live) historyRows.push(row)
   $('empty')?.remove()
@@ -110,6 +124,7 @@ function resetHistory() {
   lastSide = ''
 }
 function renderHistory() {
+  typingEl = undefined
   list.replaceChildren()
   seen.clear()
   lastTime = 0
@@ -127,6 +142,7 @@ async function loadHistory() {
   renderHistory()
   busy = r.busy
   setStatus(busy ? t('status.typing') : '', busy)
+  if (busy) showTyping(true)
   requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; list.style.visibility = '' })
   setTimeout(() => { list.scrollTop = list.scrollHeight }, 250)
 }
@@ -153,7 +169,7 @@ function listen() {
   es.onmessage = (e) => {
     const m = JSON.parse(e.data)
     if (m.type === 'row') add(m.row, true)
-    if (m.type === 'typing') { busy = true; setStatus(t('status.typing'), true); $('tank').classList.add('typing') }
+    if (m.type === 'typing') { busy = true; setStatus(t('status.typing'), true); $('tank').classList.add('typing'); showTyping(true) }
     if (m.type === 'idle') {
       busy = false
       $('tank').classList.remove('typing')

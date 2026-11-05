@@ -307,3 +307,10 @@ body.plain .row.her.lead::before { content: var(--initial); color: #fff; font: 6
   .chat-head { gap: 8px; }
 }
 .compose .icon-btn[hidden] { display: none; }
+
+.typing-bubble { display: inline-flex; align-items: center; gap: 4px; color: #7b8499; }
+.typing-bubble i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: thinking-dot 1.1s ease-in-out infinite; }
+.typing-bubble i:nth-child(2) { animation-delay: .15s; }
+.typing-bubble i:nth-child(3) { animation-delay: .3s; }
+.typing-bubble em { font-style: normal; font-size: 12px; margin-left: 4px; }
+@keyframes thinking-dot { 50% { opacity: .25; transform: translateY(-2px); } }

@@ -2,6 +2,12 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.4 — 2026-11-05
+
+### Added
+
+- Web room typing bubble: when a turn starts, a `她在想…` row with three animated dots appears in the chat list and is removed when a message arrives or the turn ends.
+
 ## 0.3.3 — 2026-11-05
 
 ### Fixed
