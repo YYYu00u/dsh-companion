@@ -32,7 +32,7 @@ export function typoOf(text, random = Math.random) {
   const chars = [...text]
   const at = chars.findIndex((c, i) => i > 0 && TYPOS[c])
   if (at < 0) return undefined
-  const fixed = chars.slice(at, at + 2).join('')
+  const fixed = chars[at]
   return [chars.with(at, TYPOS[chars[at]]).join(''), `*${fixed}`]
 }
 

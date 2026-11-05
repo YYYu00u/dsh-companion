@@ -25,6 +25,7 @@ English is the primary README; the Chinese version is [../README.zh-CN.md](../RE
 | [releases/v0.3.6.md](releases/v0.3.6.md) | v0.3.6: long posts no longer displace the figure. |
 | [releases/v0.3.7.md](releases/v0.3.7.md) | v0.3.7: focus ring, mood text, and latest-post polish. |
 | [releases/v0.3.8.md](releases/v0.3.8.md) | v0.3.8: jittered input debounce and first-reply delay. |
+| [releases/v0.3.9.md](releases/v0.3.9.md) | v0.3.9: one-character typo correction. |
 | [integrations/ears-voice.md](integrations/ears-voice.md) | Cross-plugin contract for ears, voice, history pagination, and the Electron window. |
 
 The five reviews are: [architecture](reviews/architecture.md), [UI](reviews/ui.md), [interaction](reviews/interaction.md), [function](reviews/function.md), [product](reviews/product.md).

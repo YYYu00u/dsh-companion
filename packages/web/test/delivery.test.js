@@ -28,7 +28,7 @@ test('打错字只会改一个常见错字，并给一条更正', () => {
   assert.equal(typoOf('（笑）', () => 0), undefined)
   const [wrong, fix] = typoOf('我真的知道', () => 0)
   assert.notEqual(wrong, '我真的知道')
-  assert.match(fix, /^\*/)
+  assert.equal(fix, '*的')
 })
 
 test('她说几句，发送层按顺序一条条交出去', async () => {

@@ -2,6 +2,12 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.9 — 2026-11-05
+
+### Fixed
+
+- The typo-correction line now contains only the corrected character (`*就`) instead of also appending the next character (`*就不`).
+
 ## 0.3.8 — 2026-11-05
 
 ### Changed

@@ -73,7 +73,7 @@ If any beta item fails, it should be reported as a bug, not treated as "the repo
 - [ ] Screenshots regenerated from demo data, not the private deployment.
 - [ ] README links resolve.
 - [ ] `package.json` versions bumped together; CHANGELOG entry.
-- [ ] Tag `v0.3.8`.
+- [ ] Tag `v0.3.9`.
 
 ## Reproducing the screenshots
 
