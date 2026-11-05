@@ -245,8 +245,19 @@ ${senses.hisMoodOn(dateOf()) || '（今天没说话）'}`
   }
 
   // ---- 发送层。他的话合好了才交给她；交之前先感觉一下他是怎么回的。
+  let typoStylePref = '', typoChance
+  try { const tp = JSON.parse(readFileSync(join(home, 'profile.json'), 'utf8')); typoStylePref = typeof tp.typoStyle === 'string' ? tp.typoStyle : ''; if (Number.isFinite(Number(tp.typoChance))) typoChance = Math.max(0, Math.min(0.2, Number(tp.typoChance))) } catch {}
+  const typoStyle = typoStylePref || (() => {
+    const f = currentMood(home)?.feeling ?? ''
+    if (/甜|黏|开心|高兴|喜欢|心动/.test(f)) return 'playful'
+    if (/气|委屈|烦|难|低落|伤心/.test(f)) return 'terse'
+    if (/踏实|平静|困|无聊/.test(f)) return 'soft'
+    return 'natural'
+  })
   const delivery = createDelivery({
     home,
+    typoStyle,
+    typoChance,
     hasSticker: (name) => Boolean(findSticker(home, name)),
     deliver: (part) => {
       push({ type: 'row', row: part })

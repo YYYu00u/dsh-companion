@@ -26,14 +26,21 @@ export function splitReply(text) {
 /** 两条之间等多久：随机 0.6–1.5 秒，加上下一条每个字 0.15 秒，最多 4 秒。 */
 export const gapBefore = (text, random = Math.random) => Math.min(4000, 600 + 900 * random() + [...text].length * 150)
 
-/** 偶尔打错一个字：返回 [错的那条, 更正]，没打错就是 undefined。 */
-export function typoOf(text, random = Math.random) {
-  if (random() >= TYPO_CHANCE || [...text].length < 4 || /^[（(\[]/.test(text)) return undefined
+/** 偶发打错一个字：返回 [错的那条, 自然更正]，没打错就是 undefined。
+ * 更正不写 `*`，按 typoStyle 选：natural / soft / playful / terse。 */
+export function typoOf(text, random = Math.random, style = 'natural', chance = TYPO_CHANCE) {
+  if (random() >= chance || [...text].length < 4 || /^[（(\[]/.test(text)) return undefined
   const chars = [...text]
   const at = chars.findIndex((c, i) => i > 0 && TYPOS[c])
   if (at < 0) return undefined
   const fixed = chars[at]
-  return [chars.with(at, TYPOS[chars[at]]).join(''), `*${fixed}`]
+  const correction = {
+    natural: `打错了，是「${fixed}」`,
+    soft: `（是「${fixed}」）`,
+    playful: `是「${fixed}」啦`,
+    terse: `改：${fixed}`,
+  }[style] ?? `打错了，是「${fixed}」`
+  return [chars.with(at, TYPOS[chars[at]]).join(''), correction]
 }
 
 /** 拆出来的一条：是表情就带上 sticker（名字），没有这个表情返回 undefined（不发）。 */
@@ -44,7 +51,7 @@ export function partOf(text, hasSticker) {
   return hasSticker(name) ? { text: `[${name}]`, sticker: name } : undefined
 }
 
-export function createDelivery({ home, deliver, toHer, hasSticker = () => false, sleep = (ms) => new Promise((r) => setTimeout(r, ms)), random = Math.random, now = Date.now }) {
+export function createDelivery({ home, deliver, toHer, hasSticker = () => false, sleep = (ms) => new Promise((r) => setTimeout(r, ms)), random = Math.random, now = Date.now, typoStyle = 'natural', typoChance = TYPO_CHANCE }) {
   const unsentFile = join(home, '.data/unsent.json')
   const readUnsent = () => { try { return JSON.parse(readFileSync(unsentFile, 'utf8')) } catch { return {} } }
 
@@ -66,7 +73,8 @@ export function createDelivery({ home, deliver, toHer, hasSticker = () => false,
       outbox.shift()
       const part = partOf(item.text, hasSticker)
       if (!part) continue
-      const typo = !part.sticker && typoOf(item.text, random)
+      const style = typeof typoStyle === 'function' ? typoStyle() : typoStyle
+      const typo = !part.sticker && typoOf(item.text, random, style, typoChance)
       deliver({ ...item.row, ...part, text: typo ? typo[0] : part.text, seq: `${item.row.seq}.${item.i}`, part: item.i, last: !outbox.some((o) => o.row.seq === item.row.seq) && !typo })
       if (typo) { await sleep(800 + 700 * random()); deliver({ ...item.row, text: typo[1], seq: `${item.row.seq}.${item.i}t`, part: item.i, last: !outbox.some((o) => o.row.seq === item.row.seq) }) }
     }

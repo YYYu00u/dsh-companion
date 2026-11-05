@@ -2,6 +2,13 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.10 — 2026-11-05
+
+### Changed
+
+- Typo corrections no longer use `*word`. The follow-up is natural and selected from her current mood: `打错了，是「就」` / `（是「就」）` / `是「就」啦` / `改：就`.
+- `profile.json` can override `typoChance` (0–0.2) or pin `typoStyle`; otherwise the style follows her mood.
+
 ## 0.3.9 — 2026-11-05
 
 ### Fixed
