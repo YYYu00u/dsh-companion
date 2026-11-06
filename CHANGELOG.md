@@ -4,6 +4,14 @@ All notable changes to the open-source release. The private deployment's day-by-
 
 ## Unreleased
 
+### Added
+
+- `extensions.json` + `npm run extensions`: a machine-readable catalog of optional extensions (package, status, what to download, sha256 of model files). `node scripts/extensions.mjs check` validates it; three tests cover the invariants.
+
+### Changed
+
+- [docs/extensions.md](docs/extensions.md) now points at the manifest instead of a hand-maintained table.
+
 ### Changed
 
 - Docs: split [extensions](docs/extensions.md) out of the package table. Two base packages (core + web) are enough to chat; window, voice, ears, bing and Chrome are optional, each with its own download.

@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "note": "基础不需要这张表：core + web 装完就能聊。这里只列可选扩展，以及它们各自要额外下什么。",
+  "extensions": [
+    {
+      "id": "window",
+      "name": "独立聊天窗",
+      "package": "@dsh-companion/window",
+      "path": "packages/window",
+      "status": "beta",
+      "summary": "像 QQ 的独立窗口，聊天记录和网页是同一份；从桌宠右键打开。",
+      "downloads": []
+    },
+    {
+      "id": "web-search-bing",
+      "name": "必应搜索",
+      "package": "@dsh-companion/web-search-bing",
+      "path": "packages/web-search-bing",
+      "status": "verified",
+      "summary": "把 web_search 换成必应，不用申请 key。",
+      "downloads": []
+    },
+    {
+      "id": "voice",
+      "name": "本地嗓子",
+      "package": "@dsh-companion/voice",
+      "path": "packages/voice",
+      "status": "beta",
+      "summary": "本地 ZipVoice 零样本克隆，网页里点「▶ 语音」才念；断网能用。",
+      "requires": ["python3", "ffmpeg（生成参考音频时）", "豆包 API key（生成参考音频时，仅一次）"],
+      "downloads": [
+        {
+          "id": "zipvoice",
+          "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-zipvoice-distill-int8-zh-en-emilia.tar.bz2",
+          "sha256": null,
+          "size": 109162785,
+          "into": ".models/",
+          "files": [
+            { "path": "zipvoice/encoder.int8.onnx", "sha256": "f2de9a761a85e5ddd125dee6e05bad1c7ee92c11b83b4d775dab216a6aa41379" },
+            { "path": "zipvoice/decoder.int8.onnx", "sha256": "3cc2e08a96610d7ea1b227398e97cdbbe0414499741d3aec0b8113db2a2ab251" }
+          ]
+        },
+        {
+          "id": "vocos",
+          "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/vocoder-models/vocos_24khz.onnx",
+          "sha256": "bcb3b970e384161c4d634f0bb9e999ff1c471b34c9bc0b1049a5014065ed3cc0",
+          "size": 53884024,
+          "into": ".models/",
+          "files": []
+        }
+      ]
+    },
+    {
+      "id": "ears",
+      "name": "耳朵",
+      "package": "@dsh-companion/ears",
+      "path": "packages/ears",
+      "status": "beta",
+      "summary": "按一下录系统声音/麦克风/文件，转成文字再给她。",
+      "requires": ["sherpa-onnx-node", "macOS 采集 helper", "SenseVoice int8 模型（约 250 MB，包里有 1 GB 的压缩包）"],
+      "downloads": [
+        {
+          "id": "sensevoice",
+          "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17.tar.bz2",
+          "sha256": null,
+          "size": null,
+          "into": "~/.dsh-companion/models/sensevoice/",
+          "files": []
+        }
+      ]
+    },
+    {
+      "id": "chrome",
+      "name": "浏览器",
+      "package": null,
+      "path": "extras/chrome",
+      "status": "external",
+      "summary": "她能开 Chrome：点、填、截图。是别人的 MCP，我们只提供配置示例。",
+      "requires": ["chrome-devtools-mcp", "Chrome 扩展"],
+      "downloads": []
+    }
+  ]
+}

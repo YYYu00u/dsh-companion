@@ -34,3 +34,17 @@
 | voice | ~100 KB | 197 MB + 参考音频 6~11 MB |
 | ears | ~100 KB | SenseVoice 模型（几十 MB）+ helper |
 | chrome | 示例配置 | 别人的 MCP 包 |
+
+## 清单文件
+
+上面这些不是靠文档维护的，靠根目录的 [`extensions.json`](../extensions.json)：
+
+```bash
+npm run extensions     # 列出扩展，以及本机的包和模型在不在
+node scripts/extensions.mjs check   # 只校验清单（CI 也会跑）
+```
+
+每条记着：包名、路径、状态（verified / beta / external）、一句话用途、要下什么（URL、大小、sha256）。
+`voice` 的两个模型连**解压后文件的 sha256**都钉住了，下载脚本按它校验。
+
+加新扩展就是往清单里加一条；`npm test` 会检查 id 不重复、路径存在、包名和 `package.json` 对得上、sha256 格式对。

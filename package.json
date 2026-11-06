@@ -14,7 +14,8 @@
     "test:watch": "node --test --watch",
     "check": "node scripts/check.mjs",
     "demo": "node examples/demo/server.mjs",
-    "init-home": "node scripts/init-home.mjs"
+    "init-home": "node scripts/init-home.mjs",
+    "extensions": "node scripts/extensions.mjs list"
   },
   "repository": {
     "type": "git",
