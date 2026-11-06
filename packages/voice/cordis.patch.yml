@@ -5,8 +5,12 @@
       name: '@dsh-companion/voice'
       config:
         port: 4321
-        # 默认音色，留空用清单第一个
+        # 默认音色，留空用 voice.json 里选的、再退回清单第一个
         voice: ''
+        # 选品页和 /companion-voice/api/* 挂到 DSH 上；不想要就填 false
+        start: true
+        # 选中的音色记在哪（默认 ~/.dsh-companion/voice.json）
+        stateDir: ''
         # 8 = 质量/速度折中；16/32 更稳但更慢
         steps: 8
         # 模型目录，默认 .models/

@@ -15,7 +15,7 @@
 |---|---|---|---|
 | [`@dsh-companion/window`](../packages/window) | 像 QQ 的独立聊天窗 | 无（Electron 用 DSH 自带的） | 只在网页里聊 |
 | [`@dsh-companion/web-search-bing`](../packages/web-search-bing) | 换掉 `web_search` 的实现，不用 API key | 无 | 用 DSH 默认的搜索 |
-| [`@dsh-companion/voice`](../packages/voice) | 她能用本地音色说话，网页里点「▶ 语音」 | **197 MB 模型**（`npm run models`）+ 参考音频（`npm run refs`，要自己的豆包 key） | 只有文字和表情包 |
+| [`@dsh-companion/voice`](../packages/voice) | 她能用本地音色说话，网页里点「▶ 语音」；自带选品页 `/companion-voice/` | **197 MB 模型**（`npm run models`）+ 参考音频（`npm run refs`，要自己的豆包 key） | 只有文字和表情包 |
 | [`@dsh-companion/ears`](../packages/ears) | 按一下听系统声音/麦克风/文件，转成文字 | **ASR 模型**（SenseVoice int8）+ macOS 采集 helper | 她听不到声音 |
 | [extras/chrome](../extras/chrome) | 她能开浏览器：点、填、截图（别人的 MCP，我们只给配置） | `chrome-devtools-mcp` 和 Chrome 扩展 | 没有 `mcp__chrome__*` 工具 |
 

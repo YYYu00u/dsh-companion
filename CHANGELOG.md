@@ -6,6 +6,16 @@ All notable changes to the open-source release. The private deployment's day-by-
 
 ### Added
 
+- `@dsh-companion/voice` now serves its own HTTP surface at `/companion-voice/`: the picker page, the voice list, reference audio, `POST /api/say`, and `POST /api/voices/default` (persisted to `~/.dsh-companion/voice.json`). It no longer needs the web package to wire voice up.
+- `steps` is configurable through the plugin config, not just the Python CLI.
+- 4 route tests with a fake context (no Python, no DSH): registration, list, default persistence, page redirect.
+
+### Notes
+
+- The deployment's web room still uses its own `/api/say`; both paths end at the same local service.
+
+### Added
+
 - `extensions.json` + `npm run extensions`: a machine-readable catalog of optional extensions (package, status, what to download, sha256 of model files). `node scripts/extensions.mjs check` validates it; three tests cover the invariants.
 
 ### Changed

@@ -42,7 +42,15 @@ M 系列 Mac、纯 CPU、20~28 秒参考：
 
 ## 网页怎么用
 
-- 后端：`POST /api/say {text}` → 本地服务 → wav；`GET /api/voices` 拿清单
+插件自己把接口挂在 DSH 上（不用网页插件配合）：
+
+- `GET  /companion-voice/` 选品页：十个音色点着听，点「用这个」写进 `voice.json`
+- `GET  /companion-voice/api/voices` 清单 + 当前默认
+- `GET  /companion-voice/api/voice/<id>` 参考音频（wav）
+- `POST /companion-voice/api/say {text}` → wav
+- `POST /companion-voice/api/voices/default {id}` 换默认
+
+网页房间里的「▶ 语音」还是走它自己的 `/api/say`（部署侧的实现），两条路最后都到同一个本地服务。
 - 前端：她那条话以 `[语音]` 开头时剥掉标记，气泡后面放一个「▶ 语音」
 - 点之前 1.2 秒先后台合成（防抖，只合成最后一条）；点的时候有缓存就直接播
 - 结果按 `voice|text` 缓存，同一句第二次秒开
