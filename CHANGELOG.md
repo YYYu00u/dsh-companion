@@ -2,6 +2,13 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## Unreleased
+
+### Changed
+
+- Docs: split [extensions](docs/extensions.md) out of the package table. Two base packages (core + web) are enough to chat; window, voice, ears, bing and Chrome are optional, each with its own download.
+- Both READMEs now state the hard rule: an extension that is missing or fails to start must leave the base untouched.
+
 ## 0.3.11 — 2026-11-06
 
 ### Added

@@ -85,14 +85,22 @@ The detailed component and data-flow docs are in [docs/architecture.md](docs/arc
 
 ## Packages
 
+Two packages are the base — install those and you can talk to her. Everything below the divider is an **extension**: optional, downloaded separately, and never required. If an extension is missing or fails to start, the base must keep working (no voice button, no listening, chat unaffected). Sizes and dependencies: [docs/extensions.md](docs/extensions.md).
+
+### Base
+
 | Package | Role | Verified |
 |---|---|---|
 | [`@dsh-companion/core`](packages/core) | Chat-only preset: persona, notebook, mood, memory, stickers, body, hands | Yes — daily use before extraction; unit + fake-context smoke tests |
 | [`@dsh-companion/web`](packages/web) | Web room, SSE, history, daily life, diary UI, 中文/English switch | Yes — daily use; demo server + unit tests |
-| [`@dsh-companion/window`](packages/window) | QQ-like standalone chat window, opened from the desktop pet | Page + Electron verified; pet menu is beta |
-| [`@dsh-companion/web-search-bing`](packages/web-search-bing) | Keyless Bing search provider | Yes — parser tests, used in production |
-| [`@dsh-companion/ears`](packages/ears) | Push-to-talk system audio / mic / audio files → text | **Beta** — capture + SenseVoice verified; song ID/web UI pending |
-| [`@dsh-companion/voice`](packages/voice) | Local voice: ZipVoice zero-shot, click-to-play speech in the room | **Beta** — model/refs are local; 15–60 s per sentence |
+### Extensions (optional)
+
+| Package | Extra capability | Extra download | Verified |
+|---|---|---|---|
+| [`@dsh-companion/window`](packages/window) | QQ-like standalone chat window, opened from the desktop pet | none | Page + Electron verified; pet menu is beta |
+| [`@dsh-companion/web-search-bing`](packages/web-search-bing) | Keyless Bing search provider | none | Yes — parser tests, used in production |
+| [`@dsh-companion/ears`](packages/ears) | Push-to-talk system audio / mic / audio files → text | ASR model + macOS capture helper | **Beta** — capture + SenseVoice verified; song ID/web UI pending |
+| [`@dsh-companion/voice`](packages/voice) | Local voice: ZipVoice zero-shot, click-to-play speech in the room | 197 MB model + reference clips | **Beta** — 15–60 s per sentence |
 | QQ / voice calls | Not in this release | No |
 
 The old in-DSH chat tab is deprecated and not shipped. The Chrome wrapper is [extras/chrome](extras/chrome) — a documented setup for someone else's MCP server, not a package. See [ROADMAP.md](ROADMAP.md).
@@ -112,7 +120,7 @@ This creates `~/.dsh-companion/` with a persona, notebook, standard, self-model,
 Then install the packages as DSH bundles:
 
 1. Open **Plugins** in the DSH sidebar.
-2. Install from a local path: `packages/core` first, then `packages/web`; optionally `packages/window` (desktop chat window) and `packages/web-search-bing`.
+2. Install from a local path: `packages/core` first, then `packages/web`. That is the base and it is enough to chat; add [extensions](docs/extensions.md) later if you want a window, a voice, or ears.
 3. Restart DSH.
 4. Create a session and choose the **大肥鱼** preset. For the web room, open <http://127.0.0.1:4318/companion/>.
 

@@ -126,10 +126,26 @@
 
 ## 插件清单
 
+**先装基础两个就能聊**；后面那几张表是扩展，按需再加，不装不影响聊天。完整的体积和依赖在 [扩展说明](docs/extensions.md)。
+
+### 基础
+
 | 包 | 做什么 | 状态 |
 |---|---|---|
 | [`@dsh-companion/core`](packages/core) | 人设、本子、心情、经历记忆、表情包、身体、手 | 已验证 |
 | [`@dsh-companion/web`](packages/web) | 网页房间、SSE、本子、日子、日记、中英切换 | 已验证 |
+
+### 扩展（按需）
+
+| 包 | 多出什么能力 | 要额外下什么 |
+|---|---|---|
+| [`@dsh-companion/window`](packages/window) | 像 QQ 的独立聊天窗 | 无 |
+| [`@dsh-companion/web-search-bing`](packages/web-search-bing) | 不用 key 的必应搜索 | 无 |
+| [`@dsh-companion/ears`](packages/ears) | 按一下听声音，转成文字（beta） | ASR 模型 + 采集 helper |
+| [`@dsh-companion/voice`](packages/voice) | 本地嗓子，点「▶ 语音」才念（beta） | 197 MB 模型 + 参考音频 |
+| [extras/chrome](extras/chrome) | 她能开浏览器（别人的 MCP） | MCP 包 + Chrome 扩展 |
+
+**硬规矩**：任何扩展不在或起不来，基础功能必须照常跑——语音没声音、耳朵没按钮，但聊天不能坏。
 | [`@dsh-companion/window`](packages/window) | 像 QQ 的独立聊天窗，从桌宠右键打开 | 页面和 Electron 已验证；桌宠菜单是 beta |
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | 不用 key 的必应搜索 | 已验证 |
 | [`@dsh-companion/ears`](packages/ears) | 按一下听系统声音/麦克风/音频文件，转文字 | **beta**：采集 + SenseVoice 已验证；识歌/网页语音还没做 |
@@ -153,7 +169,7 @@ node scripts/init-home.mjs --name 大肥鱼
 然后在 DSH 里装：
 
 1. 打开侧栏 **插件** 页，从本地路径安装 `packages/core`。
-2. 再装 `packages/web`；想要独立聊天窗就再装 `packages/window`；可选 `packages/web-search-bing`。
+2. 再装 `packages/web`。到这一步就能聊了；想要独立聊天窗、语音、耳朵，再按 [扩展说明](docs/extensions.md) 加。
 3. 重启 DSH。
 4. 新建会话，选 preset「大肥鱼」。网页打开 <http://127.0.0.1:4318/companion/>。
 5. 桌宠右键「更多 / 和她聊天」，打开的是独立窗口；没装桌宠就直接开 `http://<DSH 端口>/companion-window/`。
