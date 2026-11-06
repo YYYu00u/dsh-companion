@@ -27,12 +27,12 @@
   <h1>她的嗓子</h1>
   <div class="sub">同一句「你回来啦？我今天一直等你呢。快跟我说说，今天过得怎么样。」· 本地合成，断网也能用</div>
   <div id="list"></div>
-  <div class="note">点「用这个」只是本机记一下，真正换默认音色要改插件配置（`@dsh-companion/voice` 的 `cordis.patch.yml` 的 `voice`）。</div>
+  <div class="note">点「用这个」会写入她的资料，下一次合成就用这个音色。</div>
 </div>
 <script>
 const list = document.getElementById('list')
 fetch('api/voices').then(r => r.json()).then((d) => {
-  const cur = localStorage.getItem('dsh-companion-voice') || d.default
+  const cur = d.default || localStorage.getItem('dsh-companion-voice')
   for (const v of d.voices) {
     const row = document.createElement('div')
     row.className = 'row' + (v.id === cur ? ' on' : '')
@@ -40,7 +40,7 @@ fetch('api/voices').then(r => r.json()).then((d) => {
       <audio controls preload="metadata" src="api/voice/${v.id}"></audio>`
     const b = document.createElement('button')
     b.className = 'pick'; b.textContent = v.id === cur ? '正在用' : '用这个'
-    b.onclick = () => { localStorage.setItem('dsh-companion-voice', v.id); location.reload() }
+    b.onclick = async () => { try { await fetch('api/voices/default', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: v.id }) }) } catch {} localStorage.setItem('dsh-companion-voice', v.id); location.reload() }
     row.appendChild(b)
     list.appendChild(row)
   }

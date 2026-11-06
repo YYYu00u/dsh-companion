@@ -1,6 +1,6 @@
 {
   "name": "@dsh-companion/voice",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Local voice for a companion: zero-shot cloning (ZipVoice) over a small set of reference voices, exposed as click-to-play speech in the web room.",
   "license": "MIT",

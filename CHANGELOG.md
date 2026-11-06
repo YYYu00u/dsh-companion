@@ -2,6 +2,19 @@
 
 All notable changes to the open-source release. The private deployment's day-by-day log is not published; this file starts at extraction.
 
+## 0.3.11 — 2026-11-06
+
+### Added
+
+- Mood-driven typo corrections: the fix-up is a normal sentence chosen by mood, and `profile.json` can set `typoChance` / `typoStyle`.
+- `@dsh-companion/voice` 0.1.1: long lines are split before synthesis (the model drops tails), per-request steps, and the picker persists the chosen default.
+- `[语音]` makes a whole reply spoken; `[文字]` opts a later line back out.
+- Sticker dedupe by perceptual hash (64-bit dHash, Hamming ≤ 10), ffmpeg optional.
+
+### Changed
+
+- Voice picker page and manifest copy updated to match the persisted default.
+
 ## 0.3.10 — 2026-11-05
 
 ### Changed

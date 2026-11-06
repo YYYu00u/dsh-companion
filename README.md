@@ -166,6 +166,8 @@ The demo also doubles as a UI review harness: it serves the real `packages/web/p
 
 ## Voice and listening (beta)
 
+`@dsh-companion/voice` gives her an **offline** voice: a handful of reference voices, cloned locally with ZipVoice (no training). Replies get a `▶` button in the web room; she marks a line with `[语音]` to have it spoken, and `[文字]` to opt back out. The model is 197 MB and the reference clips are generated with your own key; on CPU a sentence takes 15–60 s at 8 steps. Numbers: [packages/voice/docs/en/voice.md](packages/voice/docs/en/voice.md).
+
 `@dsh-companion/ears` records 15–30 seconds of system audio, the microphone, or an audio file and turns it into text. The capture helper is verified on macOS 15.1 / M2; ASR was verified locally with the SenseVoice int8 model; song ID and the web voice UI are still pending. There is no always-on listening. Plan and limits: [docs/plans/ears.md](docs/plans/ears.md).
 
 ## Design notes

@@ -24,7 +24,7 @@ pip install -r runtime/requirements.txt
 
 ## Speed (M-series Mac, CPU only)
 
-8 steps (default): 1.3 s of speech ≈ 15 s; 7 s ≈ 59 s. 4 steps roughly halves it.
+8 steps (default): roughly 15–60 s per sentence on an M2 CPU. 16 steps doubles the CPU time; 4 steps roughly halves it.
 Longer references are super-linearly slower (33 s vs 11 s ≈ 3×).
 
 ## Web

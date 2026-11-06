@@ -49,13 +49,13 @@ export function createVoiceEngine({ log = console, port = 4321, modelDir = '', s
     ready = false
   }
 
-  async function say(text, voice) {
+  async function say(text, voice, options = {}) {
     const id = voice || readVoices().voices[0]?.id
     if (!id) throw new Error('还没有音色')
     const r = await fetch(`${url}/tts`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ text, voice: id }),
+      body: JSON.stringify({ text, voice: id, ...(options.steps ? { steps: options.steps } : {}) }),
       signal: AbortSignal.timeout(180_000),
     })
     if (!r.ok) throw new Error(`合成失败：${await r.text().catch(() => r.status)}`)

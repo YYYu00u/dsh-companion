@@ -36,7 +36,7 @@ export function typoOf(text, random = Math.random, style = 'natural', chance = T
   const fixed = chars[at]
   const correction = {
     natural: `打错了，是「${fixed}」`,
-    soft: `（是「${fixed}」）`,
+    soft: `是「${fixed}」`,
     playful: `是「${fixed}」啦`,
     terse: `改：${fixed}`,
   }[style] ?? `打错了，是「${fixed}」`
@@ -118,7 +118,14 @@ export function createDelivery({ home, deliver, toHer, hasSticker = () => false,
   return {
     /** 她说了一条（会话事件里的一行）。 */
     out(row) {
-      const parts = splitReply(row.text)
+      // 第一行写 [语音] 就整段都走语音；后面的某一行想改回文字，行首写 [文字]。
+      const voiceAll = /^\s*\[语音\]/.test(row.text)
+      const parts = splitReply(row.text).map((text, i) => {
+        if (!voiceAll || i === 0) return text
+        if (STICKER_LINE.test(text)) return text
+        if (/^\s*\[文字\]/.test(text)) return text.replace(/^\s*\[文字\]\s*/, '')
+        return `[语音]${text}`
+      })
       parts.forEach((text, i) => outbox.push({ row, text, i }))
       void drain()
     },

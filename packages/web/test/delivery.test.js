@@ -29,7 +29,7 @@ test('打错字只会改一个常见错字，并给一条更正', () => {
   const [wrong, fix] = typoOf('我真的知道', () => 0)
   assert.notEqual(wrong, '我真的知道')
   assert.equal(fix, '打错了，是「的」')
-  assert.equal(typoOf('我真的知道', () => 0, 'soft')[1], '（是「的」）')
+  assert.equal(typoOf('我真的知道', () => 0, 'soft')[1], '是「的」')
   assert.equal(typoOf('我真的知道', () => 0, 'terse')[1], '改：的')
   assert.equal(typoOf('我真的知道', () => 1), undefined)
 })

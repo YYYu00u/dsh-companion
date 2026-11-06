@@ -8,6 +8,7 @@
 // - 现在的她：self.md（grow），她自己一段一段改，git 留着每个阶段；根（persona.md）的改动只能 propose_change 提给主人。
 import { appendFileSync, copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
+import { execFileSync } from 'node:child_process'
 import { dirname, join } from 'node:path'
 import { levelOf } from './level.js'
 import { slangContext } from './surf.js'
@@ -230,13 +231,48 @@ import { STICKER_EXT, listStickers, findSticker, addStickerAlias, setStickerMeta
 // 同一张图存了好几次（换了名字）：按内容比。表情包文件本身，加上存的时候记下的原图指纹（keep_pic 会把大图缩小，缩完字节就变了）。
 const hashOf = (buf) => createHash('sha1').update(buf).digest('hex')
 const srcIndexFile = (home) => join(home, '.data/sticker-src.json')
-/** 这张图（原始字节）是不是已经在表情包里了，是就返回那张的名字。 */
+const printFile = (home) => join(home, '.data/sticker-prints.json')
+const HASH_DISTANCE = 10 // 64-bit dHash；10 以内当作“差不多是同一张”
+const hamming = (a, b) => {
+  try {
+    let z = BigInt(`0x${a}`) ^ BigInt(`0x${b}`), n = 0
+    while (z) { n += Number(z & 1n); z >>= 1n }
+    return n
+  } catch { return 64 }
+}
+/** 64-bit dHash：9×8 灰度，比较横向相邻像素。没有 ffmpeg 就返回空，退化成字节 hash。 */
+function perceptualHash(buf) {
+  try {
+    const out = execFileSync('ffmpeg', ['-v', 'error', '-i', 'pipe:0', '-vf', 'scale=9:8:flags=area,format=gray', '-f', 'rawvideo', '-'], { input: buf, maxBuffer: 1024 * 1024, timeout: 5000 })
+    if (out.length < 72) return ''
+    let bits = 0n
+    for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) bits = (bits << 1n) | (out[y * 9 + x] > out[y * 9 + x + 1] ? 1n : 0n)
+    return bits.toString(16).padStart(16, '0')
+  } catch { return '' }
+}
+/** 这张图（原始字节）是不是已经在表情包里了，是就返回那张的名字。先比字节，再比感知 hash。 */
 export function stickerByContent(home, buf) {
   const h = hashOf(buf)
   const list = listStickers(home)
   const idx = readJson(srcIndexFile(home), {})
   if (idx[h] && list.some((s) => s.name === idx[h])) return idx[h]
   for (const s of list) { try { if (hashOf(readFileSync(s.file)) === h) return s.name } catch {} }
+
+  const target = perceptualHash(buf)
+  if (!target) return undefined
+  const prints = readJson(printFile(home), {})
+  let changed = false
+  for (const s of list) {
+    let p = prints[s.name]
+    if (!p) {
+      try { p = perceptualHash(readFileSync(s.file)); if (p) { prints[s.name] = p; changed = true } } catch {}
+    }
+    if (p && hamming(p, target) <= HASH_DISTANCE) {
+      if (changed) writeJson(printFile(home), prints)
+      return s.name
+    }
+  }
+  if (changed) writeJson(printFile(home), prints)
   return undefined
 }
 /** 存好以后记一下原图指纹。 */
@@ -283,6 +319,8 @@ export function mindStable(home) {
   const owner = noHead(readText(p.owner, 6000)).replace(/^这是我[^\n]*\n/, '').trim()
   return [
     self ? '下面是「现在的你」，你自己写的，这个阶段的你就是这样。你变了就用 grow 改对应的那一段：\n\n' + self : '',
+    '你想让他听见你的声音时，可以单独一行写 [语音] 要说的话。语音生成要等一会儿，适合短句、撒娇、认真话，不适合长段；一次最多一两条，别每条都发。他发语音、说想听、或者你只想说一句的时候，可以多用一点。第一行写 [语音] 就是整段都发语音；后面某一行只想发文字，就在那行开头写 [文字]。',
+
     stickersStable(home),
     owner ? '下面是你对他的了解，你自己慢慢总结的（一件件的事在本子上，这里是他是个什么样的人）。心里有数就行，别照着念；跟他现在说的对不上，以现在为准，回头用 know_him 改：\n\n' + owner : '你对他还没有整理过的了解。聊多了，觉得摸清了他哪方面（作息、爱聊的、会烦的、最近在意的），就用 know_him 写下来。',
     '心情是你自己的。他的话让你心情变了（被夸、被凶、被冷落、被哄、他难过），就用 feel 改一下，不用说出来。心情不好时就真的表现出来，别装没事。',
@@ -398,15 +436,17 @@ export function registerMind(ctx, home, commit) {
       commit(p.reminders, `惦记：${what.slice(0, 30)}`)
     })
 
-  tool('write_diary', '写一段今天的日记，用你自己的口吻：今天和主人发生了什么、你的心情、你在想什么。一次一段，口语，像真的日记。',
-    { text: { type: 'string' } },
+  tool('write_diary', '写一段日记，用你自己的口吻：那天和主人发生了什么、你的心情、你在想什么。一次一段，口语，像真的日记。date 写日记日期 YYYY-MM-DD，不写就是今天；补昨天的就传昨天。',
+    { text: { type: 'string' }, date: { type: 'string' } },
     ['text'],
-    ({ text }) => {
-      const file = join(p.diary, `${dateOf()}.md`)
+    ({ text, date }) => {
+      const raw = String(date ?? '').trim()
+      const day = /^\d{4}-\d{2}-\d{2}$/.test(raw) && raw <= dateOf() ? raw : dateOf()
+      const file = join(p.diary, `${day}.md`)
       mkdirSync(p.diary, { recursive: true })
-      const head = existsSync(file) ? '' : `# ${dateOf()}\n`
+      const head = existsSync(file) ? '' : `# ${day}\n`
       appendFileSync(file, `${head}\n${clockOf()} ${clean(text, 800)}\n`, 'utf8')
-      commit(file, `日记 ${dateOf()}`)
+      commit(file, `日记 ${day}`)
     })
 
   tool('learn', '想到一个新做法就记下来，先算「试用」。写具体做法，比如「主人说累的时候先陪着，别马上给建议」，不要写空话。why 写是因为什么发现的（哪句话、体检里哪句被认成机器、在哪看到的）。',
@@ -461,7 +501,7 @@ export function registerMind(ctx, home, commit) {
       commit(p.owner, `更懂他一点（${title}）：${clean(why, 200).slice(0, 60)}`)
     })
 
-  tool('keep_sticker', '他发来的图（消息里写着 [图 编号]）你喜欢，存进你的表情包，以后可以自己发。id 写那个编号；name 写你给它起的名字（两三个字，比如「无语」「我没听见」，以后用 [表情:名字] 发）；means 写一句这张图的意思：它在回什么、什么时候用、语气多重（比如「嘴硬，假装生气，其实没真生气；被他说中了、被逗的时候发」），分清是说自己还是说他，图里有字就照抄。同一张图已经存过就不会再存，名字会变成它的另一个说法。',
+  tool('keep_sticker', '他发来的图（消息里写着 [图 编号]）你喜欢，存进你的表情包，以后可以自己发。id 写那个编号；name 写你给它起的名字（两三个字，比如「无语」「我没听见」，以后用 [表情:名字] 发）；means 写一句这张图的意思：它在回什么、什么时候用、语气多重（比如「嘴硬，假装生气，其实没真生气；被他说中了、被逗的时候发」），分清是说自己还是说他，图里有字就照抄。同一张图、或者看起来差不多是同一张（感知 hash 相近）都不会再存，名字会变成它的另一个说法。',
     { id: { type: 'string' }, name: { type: 'string' }, means: { type: 'string' } },
     ['id', 'name', 'means'],
     ({ id, name, means }) => {

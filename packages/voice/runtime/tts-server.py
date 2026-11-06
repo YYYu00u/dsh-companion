@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 import threading
 import time
@@ -72,6 +73,42 @@ def build_tts(model_dir, threads=4):
         max_num_sentences=1,
     ))
 
+
+
+def split_speech(text, limit=36, max_chunks=8):
+    """Long lines are split before synthesis: ZipVoice drops the tail on long inputs."""
+    text = re.sub(r"\s+", " ", str(text or "")).strip()
+    if not text:
+        return []
+    if len(text) <= limit:
+        return [text]
+    parts = re.split(r"(?<=[。！？!?；;\n])", text)
+    chunks, cur = [], ""
+    for part in parts:
+        part = part.strip()
+        if not part:
+            continue
+        if len(part) > limit:
+            if cur:
+                chunks.append(cur); cur = ""
+            # no punctuation inside: cut on comma, then hard-cut
+            bits = re.split(r"(?<=[，,])", part)
+            for bit in bits:
+                bit = bit.strip()
+                while len(bit) > limit:
+                    chunks.append(bit[:limit]); bit = bit[limit:]
+                if bit:
+                    chunks.append(bit)
+            continue
+        if len(cur) + len(part) <= limit:
+            cur += part
+        else:
+            if cur:
+                chunks.append(cur)
+            cur = part
+    if cur:
+        chunks.append(cur)
+    return [c.strip() for c in chunks if c.strip()][:max_chunks]
 
 def synth(tts, voices, text, voice_id, steps=8):
     ref, sr = voices.ensure(voice_id)
@@ -137,15 +174,26 @@ def main():
             if voice not in voices.meta:
                 return self._json(400, {"error": f"没有这个音色：{voice}"})
 
-            key = hashlib.sha1(f"{voice}|{text}".encode()).hexdigest()
+            try:
+                steps = int(req.get("steps") or a.steps)
+            except Exception:
+                steps = a.steps
+            steps = max(1, min(32, steps))
+            chunks = split_speech(text)
+            chunk_steps = 8 if len(chunks) > 1 or len(text) > 35 else steps
+            key = hashlib.sha1(f"{voice}|{text}|{chunk_steps}|{len(chunks)}".encode()).hexdigest()
             if key in _cache:
                 data = _cache[key]
             else:
                 t1 = time.time()
                 with _lock:
-                    samples, rate = synth(tts, voices, text, voice, a.steps)
+                    pieces, rate = [], 24000
+                    for chunk in chunks:
+                        piece, rate = synth(tts, voices, chunk, voice, chunk_steps)
+                        pieces.append(piece)
+                    samples = np.concatenate(pieces) if pieces else np.zeros(0, dtype=np.float32)
                 data = wav_bytes(samples, rate)
-                print(f"[voice] {voice} {len(samples)/rate:.1f}s 音频 / {time.time()-t1:.1f}s 合成", flush=True)
+                print(f"[voice] {voice} {len(samples)/rate:.1f}s 音频 / {time.time()-t1:.1f}s 合成 / {len(chunks)} 段 / {chunk_steps} 步", flush=True)
                 _cache[key] = data
                 _order.append(key)
                 if len(_order) > CACHE_MAX:
