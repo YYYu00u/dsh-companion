@@ -360,6 +360,10 @@ ${senses.hisMoodOn(dateOf()) || '（今天没说话）'}`
     return { id, mediaType, data: bytes.toString('base64') }
   }
 
+  const shotsFile = join(home, '.data/her-shots.json')
+  const readShots = () => { try { return JSON.parse(readFileSync(shotsFile, 'utf8')) } catch { return [] } }
+  const writeShots = (list) => writeFileAtomic(shotsFile, JSON.stringify(list.slice(-40), null, 2) + '\n')
+
   // ---- 路由
   async function handle(req, res) {
     const url = new URL(req.url, 'http://localhost')
@@ -371,9 +375,12 @@ ${senses.hisMoodOn(dateOf()) || '（今天没说话）'}`
       const unsent = delivery.unsent()
       // 他连发的几条在她那里合成了一条（换行连着），这里拆回去；她的回复拆成几条，没发出去的不显示。
       const has = (name) => Boolean(findSticker(home, name))
-      const all = events.map(rowOf).filter(Boolean).flatMap((row) => (row.side === 'her'
-        ? splitReply(row.text).slice(0, unsent[row.seq] ?? Infinity).map((t) => partOf(t, has))
-        : row.text.split(/\n+/).filter((t) => t.trim()).map(myPart)).map((part, i) => part && ({ ...row, ...part, seq: `${row.seq}.${i}` })).filter(Boolean))
+      const all = [
+        ...events.map(rowOf).filter(Boolean).flatMap((row) => (row.side === 'her'
+          ? splitReply(row.text).slice(0, unsent[row.seq] ?? Infinity).map((t) => partOf(t, has))
+          : row.text.split(/\n+/).filter((t) => t.trim()).map(myPart)).map((part, i) => part && ({ ...row, ...part, seq: `${row.seq}.${i}` })).filter(Boolean)),
+        ...readShots(),
+      ].sort((a, b) => a.time - b.time)
       // Recent page by default; `before` is the oldest seq already loaded.
       const limit = Math.max(1, Math.min(100, Number(url.searchParams.get('limit')) || 30))
       const before = url.searchParams.get('before')
@@ -411,6 +418,22 @@ ${senses.hisMoodOn(dateOf()) || '（今天没说话）'}`
         skills: readSkills(home).map((s) => ({ id: s.id, one: s.one })),
         wishes: readWishes(home).reverse(),
       })
+    }
+
+    if (path === '/api/her/send' && req.method === 'POST') {
+      let body
+      try { body = JSON.parse((await readBody(req, MAX_BODY)) || '{}') } catch (error) {
+        return sendJson(res, error.tooLarge ? 413 : 400, { error: error.tooLarge ? '图太大了（4MB 以内）' : '请求看不懂' })
+      }
+      const m = typeof body.image === 'string' && body.image.match(/^data:(image\/(?:png|jpeg|webp|gif));base64,([A-Za-z0-9+/=]+)$/)
+      if (!m) return sendJson(res, 400, { error: '只能发 png、jpg、webp、gif 图片' })
+      const bytes = Buffer.from(m[2], 'base64')
+      if (bytes.length > MAX_PIC) return sendJson(res, 400, { error: '图太大了，4MB 以内' })
+      const pic = savePic(bytes, m[1])
+      const row = { seq: `h${Date.now()}`, time: Date.now(), side: 'her', text: String(body.text ?? '').trim().slice(0, 200), pic: pic.id }
+      const all = readShots(); all.push(row); writeShots(all)
+      push({ type: 'row', row })
+      return sendJson(res, 200, { ok: true, row })
     }
 
     if (path === '/api/send' && req.method === 'POST') {

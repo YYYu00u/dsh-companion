@@ -27,6 +27,14 @@ All notable changes to the open-source release. The private deployment's day-by-
 - Docs: split [extensions](docs/extensions.md) out of the package table. Two base packages (core + web) are enough to chat; window, voice, ears, bing and Chrome are optional, each with its own download.
 - Both READMEs now state the hard rule: an extension that is missing or fails to start must leave the base untouched.
 
+## 0.3.14 — a screenshot she can send
+
+### Added
+
+- `send_screen`: captures the desktop, resizes it to 1280px, and sends it as her image message through the web room.
+- `POST /api/her/send`: stores the image under `.data/stickers-in`, appends to `.data/her-shots.json`, and merges it into history.
+- `chatBase` core config (default `/companion`) tells the tool where the web room is mounted.
+
 ## 0.3.13 — public access without the search gate
 
 ### Added

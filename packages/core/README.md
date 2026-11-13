@@ -7,7 +7,7 @@ The brain: a chat-only DSH preset with a persona, a notebook, moods, episodic me
 - A system-prompt section from `persona.md` (re-read every turn).
 - A stable background: notebook, body index, memory index, self/owner/standard/lessons.
 - Per-turn context: mood, reminders, senses, relevant episodes.
-- Tools: `take_note`, `fix_note`, `its_past`, `feel`, `keep_in_mind`, `write_diary`, `learn`, `judge_lesson`, `felt_it`, `update_standard`, `propose_change`, `grow`, `know_him`, `want_to`, `did`, `let_go`, `keep_sticker`, `edit_sticker`, `find_sticker`, `hot_list`, `hot_comments`, `pick_up`, `douyin_feed`, `douyin_hot`, `tieba_posts`, `tieba_thread`, `find_pic`, `look_pic`, `keep_pic`, `look_body`, `recall`, `wish`, `use_hands`, `look_back`.
+- Tools: `take_note`, `fix_note`, `its_past`, `feel`, `keep_in_mind`, `write_diary`, `learn`, `judge_lesson`, `felt_it`, `update_standard`, `propose_change`, `grow`, `know_him`, `want_to`, `did`, `let_go`, `keep_sticker`, `edit_sticker`, `find_sticker`, `hot_list`, `hot_comments`, `pick_up`, `douyin_feed`, `douyin_hot`, `tieba_posts`, `tieba_thread`, `find_pic`, `look_pic`, `keep_pic`, `look_body`, `recall`, `wish`, `use_hands`, `look_back`, `bilibili`, `send_screen`.
 - A memory hook: archive turns, recall episodes, `look_back`.
 - A compaction entry (`./compact`) that subclasses DSH's basic compaction engine.
 

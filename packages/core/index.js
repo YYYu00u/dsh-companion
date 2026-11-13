@@ -3,7 +3,8 @@
 // - 给她一个 take_note 工具，让她自己往「关于主人」「我自己的事」两节里记一笔。
 // - 这一行挂在伙伴 preset 里面，所以上下文和工具只出现在伙伴会话，别的会话看不到。
 import { execFile } from 'node:child_process'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
 import { mindStable, registerMind, writeFileAtomic } from './mind.js'
 import { registerSurf } from './surf.js'
@@ -32,6 +33,34 @@ const notebookTemplate = (who) => `# ${who}的小本子
 
 ## 我自己的事
 `
+
+function registerScreen(ctx, config = {}) {
+  const chatBase = String(config.chatBase ?? '/companion').replace(/\/+$/, '')
+  ctx.tools.register({
+    name: 'send_screen',
+    description: '截一张当前电脑屏幕，作为你的图片消息发给主人看。他说“发给我看看”“截个图”，或者你看到好玩的、想让他看你屏幕上在放什么时用；只读，不动鼠标键盘。',
+    parameters: { type: 'object', properties: {}, additionalProperties: false },
+    output: { schema: { type: 'object', properties: { text: { type: 'string' } }, required: ['text'], additionalProperties: false }, render: (_a, v) => [{ type: 'text', text: v.text }] },
+    timeoutMs: 30000,
+    async execute() {
+      const file = join(tmpdir(), `dsh-companion-screen-${process.pid}-${Date.now()}.png`)
+      try {
+        await new Promise((resolve, reject) => execFile('screencapture', ['-x', '-t', 'png', file], { timeout: 15_000 }, (e) => e ? reject(e) : resolve()))
+        await new Promise((resolve) => execFile('sips', ['-Z', '1280', file, '--out', file], () => resolve()))
+        const data = readFileSync(file).toString('base64')
+        const origin = (() => { try { return ctx.get('webServer').getOrigin() } catch { return '' } })()
+        if (!origin) return { text: '截到了，但网页服务没接上，发不出去。' }
+        const r = await fetch(`${origin}${chatBase}/api/her/send`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ image: `data:image/png;base64,${data}`, text: '看这个' }) })
+        if (!r.ok) return { text: `截到了，但发不出去：${await r.text().catch(() => r.status)}` }
+        return { text: '截好发过去了。' }
+      } catch (error) {
+        return { text: `截不到屏：${error?.message ?? error}` }
+      } finally {
+        try { if (existsSync(file)) rmSync(file) } catch {}
+      }
+    },
+  })
+}
 
 function registerBili(ctx) {
   const clean = (s) => String(s ?? '').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").trim()
@@ -246,6 +275,7 @@ export function apply(ctx, config = {}) {
   registerMind(ctx, home, commit)
   registerSurf(ctx, home, commit)
   registerBili(ctx)
+  registerScreen(ctx, config)
   registerPics(ctx, home, commit)
   registerSocial(ctx, home)
   // 记忆：原话档案、每轮想起来、look_back（写经历在压缩那边：./memory/compact.js）
