@@ -27,6 +27,13 @@ All notable changes to the open-source release. The private deployment's day-by-
 - Docs: split [extensions](docs/extensions.md) out of the package table. Two base packages (core + web) are enough to chat; window, voice, ears, bing and Chrome are optional, each with its own download.
 - Both READMEs now state the hard rule: an extension that is missing or fails to start must leave the base untouched.
 
+## 0.3.13 — public access without the search gate
+
+### Added
+
+- `bilibili` tool: public search, video info, popular and ranking through Bilibili's public endpoints, no login and no search-page captcha.
+- Hands prompt: on a captcha/slider/scan gate, stop and hand off; for Bilibili search, try public data or a `site:bilibili.com` search instead of hitting the gate.
+
 ## 0.3.12 — the desktop window
 
 ### Added

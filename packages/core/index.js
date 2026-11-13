@@ -33,6 +33,43 @@ const notebookTemplate = (who) => `# ${who}的小本子
 ## 我自己的事
 `
 
+function registerBili(ctx) {
+  const clean = (s) => String(s ?? '').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").trim()
+  const secs = (n) => { n = Number(n) || 0; const m = Math.floor(n / 60); return `${m}:${String(n % 60).padStart(2, '0')}` }
+  const get = async (path) => {
+    const r = await fetch(`https://api.bilibili.com${path}`, { headers: { 'user-agent': 'Mozilla/5.0', referer: 'https://www.bilibili.com/' }, signal: AbortSignal.timeout(15_000) })
+    if (!r.ok) throw new Error(`B站接口 ${r.status}`)
+    const d = await r.json()
+    if (d.code !== 0) throw new Error(d.message || `B站接口 code ${d.code}`)
+    return d.data
+  }
+  const line = (v) => `- ${clean(v.title)}｜UP：${clean(v.owner?.name ?? v.author)}｜${secs(v.duration)}｜播放 ${Number(v.stat?.view ?? v.play ?? 0).toLocaleString('zh-CN')}\n  https://www.bilibili.com/video/${v.bvid}`
+  ctx.tools.register({
+    name: 'bilibili',
+    description: '看 B 站公开内容，不需要登录：query 搜视频，bvid 看一个视频，mode=popular/ranking 看热门或排行榜。搜索页被验证码挡住时优先用这个。',
+    parameters: { type: 'object', properties: { query: { type: 'string' }, bvid: { type: 'string' }, mode: { type: 'string', enum: ['popular', 'ranking'] } }, additionalProperties: false },
+    output: { schema: { type: 'object', properties: { text: { type: 'string' } }, required: ['text'], additionalProperties: false }, render: (_a, v) => [{ type: 'text', text: v.text }] },
+    timeoutMs: 25000,
+    async execute({ query, bvid, mode } = {}) {
+      try {
+        if (bvid) {
+          const v = await get(`/x/web-interface/view?bvid=${encodeURIComponent(String(bvid).trim())}`)
+          return { text: `${clean(v.title)}\nUP：${clean(v.owner?.name)}｜${secs(v.duration)}｜播放 ${Number(v.stat?.view ?? 0).toLocaleString('zh-CN')}\nhttps://www.bilibili.com/video/${v.bvid}\n${clean(v.desc).slice(0, 300)}` }
+        }
+        if (mode === 'popular' || mode === 'ranking') {
+          const d = mode === 'ranking' ? await get('/x/web-interface/ranking/v2?rid=0&type=all') : await get('/x/web-interface/popular?ps=10&pn=1')
+          return { text: `B站${mode === 'ranking' ? '排行榜' : '热门'}：\n` + (d.list ?? []).slice(0, 10).map(line).join('\n') }
+        }
+        const q = String(query ?? '').trim()
+        if (!q) throw new Error('给 query、bvid 或 mode')
+        const d = await get(`/x/web-interface/search/type?search_type=video&keyword=${encodeURIComponent(q)}&page=1`)
+        const list = (d.result ?? []).slice(0, 8)
+        return { text: list.length ? `B站搜索「${q}」：\n` + list.map(line).join('\n') : `「${q}」没搜到视频。` }
+      } catch (error) { return { text: `B站没看成：${error?.message ?? error}` } }
+    },
+  })
+}
+
 function today() {
   const d = new Date()
   const p = (n) => String(n).padStart(2, '0')
@@ -208,6 +245,7 @@ export function apply(ctx, config = {}) {
   const commit = committer(home, { name: who, email: config.email ?? 'persona@local' })
   registerMind(ctx, home, commit)
   registerSurf(ctx, home, commit)
+  registerBili(ctx)
   registerPics(ctx, home, commit)
   registerSocial(ctx, home)
   // 记忆：原话档案、每轮想起来、look_back（写经历在压缩那边：./memory/compact.js）
