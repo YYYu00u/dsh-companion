@@ -208,6 +208,12 @@ The demo also doubles as a UI review harness: it serves the real `packages/web/p
 
 `@dsh-companion/window` is a QQ-like standalone window: chat on the left, her mood and recent moments on the right, a profile card when you click her. It is served at `/companion-window/` and uses the same transcript as the web room. It opens from the desktop pet's right-click menu, or directly from the URL. Images open full-screen on click; close with the backdrop, `×`, or Escape.
 
+### The profile card
+
+![The profile card](docs/images/profile.jpg)
+
+<sub>Chinese UI, demo data. The facts and appearance are shared; the signature, voice and chat history belong to the current persona slot.</sub>
+
 ## Voice and listening (beta)
 
 `@dsh-companion/voice` gives her an **offline** voice: a handful of reference voices, cloned locally with ZipVoice (no training). Replies get a `▶` button in the web room; she marks a line with `[语音]` to have it spoken, and `[文字]` to opt back out. The model is 197 MB and the reference clips are generated with your own key; on CPU a sentence takes 15–60 s at 8 steps. Numbers: [packages/voice/docs/en/voice.md](packages/voice/docs/en/voice.md).
