@@ -1,26 +1,62 @@
 <p align="right"><strong>English</strong> | <a href="README.zh-CN.md">简体中文</a></p>
 
-# dsh-companion
+<p align="center">
+  <img src="packages/core/icon.svg" width="88" alt="">
+</p>
 
-[![CI](https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml/badge.svg)](https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml)
+<h1 align="center">dsh-companion</h1>
 
-A local-first companion for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness). She has a persona, a notebook, moods, episodic memory, stickers, a web room, and a life of her own — and she runs entirely on your machine, against the model provider you already use.
+<p align="center"><strong>She remembers your life, not just your last 20 messages.</strong></p>
 
-She is not a general assistant with a character prompt. She is a separate preset with no work tools: she only talks, remembers, and lives. The work stays in your normal DSH sessions.
+<p align="center">A local-first companion for <a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness</a>.<br>
+Persona, notebook, moods, episodic memory, a room, and a life of her own — all plain files on your machine.</p>
+
+<p align="center">
+  <a href="https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml"><img src="https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2ea44f" alt="License: MIT"></a>
+  <a href="https://github.com/deepseek-ai/deepseek-harness"><img src="https://img.shields.io/badge/DSH-0.2.1--rc.5-5b6cff" alt="DeepSeek Harness"></a>
+  <img src="https://img.shields.io/badge/status-beta-f0a020" alt="Beta">
+</p>
 
 ![The web room, English UI](docs/images/home-en.jpg)
 
 <sub>English UI, demo data. The right side is her tank: the water colour follows her mood. The notebook tabs are "Today / Moments / You / Learning".</sub>
 
-## Why another companion project
+## The 30-second version
+
+Most companions remember the last N messages. When the context fills, they compress it into a paragraph, and the relationship becomes "they talked about some things".
+
+This one is built around what survives that compression:
+
+- **Local-first.** Persona, diary, memories, stickers and state are plain files in a directory you own. No account, no telemetry, no hosted service.
+- **Continuity, not cleverness.** Raw turns become episodes; episodes are recalled by relevance and a forgetting curve; the notebook and self-model stay in the prompt.
+- **Separate from work.** She is a preset with no shell, no file editing and no approval prompts. If she needs hands, they run in a child session with a narrow toolset.
+- **Bring your own model.** Any provider/model DSH can route to. The companion and the optional judge model are configured separately.
+
+## A small example
+
+> You: "Interview next Wednesday. A bit nervous."
+>
+> She notes it. On Wednesday she asks how it went.
+>
+> You: "Done. It went okay."
+>
+> She moves it to "past" and stops asking.
+>
+> A month later: "Interviews are annoying."
+>
+> She: "Last time you were nervous too, and it went better than you expected."
+
+That is the difference between **remembering** and **storing**.
+
+## Why this exists
 
 Most "AI girlfriend" stacks are cloud products: your conversations live on someone else's server, the character is fixed, and the model is chosen for you. This project takes the opposite position:
 
-- **Local-first.** Persona, diary, memories, stickers, and state are plain files in a directory you own. No telemetry, no account, no hosted service.
-- **Bring your own model.** Any provider/model DSH can route to. The companion and the judge/exam model are configured separately.
-- **Plugin-native.** It is a DSH preset + a host plugin, not a separate app that scrapes a chat UI. Sessions, tools, and context come from DSH.
-- **Continuity over cleverness.** The interesting part is not the prompt; it is what survives a compaction: raw turns → episodes → recall, plus a notebook and a self-model that she edits herself.
-- **Separated from work.** She gets no shell, no file editing, no approval prompts. If she needs hands, they run in a separate child session with a narrow toolset.
+- **Local-first.** The only outbound traffic is what DSH already sends to your model provider and the sites she explicitly visits.
+- **Plugin-native.** A DSH preset plus host plugins, not a separate app scraping a chat UI. Sessions, tools and context come from DSH.
+- **Files over dashboards.** Edit `persona.md` and the next sentence changes. Read the diary with `cat`. Back it up with git.
+- **Honest about the seams.** Beta features are labelled; what is not verified is written down in [docs/verification.md](docs/verification.md).
 
 ## What is inside
 

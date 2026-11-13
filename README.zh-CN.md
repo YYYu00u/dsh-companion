@@ -1,26 +1,62 @@
 <p align="right"><a href="README.md">English</a> | <strong>简体中文</strong></p>
 
-# dsh-companion
+<p align="center">
+  <img src="packages/core/icon.svg" width="88" alt="">
+</p>
 
-[![CI](https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml/badge.svg)](https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml)
+<h1 align="center">dsh-companion</h1>
 
-**大肥鱼住进了 DeepSeek Harness。**
+<p align="center"><strong>她记得的是你们的日子，不只是最近二十句。</strong></p>
 
-她不是那种随叫随到的聊天角色。她有自己的本子、心情、经历和日子；你不在的时候，她会自己找事做；你回来的时候，她记得你们上次聊到哪。所有东西都在你的电脑上，模型用你自己配的。
+<p align="center">跑在 <a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness</a> 里的本地陪伴。<br>
+人设、本子、心情、经历、网页房间和她自己的日子——都是你电脑上的普通文件。</p>
+
+<p align="center">
+  <a href="https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml"><img src="https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2ea44f" alt="License: MIT"></a>
+  <a href="https://github.com/deepseek-ai/deepseek-harness"><img src="https://img.shields.io/badge/DSH-0.2.1--rc.5-5b6cff" alt="DeepSeek Harness"></a>
+  <img src="https://img.shields.io/badge/status-beta-f0a020" alt="Beta">
+</p>
 
 ![网页房间](docs/images/home.jpg)
 
 <sub>中文界面，演示数据。右上角可以切 English；右边是她的鱼缸，水色跟着心情变。</sub>
 
-大多数 AI 陪伴聊到第三十天就露馅：她记得的是最近二十句，不是你。这个项目想做的，就是让“同一个人”这件事成立——压缩、重启、换模型之后，她还是她。
+## 30 秒
 
-## 她到底是什么
+大多数 AI 陪伴记得的是最近 N 句。上下文满了就压成一段摘要，关系变成“他们聊过一些事”。
 
-一句话：**一个只聊天的 DSH preset，加一个网页房间。**
+这里做的是压缩之后还剩下的东西：
 
-- 不是另一个 App。会话、工具、上下文都走 DSH，她和你正常的干活会话是分开的。
-- 不是“带人设的助手”。她没有 shell、不改文件、不弹审批；要动手，手在单独的子会话里跑。
-- 不是云服务。人设、日记、记忆、表情包都是你目录里的普通文件，没有账号，没有遥测。
+- **本地优先。** 人设、日记、记忆、表情包、状态都是你目录里的普通文件。没有账号、没有遥测、没有托管服务。
+- **连续，而不是聪明。** 原话先存档，压缩时写成一段段“经历”；每轮按相关度和遗忘曲线回忆；本子和“现在的她”一直在提示里。
+- **和干活分开。** 她是一个没有 shell、不改文件、不弹审批的 preset。真要动手，手在单独的子会话里跑，只带很窄的工具。
+- **模型自己选。** DSH 能路由的 provider/model 都行；陪伴模型和可选的裁判模型分开配。
+
+## 一个具体的例子
+
+> 你：“下周三面试，有点烦。”
+>
+> 她记下来。周三晚上问你面得怎么样。
+>
+> 你：“面完了，还行。”
+>
+> 她把这条收进“过去的事”，不再反复问。
+>
+> 一个月后你又说：“面试好烦。”
+>
+> 她：“上次你也说烦，后来面得挺顺的。”
+
+这就是**记得**和**存下来**的区别。
+
+## 为什么做这个
+
+大多数“AI 女友”是云产品：聊天在别人服务器上，角色是固定的，模型也没得选。这个项目反过来：
+
+- **本地优先。** 唯一的出站流量是 DSH 本来就会发给模型 provider 的请求，以及她主动去看的网站。
+- **插件原生。** 是 DSH 的 preset + host 插件，不是一个去抓聊天框的独立 App。会话、工具、上下文都来自 DSH。
+- **文件优先。** 改 `persona.md`，下一句话就变；日记直接 `cat`；备份用 git。
+- **不装。** beta 就写 beta；没验过的写在 [docs/verification.md](docs/verification.md)。
 
 ## 她怎么记住你
 
@@ -36,7 +72,7 @@
 
 短期满了会压缩。大多数做法是压成一段摘要，压完就只剩一句“他们聊过一些事”。这里的做法是：被压掉的原话按时间切成几阵，写成一条条经历（标题、经过、关键词、提到的人、情绪、重要度、没兑现的事、关联），再把最近几段的一行经过留在聊天历史里。
 
-### 一个具体的例子
+### 压缩之后发生什么
 
 你说：“下周三面试，有点烦。”
 
