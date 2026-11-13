@@ -182,6 +182,18 @@ function showTyping(on) {
   } else if (!on && typingRow) { typingRow.remove(); typingRow = undefined }
 }
 
+function openLightbox(src, alt = '') {
+  const lb = $('lightbox'); if (!lb) return
+  const im = $('lightbox-img'); im.src = src; im.alt = alt
+  lb.hidden = false
+}
+function closeLightbox() {
+  const lb = $('lightbox'); if (!lb) return
+  lb.hidden = true; $('lightbox-img').removeAttribute('src')
+}
+$('lightbox')?.addEventListener('click', (e) => { if (e.target.id === 'lightbox' || e.target.id === 'lightbox-x') closeLightbox() })
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox() })
+
 function add(row, live) {
   if (seen.has(row.seq)) return
   seen.add(row.seq)
@@ -201,6 +213,7 @@ function add(row, live) {
   if (src) {
     b = el('div', `bubble pic${row.pic ? ' photo' : ''}`)
     const im = el('img'); im.src = src; im.alt = row.sticker ?? '图片'; im.title = im.alt
+    im.addEventListener('click', () => openLightbox(src, im.alt))
     im.addEventListener('load', () => { if (stick) scrollDown() }, { once: true })
     b.appendChild(im)
   } else {

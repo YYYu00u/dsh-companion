@@ -170,7 +170,7 @@ The demo also doubles as a UI review harness: it serves the real `packages/web/p
 
 ![The desktop window](docs/images/window.jpg)
 
-`@dsh-companion/window` is a QQ-like standalone window: chat on the left, her mood and recent moments on the right, a profile card when you click her. It is served at `/companion-window/` and uses the same transcript as the web room. It opens from the desktop pet's right-click menu, or directly from the URL.
+`@dsh-companion/window` is a QQ-like standalone window: chat on the left, her mood and recent moments on the right, a profile card when you click her. It is served at `/companion-window/` and uses the same transcript as the web room. It opens from the desktop pet's right-click menu, or directly from the URL. Images open full-screen on click; close with the backdrop, `×`, or Escape.
 
 ## Voice and listening (beta)
 

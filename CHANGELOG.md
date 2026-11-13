@@ -27,6 +27,17 @@ All notable changes to the open-source release. The private deployment's day-by-
 - Docs: split [extensions](docs/extensions.md) out of the package table. Two base packages (core + web) are enough to chat; window, voice, ears, bing and Chrome are optional, each with its own download.
 - Both READMEs now state the hard rule: an extension that is missing or fails to start must leave the base untouched.
 
+## 0.3.12 — the desktop window
+
+### Added
+
+- Click any image in the web room or the QQ-like desktop window to open a full-screen lightbox; close with the backdrop, the ×, or Escape.
+
+### Changed
+
+- `stripMeta()` drops model planning leaked into the visible reply (`按角色：`, `回应：`, `简短一点`), keeping the final message.
+- Public window docs now describe the image viewer and the window's role as the standalone desktop shell.
+
 ## 0.3.11 — 2026-11-06
 
 ### Added

@@ -1,6 +1,6 @@
 # @dsh-companion/window
 
-A QQ-like standalone chat window for the companion. The page is served at `/companion-window/` and talks to the web plugin's `/companion/api/*`, so the transcript is the same.
+A QQ-like standalone chat window for the companion. The page is served at `/companion-window/` and talks to the web plugin's `/companion/api/*`, so the transcript is the same. Click any image to view it full-screen; close with the backdrop, the ×, or Escape.
 
 It opens from the desktop pet's right-click menu (**More / Chat with her**), or from the URL directly. The window itself is Electron (the copy bundled with DSH at `~/.dsh/electron`); if Electron is unavailable it falls back to Chrome `--app`, then the default browser.
 

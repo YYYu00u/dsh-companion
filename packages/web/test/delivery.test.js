@@ -3,11 +3,17 @@ import assert from 'node:assert/strict'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { createDelivery, gapBefore, partOf, splitReply, typoOf } from '../delivery.js'
+import { createDelivery, gapBefore, partOf, splitReply, stripMeta, typoOf } from '../delivery.js'
 
 test('一条回复按换行、括号小动作、表情行拆开，最多 6 条', () => {
   assert.deepEqual(splitReply('好啊\n（笑）\n[表情:哼]'), ['好啊', '（笑）', '[表情:哼]'])
   assert.deepEqual(splitReply('一\n二\n三\n四\n五\n六\n七'), ['一', '二', '三', '四', '五', '六\n七'])
+})
+
+test('模型把内部草稿写进正文时，只留最后回话', () => {
+  const raw = '多大点事\n\n回应：不找。\n\n按角色：她在等他哄。\n\n简短一点。哦 行\n那就不闹了'
+  assert.equal(stripMeta(raw), '哦 行\n那就不闹了')
+  assert.equal(stripMeta('普通回复。'), '普通回复。')
 })
 
 test('没有的表情不发；有的表情单独成条', () => {

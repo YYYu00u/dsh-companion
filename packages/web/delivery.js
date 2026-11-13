@@ -24,6 +24,19 @@ export function splitReply(text) {
 }
 
 /** 两条之间等多久：随机 0.6–1.5 秒，加上下一条每个字 0.15 秒，最多 4 秒。 */
+
+/** 模型偶尔把“按角色/回应/简短一点”的内部草稿写进正文；有这些标记时只留最后的回话。 */
+export function stripMeta(text) {
+  const raw = String(text ?? '')
+  const marks = ['按角色：', '回应：', '简短一点']
+  const at = Math.max(...marks.map((m) => raw.lastIndexOf(m)))
+  if (at < 0) return raw
+  let tail = raw.slice(at).replace(/^\s*(?:按角色|回应|简短一点)[：:]?\s*[。.!！]?\s*/, '')
+  const lines = tail.split('\n').filter((line) => !/^\s*(?:按角色|回应|简短一点|我被说|他这句|策略|我该不该|我要不要)/.test(line))
+  const out = lines.join('\n').trim()
+  return out.length >= 2 ? out : raw
+}
+
 export const gapBefore = (text, random = Math.random) => Math.min(4000, 600 + 900 * random() + [...text].length * 150)
 
 /** 偶发打错一个字：返回 [错的那条, 自然更正]，没打错就是 undefined。
@@ -120,7 +133,7 @@ export function createDelivery({ home, deliver, toHer, hasSticker = () => false,
     out(row) {
       // 第一行写 [语音] 就整段都走语音；后面的某一行想改回文字，行首写 [文字]。
       const voiceAll = /^\s*\[语音\]/.test(row.text)
-      const parts = splitReply(row.text).map((text, i) => {
+      const parts = splitReply(stripMeta(row.text)).map((text, i) => {
         if (!voiceAll || i === 0) return text
         if (STICKER_LINE.test(text)) return text
         if (/^\s*\[文字\]/.test(text)) return text.replace(/^\s*\[文字\]\s*/, '')

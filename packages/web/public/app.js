@@ -56,6 +56,18 @@ function setStatus(text, typing = false) {
 
 // 拆条和发送节奏都在后端（delivery.js）做好了：一行就是一条，到了就显示。
 
+function openLightbox(src, alt = '') {
+  const lb = document.querySelector('#lightbox'); if (!lb) return
+  const im = document.querySelector('#lightbox-img'); im.src = src; im.alt = alt
+  lb.hidden = false
+}
+function closeLightbox() {
+  const lb = document.querySelector('#lightbox'); if (!lb) return
+  lb.hidden = true; document.querySelector('#lightbox-img').removeAttribute('src')
+}
+document.querySelector('#lightbox')?.addEventListener('click', (e) => { if (e.target.id === 'lightbox' || e.target.id === 'lightbox-x') closeLightbox() })
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox() })
+
 function bubble(side, text, lead, fresh, img) {
   const row = document.createElement('div')
   row.className = `row ${side}${lead ? ' lead' : ''}${fresh ? ' fresh' : ''}`
@@ -67,6 +79,7 @@ function bubble(side, text, lead, fresh, img) {
     a.href = img.src; a.target = '_blank'; a.rel = 'noopener'; a.title = t('image.open', { alt: img.alt })
     const im = document.createElement('img')
     im.src = img.src; im.alt = img.alt; im.loading = 'lazy'; im.width = 160; im.height = 160
+    im.addEventListener('click', () => openLightbox(img.src, img.alt))
     im.addEventListener('load', scrollDown, { once: true })
     a.appendChild(im)
     b.appendChild(a)
