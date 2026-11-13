@@ -1,6 +1,6 @@
 {
   "name": "@dsh-companion/web-search-bing",
-  "version": "0.3.13",
+  "version": "0.3.15",
   "type": "module",
   "description": "Bing (cn.bing.com) web search provider for DeepSeek Harness. No API key required.",
   "license": "MIT",

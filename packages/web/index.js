@@ -119,9 +119,23 @@ function ownerSections(home) {
 
 // 一个人一份：自己的家、自己的会话、自己的日子、自己的网址。
 // main=true 才有桌宠、感官轮询；modules 是开着的日子模块（life.js 的 ALL_LIFE），空就只聊天。
-function person(ctx, { base, preset, home, chatCwd = home, name, main, modules, petId, log, timeZone, exam, schedule }) {
+function person(ctx, { base, preset, home, chatCwd = home, name, main, modules, petId, log, timeZone, exam, schedule, profileBase }) {
   const BASE = base
   const sessionFile = join(home, '.data/web-session.json')
+  const ownProfileFile = join(home, 'profile.json')
+  const baseProfileFile = profileBase || ownProfileFile
+  const readJson = (file, fallback = {}) => { try { return JSON.parse(readFileSync(file, 'utf8')) } catch { return fallback } }
+  const readProfile = () => {
+    const base = readJson(baseProfileFile)
+    const own = readJson(ownProfileFile)
+    const merged = { ...base }
+    for (const [k, v] of Object.entries(own)) { if (v === '' || v === null || v === undefined) continue; merged[k] = v }
+    merged.signature = typeof own.signature === 'string' ? own.signature : ''
+    merged.signatures = Array.isArray(own.signatures) ? own.signatures : []
+    for (const k of ['birthday', 'age', 'city', 'height']) if (base[k] !== undefined) merged[k] = base[k]
+    return merged
+  }
+  const writeProfile = (patch) => { const next = { ...readJson(ownProfileFile), ...patch }; writeFileAtomic(ownProfileFile, JSON.stringify(next, null, 2) + '\n'); return next }
 
   // ---- 她的会话：id 存在 .data 里，重启后接着聊。
   let sessionId
@@ -246,7 +260,7 @@ ${senses.hisMoodOn(dateOf()) || '（今天没说话）'}`
 
   // ---- 发送层。他的话合好了才交给她；交之前先感觉一下他是怎么回的。
   let typoStylePref = '', typoChance
-  try { const tp = JSON.parse(readFileSync(join(home, 'profile.json'), 'utf8')); typoStylePref = typeof tp.typoStyle === 'string' ? tp.typoStyle : ''; if (Number.isFinite(Number(tp.typoChance))) typoChance = Math.max(0, Math.min(0.2, Number(tp.typoChance))) } catch {}
+  try { const tp = readProfile(); typoStylePref = typeof tp.typoStyle === 'string' ? tp.typoStyle : ''; if (Number.isFinite(Number(tp.typoChance))) typoChance = Math.max(0, Math.min(0.2, Number(tp.typoChance))) } catch {}
   const typoStyle = typoStylePref || (() => {
     const f = currentMood(home)?.feeling ?? ''
     if (/甜|黏|开心|高兴|喜欢|心动/.test(f)) return 'playful'
@@ -463,6 +477,17 @@ ${senses.hisMoodOn(dateOf()) || '（今天没说话）'}`
       return sendJson(res, 200, { ok: true })
     }
 
+    if (path === '/api/profile' && req.method === 'GET') return sendJson(res, 200, { ok: true, profile: readProfile() })
+    if (path === '/api/profile' && req.method === 'POST') {
+      let body = {}
+      try { body = JSON.parse((await readBody(req)) || '{}') } catch { return sendJson(res, 400, { error: '请求体不是 JSON' }) }
+      if (typeof body.signature === 'string') {
+        const signature = body.signature.trim().slice(0, 80)
+        const p = readProfile(); const signatures = Array.isArray(p.signatures) ? p.signatures : []
+        signatures.push({ text: signature, at: new Date().toISOString() }); writeProfile({ signature, signatures: signatures.slice(-50) })
+      }
+      return sendJson(res, 200, { ok: true, profile: readProfile() })
+    }
     if (path === '/api/who' && req.method === 'GET') return sendJson(res, 200, { name, main, modules })
 
     if (path === '/api/level' && req.method === 'GET') {
@@ -539,9 +564,10 @@ export function apply(ctx, config = {}) {
     : { enabled: false }
   const schedule = config.schedule && typeof config.schedule === 'object' ? config.schedule : undefined
 
+  const sharedProfile = config.sharedProfile ? expandPath(config.sharedProfile, cwd) : join(cwd, 'personas/shared/profile.json')
   const main = person(ctx, {
     base, preset: config.preset ?? 'dsh-companion', home: mainHome, chatCwd: config.chatCwd ? expandPath(config.chatCwd, cwd) : mainHome,
-    name: who, main: true, modules, petId, log, timeZone, exam, schedule,
+    name: who, main: true, modules, petId, log, timeZone, exam, schedule, profileBase: sharedProfile,
   })
 
   // 别的人格：config.people 或一个名册文件，一人一个 /p/<id>/。坏了就只有主人格，不影响她。
@@ -557,7 +583,7 @@ export function apply(ctx, config = {}) {
     const personModules = Array.isArray(p.life) ? p.life.filter((m) => ALL_LIFE.includes(m)) : []
     others.set(p.id, person(ctx, {
       base: `/p/${p.id}`, preset: p.preset ?? `persona-${p.id}`, home, chatCwd: p.chatCwd ? expandPath(p.chatCwd, cwd) : home,
-      name: p.name ?? p.id, main: false, modules: personModules, log, timeZone, schedule,
+      name: p.name ?? p.id, main: false, modules: personModules, log, timeZone, schedule, profileBase: sharedProfile,
     }))
   }
   const servePersona = (req, res) => {

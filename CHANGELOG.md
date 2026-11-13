@@ -27,6 +27,14 @@ All notable changes to the open-source release. The private deployment's day-by-
 - Docs: split [extensions](docs/extensions.md) out of the package table. Two base packages (core + web) are enough to chat; window, voice, ears, bing and Chrome are optional, each with its own download.
 - Both READMEs now state the hard rule: an extension that is missing or fails to start must leave the base untouched.
 
+## 0.3.15 — persona slots and a shared profile
+
+### Added
+
+- Public web persona slots: `people` / `roster` create `/p/<id>/` with separate chat, memory and signature.
+- `sharedProfile`: one base JSON for birthday, age, city, height; per-slot `profile.json` keeps signature/voice/background.
+- `GET/POST /api/profile` on the public web room.
+
 ## 0.3.14 — a screenshot she can send
 
 ### Added

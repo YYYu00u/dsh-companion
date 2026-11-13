@@ -34,3 +34,8 @@ See [../../docs/configuration.md](../../docs/configuration.md). The important ke
 ## Security
 
 Loopback only; cross-site state changes rejected; CSP/nosniff/no-referrer/DENY on static responses; 4 MB image cap; 4000-character text cap. No authentication by design.
+
+
+## Persona slots
+
+`config.people` or `config.roster` adds `/p/<id>/` slots, each with its own home, chat, memory and signature. `config.sharedProfile` is a JSON file used as the shared base for birthday, age, city and height. See [docs/personas.md](../../docs/personas.md).
