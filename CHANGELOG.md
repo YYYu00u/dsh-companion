@@ -4,6 +4,11 @@ All notable changes to the open-source release. The private deployment's day-by-
 
 ## Unreleased
 
+### Changed
+
+- Both READMEs rewritten for readability: one idea per section, no duplicated bullet lists, no stray table rows. Order is now: what it is → five-minute setup → what she does → memory → persona → life → chat feel → what to install → limits → docs.
+- Removed the leftover package rows that had been dangling under the extensions table.
+
 ### Added
 
 - `@dsh-companion/voice` now serves its own HTTP surface at `/companion-voice/`: the picker page, the voice list, reference audio, `POST /api/say`, and `POST /api/voices/default` (persisted to `~/.dsh-companion/voice.json`). It no longer needs the web package to wire voice up.

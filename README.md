@@ -9,7 +9,7 @@
 <p align="center"><strong>She remembers your life, not just your last 20 messages.</strong></p>
 
 <p align="center">A local-first companion for <a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness</a>.<br>
-Persona, notebook, moods, episodic memory, a room, and a life of her own — all plain files on your machine.</p>
+Persona, notebook, moods, episodes, diary — plain files on your machine.</p>
 
 <p align="center">
   <a href="https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml"><img src="https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -20,85 +20,124 @@ Persona, notebook, moods, episodic memory, a room, and a life of her own — all
 
 ![The web room, English UI](docs/images/home-en.jpg)
 
-<sub>English UI, demo data. The right side is her tank: the water colour follows her mood. The notebook tabs are "Today / Moments / You / Learning".</sub>
+<sub>English UI, demo data. The right side is her tank: the water colour follows her mood.</sub>
 
-## The 30-second version
+## What this is
 
 Most companions remember the last N messages. When the context fills, they compress it into a paragraph, and the relationship becomes "they talked about some things".
 
 This one is built around what survives that compression:
 
-- **Local-first.** Persona, diary, memories, stickers and state are plain files in a directory you own. No account, no telemetry, no hosted service.
-- **Continuity, not cleverness.** Raw turns become episodes; episodes are recalled by relevance and a forgetting curve; the notebook and self-model stay in the prompt.
-- **Separate from work.** She is a preset with no shell, no file editing and no approval prompts. If she needs hands, they run in a child session with a narrow toolset.
-- **Bring your own model.** Any provider/model DSH can route to. The companion and the optional judge model are configured separately.
+- **Local-first.** Persona, diary, memories, stickers and state are plain files you own. No account, no telemetry, no hosted service.
+- **Continuity, not cleverness.** Raw turns are archived, compressed into episodes, recalled by relevance and a forgetting curve.
+- **Separate from work.** She is a preset with no shell, no file editing and no approval prompts. When she needs to act, "hands" run in a child session.
+- **Bring your own model.** Any provider DSH can route to; the companion and the optional judge model are configured separately.
 
-## A small example
+## Five minutes to run
 
-> You: "Interview next Wednesday. A bit nervous."
->
-> She notes it. On Wednesday she asks how it went.
->
-> You: "Done. It went okay."
->
-> She moves it to "past" and stops asking.
->
-> A month later: "Interviews are annoying."
->
-> She: "Last time you were nervous too, and it went better than you expected."
+Requirements: DSH desktop **0.2.1-rc.5** or compatible, Node.js 20+, and a model provider already configured in DSH.
 
-That is the difference between **remembering** and **storing**.
+```bash
+git clone https://github.com/YYYu00u/dsh-companion.git
+cd dsh-companion
+node scripts/init-home.mjs --name 大肥鱼
+```
 
-## Why this exists
+That creates `~/.dsh-companion/` — her home: persona, notebook, standard, state, body parts.
 
-Most "AI girlfriend" stacks are cloud products: your conversations live on someone else's server, the character is fixed, and the model is chosen for you. This project takes the opposite position:
+Then:
 
-- **Local-first.** The only outbound traffic is what DSH already sends to your model provider and the sites she explicitly visits.
-- **Plugin-native.** A DSH preset plus host plugins, not a separate app scraping a chat UI. Sessions, tools and context come from DSH.
-- **Files over dashboards.** Edit `persona.md` and the next sentence changes. Read the diary with `cat`. Back it up with git.
-- **Honest about the seams.** Beta features are labelled; what is not verified is written down in [docs/verification.md](docs/verification.md).
+1. In DSH, open **Plugins** and install `packages/core` from a local path
+2. Install `packages/web` — that is enough to chat
+3. Restart DSH
+4. Create a session and pick the **大肥鱼** preset
+5. Open <http://127.0.0.1:4318/companion/>
 
-## What is inside
+Before the first chat, edit two places: the "你们的开始" section at the end of `persona.md`, and "主人给我的设定" in `notebook.md`.
 
-| Piece | What it does |
-|---|---|
-| **Persona** | `persona.md` is the root. It is re-read every turn, so editing the file changes the next sentence. |
-| **Notebook** | `notebook.md`: things she noted about you and about herself. Old items can be moved to "past" instead of deleted. |
-| **Mood** | A 0–100 score with a slow "base mood" layer, a half-life, and ten named feelings. Mood changes how she talks. |
-| **Episodic memory** | Raw turns are archived; on compaction they become episodes with keywords, people, emotion, importance, and links. Recall is BM25 + a forgetting curve. |
-| **Daily life** | Reminders, an evening diary/reflection, random "own time", and proactive messages with budgets and quiet hours. |
-| **Stickers** | She can keep images, describe when to use them, send them as `[表情:name]`, and learn from your reaction. |
-| **Body index** | Body parts map to real tools. If a tool is missing, she knows that part does not work instead of pretending. |
-| **Hands (optional)** | A child session with browser access. She writes the task; the hands do the clicking and return a short result. |
-| **Web room (optional)** | Chat, SSE, her notebook, mood tank, diary, stickers, activity level. Desktop and mobile. |
+Troubleshooting: [docs/install.md](docs/install.md).
+
+## What she does
+
+- **Remembers.** "Interview next Wednesday, a bit nervous" → she asks on Wednesday, then files it away and stops asking.
+- **Has a life.** Reminders, her own time, nudges when you have been away, an evening diary and reflection.
+- **Types like a person.** She waits when you send three messages in a row, splits replies into bubbles, stops when you cut in, and now and then mistypes a character and fixes it in her own words.
+- **Speaks (beta).** A local voice, played on click, works offline.
+- **Listens (beta).** Records 15 seconds and turns it into text.
 
 ## How she remembers you
 
-Most companions keep the last N messages in context. When the window fills, they compress it into a paragraph, and the relationship becomes "they talked about some things". This project takes the harder path.
+Short-term is the chat history. When it fills, it is compressed — most implementations produce a summary paragraph, and afterwards the relationship is "they talked about some things".
 
-| Layer | What it holds | When it is used |
+Here it becomes:
+
+| Layer | What is stored | When it is used |
 |---|---|---|
-| Short-term | The live chat | Every turn, until compaction |
-| Episodic | Episodes: one bout of conversation, summarized with title, gist, keywords, people, emotion, importance, open loops, links | Written on compaction; 2–3 relevant episodes are recalled each turn |
-| Long-term | Notebook, what she knows about you, her current self, her standard | In the system prompt every turn, no retrieval |
+| Short | Recent chat | Every message, until compressed |
+| Mid | Episodes | Written at compression; 2–3 relevant ones are recalled per turn |
+| Long | Notebook, what she knows about you, her current self, her standard | Always in the system prompt, no retrieval |
 
-A concrete example: you say "interview next Wednesday, a bit nervous." She notes it and asks on Wednesday. You say "done, it went okay"; she moves it to "past" and stops asking. A month later you say "interviews are annoying"; she remembers "last time you were nervous too, and it went better than you expected" — not the whole transcript.
+A month later, "interviews are annoying" recalls "last time you were nervous too, and it went better than you expected" — not the transcript.
 
-Why no vector DB yet: the corpus is small, the target environment may not have an embedding model, and BM25 over Chinese character bigrams is explainable. Revisit at ~500 episodes or when paraphrase recall starts failing. The formulas and the comparison are in [docs/design/memory.md](docs/design/memory.md).
+Why no vector DB yet, and the formulas: [docs/design/memory.md](docs/design/memory.md).
 
 ## Her persona is not one prompt
 
 | File | What it is | Who edits it |
 |---|---|---|
-| `persona.md` | The root: who she is, how she speaks, where her boundaries are | You; she can only propose |
-| `self.md` | The current her: habits, opinions, feelings | Her (`grow`) |
+| `persona.md` | The root: who she is, how she speaks, her boundaries | You; she can only propose |
+| `self.md` | The current her: habits, opinions, feelings | Her |
 | `standard.md` | Who she wants to become | Her (evening reflection) |
-| `owner.md` | What she knows about you, by section | Her (`know_him`) |
-| `notebook.md` | Concrete events, promises, preferences | Her (`take_note`) |
+| `owner.md` | What she knows about you | Her |
+| `notebook.md` | Concrete events, promises, preferences | Her |
 
-She can grow, but she cannot become a different person overnight. Changing the root requires a `propose_change`; the web room shows it in "She wants to change — waiting for you". Editing a file directly works too and takes effect on the next reply.
+She can grow, but the root only changes when you agree.
 
-A practical workflow: write three sentences in "你们的开始" (how you met, what she calls you, where she lives on the computer); chat for a week; read what she wrote into `self.md` and `owner.md`; then adjust one line at a time. More in [docs/design/persona.md](docs/design/persona.md), and the Chinese deep-dive in [docs/zh-CN/persona.md](docs/zh-CN/persona.md).
+Three things that work:
+
+- Write **specific temper**, not adjective lists. "Stubborn, soft underneath, snaps back first then finds a way down" beats "gentle, cute, smart".
+- Write **how she talks**. "Short sentences, one thing at a time, no bullet lists" changes the output immediately.
+- **Leave gaps.** The persona is a root, not a setting bible; put the actual days in the notebook.
+
+More: [docs/design/persona.md](docs/design/persona.md).
+
+## A life of her own
+
+- **Reminders** for things you said you would do.
+- **Her own time**: after a quiet stretch she may browse, look for stickers, post a moment, or do nothing.
+- **Nudges**: she comes to find you after a long absence; a few unanswered and she stops.
+- **Evening reflection**: diary, what did not go well, which habits to keep.
+
+All of it is budgeted: activity 0–4, quiet hours 23:00–08:00, a failed turn refunds its slot. Set `modules` to `[]` to turn it off.
+
+## Chat feel
+
+- Three messages in a row: she waits, then answers once.
+- Multi-sentence replies are split into bubbles with human pacing.
+- If you cut in, the rest is dropped.
+- Now and then a typo, corrected in her own words, chosen by her mood.
+- Stickers must exist; an invented name never becomes a broken image.
+
+Details: [docs/design/delivery.md](docs/design/delivery.md).
+
+## What to install
+
+**Two base packages and you can chat.** Everything else is an extension: optional, never required. Sizes and dependencies: [docs/extensions.md](docs/extensions.md).
+
+| Base | Role |
+|---|---|
+| [`@dsh-companion/core`](packages/core) | Persona, notebook, mood, memory, stickers, body |
+| [`@dsh-companion/web`](packages/web) | Web room, SSE, diary, 中文/English switch |
+
+| Extension | Adds | Extra download |
+|---|---|---|
+| [`@dsh-companion/window`](packages/window) | QQ-like standalone window | none |
+| [`@dsh-companion/web-search-bing`](packages/web-search-bing) | Keyless Bing search | none |
+| [`@dsh-companion/ears`](packages/ears) | Press to listen, speech to text | ASR model + capture helper |
+| [`@dsh-companion/voice`](packages/voice) | Local voice, click to play | 197 MB model + reference clips |
+| [extras/chrome](extras/chrome) | She can drive a browser (someone else's MCP) | MCP package + Chrome extension |
+
+**Hard rule**: a missing or failing extension must leave the base untouched — no voice, no listening, chat unaffected.
 
 ## Architecture
 
@@ -117,145 +156,24 @@ flowchart LR
   P[Model provider] <--> S
 ```
 
-The detailed component and data-flow docs are in [docs/architecture.md](docs/architecture.md).
+More: [docs/architecture.md](docs/architecture.md).
 
-## Packages
+## Known limits
 
-Two packages are the base — install those and you can talk to her. Everything below the divider is an **extension**: optional, downloaded separately, and never required. If an extension is missing or fails to start, the base must keep working (no voice button, no listening, chat unaffected). Sizes and dependencies: [docs/extensions.md](docs/extensions.md).
+- **Beta**: voice takes 15–60 s per sentence; the ears capture helper is only verified on macOS, song ID and the web voice UI are not done.
+- **Verified on macOS only.**
+- **Her real data is not shipped**: the persona, diary, memory and stickers in this repo are an original example.
+- The old in-DSH chat tab is deprecated.
 
-### Base
+## Docs
 
-| Package | Role | Verified |
-|---|---|---|
-| [`@dsh-companion/core`](packages/core) | Chat-only preset: persona, notebook, mood, memory, stickers, body, hands | Yes — daily use before extraction; unit + fake-context smoke tests |
-| [`@dsh-companion/web`](packages/web) | Web room, SSE, history, daily life, diary UI, 中文/English switch | Yes — daily use; demo server + unit tests |
-### Extensions (optional)
+- [Install and troubleshooting](docs/install.md) · [Extensions](docs/extensions.md) · [Verification](docs/verification.md)
+- Design: [memory](docs/design/memory.md) · [delivery](docs/design/delivery.md) · [proactive life](docs/design/proactive.md) · [persona](docs/design/persona.md)
 
-| Package | Extra capability | Extra download | Verified |
-|---|---|---|---|
-| [`@dsh-companion/window`](packages/window) | QQ-like standalone chat window, opened from the desktop pet | none | Page + Electron verified; pet menu is beta |
-| [`@dsh-companion/web-search-bing`](packages/web-search-bing) | Keyless Bing search provider | none | Yes — parser tests, used in production |
-| [`@dsh-companion/ears`](packages/ears) | Push-to-talk system audio / mic / audio files → text | ASR model + macOS capture helper | **Beta** — capture + SenseVoice verified; song ID/web UI pending |
-| [`@dsh-companion/voice`](packages/voice) | Local voice: ZipVoice zero-shot, click-to-play speech in the room | 197 MB model + reference clips | **Beta** — 15–60 s per sentence |
-| QQ / voice calls | Not in this release | No |
+## Privacy
 
-The old in-DSH chat tab is deprecated and not shipped. The Chrome wrapper is [extras/chrome](extras/chrome) — a documented setup for someone else's MCP server, not a package. See [ROADMAP.md](ROADMAP.md).
-
-## Quick start
-
-Requirements: DeepSeek Harness desktop **0.2.1-rc.5** or a compatible build, Node.js 20+, and a model provider configured in DSH.
-
-```bash
-git clone https://github.com/YYYu00u/dsh-companion.git
-cd dsh-companion
-node scripts/init-home.mjs --name 大肥鱼
-```
-
-This creates `~/.dsh-companion/` with a persona, notebook, standard, self-model, empty state files, and body parts. Edit `persona.md` and the "主人给我的设定" section of `notebook.md` before the first chat.
-
-Then install the packages as DSH bundles:
-
-1. Open **Plugins** in the DSH sidebar.
-2. Install from a local path: `packages/core` first, then `packages/web`. That is the base and it is enough to chat; add [extensions](docs/extensions.md) later if you want a window, a voice, or ears.
-3. Restart DSH.
-4. Create a session and choose the **大肥鱼** preset. For the web room, open <http://127.0.0.1:4318/companion/>.
-
-The exact labels differ slightly between DSH builds; [docs/install.md](docs/install.md) has the manual profile fallback and troubleshooting.
-
-### Minimal configuration
-
-```yaml
-# packages/core/cordis.patch.yml (already in the package)
-- id: notebook
-  name: '@dsh-companion/core'
-  config:
-    home: ~/.dsh-companion
-    name: 大肥鱼
-```
-
-```yaml
-# packages/web/cordis.patch.yml (already in the package)
-- id: dsh-companion-web
-  name: '@dsh-companion/web'
-  config:
-    base: /companion
-    preset: dsh-companion
-    name: 大肥鱼
-    home: ~/.dsh-companion
-    port: 4318
-```
-
-Everything else is optional: `modules` (which parts of her daily life run), `schedule` (quiet hours), `exam` (the optional Turing-style self-check), `people` (multiple companions on one install), and `pet` (dsh-pet bubbles).
-
-## The web room
-
-```bash
-# No DSH needed: real UI, mock data, no model calls.
-npm run demo            # http://127.0.0.1:4319/companion/
-```
-
-| Desktop | Notebook | Mobile |
-|---|---|---|
-| ![Desktop](docs/images/home-en.jpg) | ![Notebook](docs/images/book-en.jpg) | ![Mobile](docs/images/mobile-en.jpg) |
-
-The UI switches between 中文 and English from the header. The choice is remembered, and `?lang=en` / `?lang=zh` gives you a direct link. Only the chrome is translated; her own words, diary, and memories stay in whatever language she wrote them.
-
-The demo also doubles as a UI review harness: it serves the real `packages/web/public` bundle and exercises every API shape.
-
-## Desktop window
-
-![The desktop window](docs/images/window.jpg)
-
-`@dsh-companion/window` is a QQ-like standalone window: chat on the left, her mood and recent moments on the right, a profile card when you click her. It is served at `/companion-window/` and uses the same transcript as the web room. It opens from the desktop pet's right-click menu, or directly from the URL. Images open full-screen on click; close with the backdrop, `×`, or Escape.
-
-### The profile card
-
-![The profile card](docs/images/profile.jpg)
-
-<sub>Chinese UI, demo data. The facts and appearance are shared; the signature, voice and chat history belong to the current persona slot.</sub>
-
-## Voice and listening (beta)
-
-`@dsh-companion/voice` gives her an **offline** voice: a handful of reference voices, cloned locally with ZipVoice (no training). Replies get a `▶` button in the web room; she marks a line with `[语音]` to have it spoken, and `[文字]` to opt back out. The model is 197 MB and the reference clips are generated with your own key; on CPU a sentence takes 15–60 s at 8 steps. Numbers: [packages/voice/docs/en/voice.md](packages/voice/docs/en/voice.md).
-
-`@dsh-companion/ears` records 15–30 seconds of system audio, the microphone, or an audio file and turns it into text. The capture helper is verified on macOS 15.1 / M2; ASR was verified locally with the SenseVoice int8 model; song ID and the web voice UI are still pending. There is no always-on listening. Plan and limits: [docs/plans/ears.md](docs/plans/ears.md).
-
-## Design notes
-
-- [Memory](docs/design/memory.md) — three layers, BM25 with character bigrams, a forgetting curve, why no vector DB yet.
-- [Delivery](docs/design/delivery.md) — debounce, split replies, typing rhythm, interruption, the occasional typo.
-- [Proactive life](docs/design/proactive.md) — budgets, randomness, quiet hours, and rolling back a failed turn.
-- [Persona layers](docs/design/persona.md) — what she may edit, what needs your approval, and why it is all git-friendly files.
-- [Reviews](docs/reviews/README.md) — architecture, UI, interaction, function, and product audits, including what we fixed and what we deliberately left.
-
-## Verification
-
-What "verified" means here:
-
-- `npm test` — 48 unit/smoke tests over config bootstrap, notebook edits, levels, memory retrieval, delivery, life rollback, Bing parsing, UI i18n, and ears WAV/STT helpers.
-- `npm run check` — syntax, package manifests, private paths, secrets, stale scopes.
-- `npm run demo` — the real web bundle against a mock backend, desktop + mobile.
-- The core/web/window/search packages are extracted from a setup that ran daily against DSH 0.2.1-rc.5; the window page and Electron app were exercised and screenshotted. `ears` is beta: capture and SenseVoice ASR are verified locally, but song ID and the web voice UI are still pending.
-- Not verified end-to-end in this repository: the compaction plugin after a fresh install, multi-persona `people`, and the optional exam. They are marked **beta** in [docs/verification.md](docs/verification.md), with the exact manual check to run.
-
-## Privacy and safety
-
-- Everything is local. The only outbound traffic is what DSH already sends to your model provider and the sites she explicitly visits.
-- The web server binds to `127.0.0.1` only; cross-site POSTs are rejected. It has no login. Do not expose the port.
-- `.data/` is git-ignored: raw turns, mood state, API keys, uploaded images. Do not commit it.
-- The example persona is intentionally non-explicit. What you write in `persona.md` is your responsibility; do not publish someone else's intimate data.
-- The demo assets are AI-generated. See [NOTICE](NOTICE).
-
-## Contributing
-
-Issues and pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md); good first issues are labelled in the tracker. For anything that changes the persona format or the memory schema, open an issue first — those are the two things that are expensive to migrate.
+The only outbound traffic is model requests and the sites she explicitly visits. No telemetry. See [SECURITY.md](SECURITY.md).
 
 ## License
 
-Code is [MIT](LICENSE). The demo art is **not** MIT; see [NOTICE](NOTICE). The LCCC corpus used by the optional exam is not redistributed; download it yourself and check its license.
-
-## Acknowledgements
-
-- DeepSeek Harness for the plugin/preset model and the compaction base class.
-- The open companion community whose designs we compared and learned from; the comparison notes are in [docs/design/memory.md](docs/design/memory.md) and the review archive.
-- LCCC (Tsinghua) for the human-dialogue corpus used by the optional exam.
+MIT. Third-party code and model licenses: [NOTICE](NOTICE), [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
