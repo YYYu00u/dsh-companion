@@ -68,7 +68,7 @@ Every extension is optional; with any of them missing, basic chat must keep work
 ```mermaid
 flowchart TB
   U[You] -->|window / DSH session| W[web: API + SSE<br/>delivery, daily life, diary]
-  W -->|writes the session| S[DSH session<br/>preset=dafeiyu]
+  W -->|writes the session| S[DSH session<br/>preset=companion]
   S -->|system prompt| P[persona + notebook + current self]
   S -->|recall each turn| M[(episodes / raw turns)]
   S -->|at compression| M
