@@ -158,6 +158,12 @@ flowchart LR
 
 More: [docs/architecture.md](docs/architecture.md).
 
+## What changed recently
+
+0.3.x is about whether she reads like someone typing: mood-driven typo fixes, waiting when you send three messages, a thinking bubble, a local voice you click to hear, and sticker dedupe by picture instead of bytes.
+
+Per-version notes: [CHANGELOG](CHANGELOG.md), [docs/releases](docs/releases/).
+
 ## Known limits
 
 - **Beta**: voice takes 15–60 s per sentence; the ears capture helper is only verified on macOS, song ID and the web voice UI are not done.

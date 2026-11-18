@@ -141,6 +141,25 @@ node scripts/init-home.mjs --name 大肥鱼
 
 **硬规矩**：任何扩展不在或起不来，基础功能必须照常跑——语音没声音、耳朵没按钮，但聊天不能坏。
 
+## 架构
+
+```mermaid
+flowchart LR
+  subgraph DSH[DeepSeek Harness]
+    S[会话 / agent 循环] -->|系统提示 + 工具| C
+    C[core 预设<br/>人设、本子、心情、记忆、表情包] -->|工具调用| F[(她的家<br/>普通文件)]
+    W[网页宿主插件<br/>HTTP + SSE + 日子] -->|提示| S
+    W -->|读写| F
+    C -->|压缩钩子| M[记忆压缩<br/>原话 → 经历]
+    M --> F
+    C -->|use_hands| H[手的预设<br/>浏览器工具]
+  end
+  U[浏览器] -->|/companion/| W
+  P[模型服务] <--> S
+```
+
+细节在 [架构说明](docs/architecture.md)。
+
 ## 最近加了什么
 
 0.3.x 都在磨「她像不像一个正在打字的人」：错字按心情补、连发先等、能看到她在想、能出声、同一张图换个名字存会被认出来。
