@@ -18,9 +18,9 @@
   <img src="https://img.shields.io/badge/status-beta-f0a020" alt="Beta">
 </p>
 
-![网页房间](docs/images/home.jpg)
+![QQ 窗](docs/images/window.jpg)
 
-<sub>中文界面，演示数据。右上角可切 English；右边是她的鱼缸，水色跟着心情变。</sub>
+<sub>演示数据。左边聊天，右边她的心情和最近发的说说；点头像看资料卡。</sub>
 
 ## 这是什么
 
@@ -47,11 +47,11 @@ node scripts/init-home.mjs --name 大肥鱼
 
 然后：
 
-1. 打开 DSH 侧栏 **插件**，从本地路径安装 `packages/core`
-2. 再装 `packages/web`——到这一步就能聊了
+1. 打开 DSH 侧栏 **插件**，从本地路径装 `packages/core`
+2. 再装 `packages/web`（后端接口）和 `packages/window`（QQ 窗）
 3. 重启 DSH
-4. 新建会话，选 preset **大肥鱼**
-5. 打开 <http://127.0.0.1:4318/companion/>
+4. 桌宠右键 →「和她聊天」，或直接开 `http://<DSH 端口>/companion-window/`
+5. 想只在 DSH 里聊，也可以新建会话选 preset **大肥鱼**
 
 第一次聊之前，改两处：`persona.md` 最后那节「你们的开始」（你们怎么认识、她怎么叫你），和 `notebook.md` 里「主人给我的设定」。
 
@@ -61,13 +61,10 @@ node scripts/init-home.mjs --name 大肥鱼
 
 装完有三个入口，用哪个都行，**是同一个她、同一份聊天记录**：
 
-1. **QQ 窗**（推荐日常用）：桌宠右键 →「和她聊天」；没装桌宠就直接开 `http://<DSH 端口>/companion-window/`
-2. **网页房间**：<http://127.0.0.1:4318/companion/>
-3. **DSH 里**：新建会话，选「大肥鱼」preset
+1. **QQ 窗**（日常就用它）：桌宠右键 →「和她聊天」；没装桌宠就直接开 `http://<DSH 端口>/companion-window/`
+2. **DSH 里**：新建会话，选「大肥鱼」preset
 
-两个前端的关系要说清：**窗口用的是 `web` 包的接口**（`/companion/api/*`），所以 `web` 必须装——但网页那个页面可以不用，不打开它就行，它的接口还在给窗口用。
-
-不想留网页房间，就把 `packages/web` 的页面入口关掉，只当后端；窗口照常。
+窗口用的是 `web` 包的接口（`/companion/api/*`），所以 `web` 必须装，但**只当后端**——它的网页页面还在，问题不少，暂时不推荐，当它不存在就好。
 
 ## 她会做什么
 
@@ -136,16 +133,16 @@ node scripts/init-home.mjs --name 大肥鱼
 
 ## 装什么
 
-**基础两个装完就能聊**；下面是扩展，按需再加，不装不影响聊天。体积和依赖见 [扩展说明](docs/extensions.md)。
+**三个基础包装完就能聊**；下面是扩展，按需再加，不装不影响聊天。体积和依赖见 [扩展说明](docs/extensions.md)。
 
 | 基础 | 做什么 |
 |---|---|
 | [`@dsh-companion/core`](packages/core) | 人设、本子、心情、记忆、表情包、身体 |
-| [`@dsh-companion/web`](packages/web) | 接口（HTTP + SSE）、日记、中英切换；网页房间页面也在这里 |
+| [`@dsh-companion/web`](packages/web) | 接口（HTTP + SSE）、日记；**只当后端用，网页页面不推荐** |
+| [`@dsh-companion/window`](packages/window) | 像 QQ 的独立聊天窗——**日常就用它** |
 
 | 扩展 | 多出什么 | 要额外下什么 |
 |---|---|---|
-| [`@dsh-companion/window`](packages/window) | 像 QQ 的独立聊天窗（推荐日常用） | 无 |
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | 不用 key 的必应搜索 | 无 |
 | [`@dsh-companion/ears`](packages/ears) | 按一下听声音，转成文字 | ASR 模型 + 采集 helper |
 | [`@dsh-companion/voice`](packages/voice) | 本地音色，点「▶ 语音」才念 | 197 MB 模型 + 参考音频 |
@@ -180,6 +177,7 @@ flowchart LR
 
 ## 已知限制
 
+- **网页页面不推荐**：`packages/web` 的聊天页面还有不少问题（状态不同步、布局在窄窗口下会乱）。它现在只作为接口层；日常用 QQ 窗。
 - **beta**：语音每句要等 15~60 秒；耳朵的采集只验过 macOS，识歌和网页语音还没做。
 - **只在 macOS 上验过**；Windows/Linux 没试。
 - **不打包她的真实数据**：人设、日记、记忆、表情包都不在仓库里，仓库里是一份原创示例。

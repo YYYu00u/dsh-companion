@@ -18,9 +18,9 @@ Persona, notebook, moods, episodes, diary — plain files on your machine.</p>
   <img src="https://img.shields.io/badge/status-beta-f0a020" alt="Beta">
 </p>
 
-![The web room, English UI](docs/images/home-en.jpg)
+![The chat window](docs/images/window.jpg)
 
-<sub>English UI, demo data. The right side is her tank: the water colour follows her mood.</sub>
+<sub>Demo data. Chat on the left; her mood and recent moments on the right; click the avatar for her profile card.</sub>
 
 ## What this is
 
@@ -48,10 +48,10 @@ That creates `~/.dsh-companion/` — her home: persona, notebook, standard, stat
 Then:
 
 1. In DSH, open **Plugins** and install `packages/core` from a local path
-2. Install `packages/web` — that is enough to chat
+2. Install `packages/web` (the API) and `packages/window` (the chat window)
 3. Restart DSH
-4. Create a session and pick the **大肥鱼** preset
-5. Open <http://127.0.0.1:4318/companion/>
+4. Right-click the pet → "Chat with her", or open `http://<DSH port>/companion-window/`
+5. Prefer working inside DSH? Create a session with the **大肥鱼** preset instead
 
 Before the first chat, edit two places: the "你们的开始" section at the end of `persona.md`, and "主人给我的设定" in `notebook.md`.
 
@@ -61,11 +61,10 @@ Troubleshooting: [docs/install.md](docs/install.md).
 
 Three ways in. They are the same her and the same transcript:
 
-1. **The QQ window** (recommended for daily use): right-click the desktop pet → "Chat with her"; without the pet, open `http://<DSH port>/companion-window/`
-2. **The web room**: <http://127.0.0.1:4318/companion/>
-3. **Inside DSH**: new session, pick the 大肥鱼 preset
+1. **The chat window** (the daily driver): right-click the desktop pet → "Chat with her"; without the pet, open `http://<DSH port>/companion-window/`
+2. **Inside DSH**: new session, pick the 大肥鱼 preset
 
-One thing to know: **the window is a second front-end that talks to the `web` package's API** (`/companion/api/*`). So `web` is required — but the room page is optional: leave it closed and its API keeps serving the window.
+The window talks to the `web` package's API (`/companion/api/*`), so `web` is required — as a **backend only**. Its room page still exists, has known problems, and is not recommended for now.
 
 ## What she does
 
@@ -132,16 +131,16 @@ Details: [docs/design/delivery.md](docs/design/delivery.md).
 
 ## What to install
 
-**Two base packages and you can chat.** Everything else is an extension: optional, never required. Sizes and dependencies: [docs/extensions.md](docs/extensions.md).
+**Three base packages and you can chat.** Everything else is an extension: optional, never required. Sizes and dependencies: [docs/extensions.md](docs/extensions.md).
 
 | Base | Role |
 |---|---|
 | [`@dsh-companion/core`](packages/core) | Persona, notebook, mood, memory, stickers, body |
-| [`@dsh-companion/web`](packages/web) | API (HTTP + SSE), diary, 中文/English switch; the room page lives here too |
+| [`@dsh-companion/web`](packages/web) | API (HTTP + SSE), diary; **backend only — its page is not recommended** |
+| [`@dsh-companion/window`](packages/window) | QQ-like standalone window — **the daily driver** |
 
 | Extension | Adds | Extra download |
 |---|---|---|
-| [`@dsh-companion/window`](packages/window) | QQ-like standalone window (recommended daily driver) | none |
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | Keyless Bing search | none |
 | [`@dsh-companion/ears`](packages/ears) | Press to listen, speech to text | ASR model + capture helper |
 | [`@dsh-companion/voice`](packages/voice) | Local voice, click to play | 197 MB model + reference clips |
@@ -176,6 +175,7 @@ Per-version notes: [CHANGELOG](CHANGELOG.md), [docs/releases](docs/releases/).
 
 ## Known limits
 
+- **The web room is not recommended**: `packages/web`'s chat page has state-sync and narrow-layout problems. It is the API layer now; use the window.
 - **Beta**: voice takes 15–60 s per sentence; the ears capture helper is only verified on macOS, song ID and the web voice UI are not done.
 - **Verified on macOS only.**
 - **Her real data is not shipped**: the persona, diary, memory and stickers in this repo are an original example.
