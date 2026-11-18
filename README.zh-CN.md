@@ -1,41 +1,92 @@
 <p align="right"><a href="README.md">English</a> | <strong>简体中文</strong></p>
 
-<p align="center">
-  <img src="packages/core/icon.svg" width="88" alt="">
-</p>
-
 <h1 align="center">dsh-companion</h1>
 
-<p align="center"><strong>她记得的是你们的日子，不只是最近二十句。</strong></p>
+<p align="center"><strong>一个住在你电脑里的陪伴角色：她记得你们的事，有自己的日子。</strong></p>
 
-<p align="center">跑在 <a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness</a> 里的本地陪伴。<br>
-人设、本子、心情、经历、日记——都是你电脑上的普通文件。</p>
+<p align="center">跑在 <a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness</a> 里。人设、日记、记忆都是你目录里的普通文件。</p>
 
 <p align="center">
   <a href="https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml"><img src="https://github.com/YYYu00u/dsh-companion/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2ea44f" alt="License: MIT"></a>
-  <a href="https://github.com/deepseek-ai/deepseek-harness"><img src="https://img.shields.io/badge/DSH-0.2.1--rc.5-5b6cff" alt="DeepSeek Harness"></a>
   <img src="https://img.shields.io/badge/status-beta-f0a020" alt="Beta">
 </p>
 
-![QQ 窗](docs/images/window.jpg)
+![聊天窗](docs/images/window.jpg)
 
-<sub>演示数据。左边聊天，右边她的心情和最近发的说说；点头像看资料卡。</sub>
+<sub>聊天窗，演示数据。左边聊天，右边她的心情和最近发的说说。</sub>
 
-## 这是什么
+## 一句话
 
-大多数 AI 陪伴记得的是「最近 N 句」。上下文满了压成一段摘要，关系就变成“他们聊过一些事”。
+**市面上的 AI 陪伴，聊三天就忘了你们聊过什么。这个项目就是解决这件事的。**
 
-这里做的是压缩之后还能留下来的东西：
+她不靠在提示词里写“你要记住我”，而是把聊过的事存成文件、压成“经历”、按相关度想起来；不聊天的时候，她有自己的日子。
 
-- **本地优先**：人设、日记、记忆、表情包、状态都是你目录里的文件。没有账号、没有遥测、没有托管服务。
-- **连续，而不是聪明**：原话先存档，压缩时写成一段段“经历”，每轮按相关度和遗忘曲线回忆。
-- **和干活分开**：她是一个没有 shell、不改文件、不弹审批的 preset。要动手时，“手”在单独的子会话里跑。
-- **模型自己选**：DSH 能路由的 provider 都行，陪伴模型和可选的裁判模型可以分开配。
+## 一个真实的晚上
+
+> **周一 21:40** 你说：“下周三面试，有点烦。”
+>
+> 她记进本子，顺便问了一句是哪家公司。
+>
+> **周三 19:12** 她：“面得怎么样？”
+>
+> 你：“还行，问的东西不难。”
+>
+> 她把这条收进“过去的事”，以后不再问。
+>
+> **一个月后** 你说：“面试好烦。”
+>
+> 她：“上次你也这么说，后来面得挺顺的。”
+
+这段对话能发生，靠的是三样东西：原话存档、压缩成经历、按相关度回忆。不是靠上下文窗口够大。
+
+## 它解决什么问题
+
+| 常见做法 | 问题 | 这里怎么做 |
+|---|---|---|
+| 云端的 AI 女友 | 记录在别人服务器，角色固定，模型没得选 | 全在本地文件，模型你自己配 |
+| 一大段人设提示词 | 聊久了会漂，越写越长 | 人设拆成五层，各自有编辑权限 |
+| 通用 AI 助手 | 会干活、爱列清单、像客服 | 专为聊天做的发送层：拆句、节奏、会打错字 |
+
+**它不做什么**：不是工作助手。没有 shell、不改你的文件、不弹审批。真要动手，得单独开一个“手”的子会话。
+
+## 里面有什么
+
+| 装什么 | 是什么 | 必须吗 |
+|---|---|---|
+| [`@dsh-companion/core`](packages/core) | 人设、本子、心情、经历记忆、表情包 | 必须 |
+| [`@dsh-companion/web`](packages/web) | 接口（HTTP + SSE）、日记；聊天页面附带但**不推荐** | 必须（当后端） |
+| [`@dsh-companion/window`](packages/window) | 像 QQ 的独立聊天窗——**日常就用它** | 推荐 |
+| [`@dsh-companion/voice`](packages/voice) | 本地音色，点一下才念，断网可用 | 扩展 |
+| [`@dsh-companion/ears`](packages/ears) | 按一下录 15 秒，转成文字给她 | 扩展 |
+| [`@dsh-companion/web-search-bing`](packages/web-search-bing) | 换掉搜索源，不用 key | 扩展 |
+
+扩展都是可选的；缺了任何一个，基础聊天必须照常。体积和依赖见 [extensions](docs/extensions.md)。
+
+## 它怎么运转
+
+```mermaid
+flowchart TB
+  U[你] -->|聊天窗 / DSH 会话| W[web：接口 + SSE<br/>发送层、日子、日记]
+  W -->|写会话| S[DSH 会话<br/>preset=大肥鱼]
+  S -->|系统提示| P[人设 + 本子 + 现在的她]
+  S -->|每轮回忆| M[(经历 / 原话档案)]
+  S -->|压缩时| M
+  M -->|2~3 段相关的| S
+  W -->|气泡 / 语音| U
+  V[voice 扩展] -.->|点播合成| W
+  E[ears 扩展] -.->|转成文字| S
+```
+
+- 聊天进的是 DSH 的会话，人设和记忆都是文件，不是数据库。
+- 压缩时把原话写成经历；下一轮按相关度和遗忘曲线挑几段放回背景。
+- 语音、耳朵、浏览器都是旁挂的扩展，不在主链路上。
+
+细节：[架构](docs/architecture.md) · [记忆](docs/design/memory.md) · [发送层](docs/design/delivery.md)。
 
 ## 五分钟跑起来
 
-要求：DSH 桌面版 **0.2.1-rc.5** 或兼容版本、Node.js 20+、DSH 里已经配好模型。
+要求：DSH 桌面版 0.2.1-rc.5+、Node.js 20+、DSH 里配好模型。
 
 ```bash
 git clone https://github.com/YYYu00u/dsh-companion.git
@@ -43,155 +94,38 @@ cd dsh-companion
 node scripts/init-home.mjs --name 大肥鱼
 ```
 
-这几步会在 `~/.dsh-companion/` 建好她的家：人设、本子、标准、状态、身体部位。
+然后在 DSH 侧栏「插件」里，从本地路径依次装 `packages/core`、`packages/web`、`packages/window`，重启 DSH。
 
-然后：
+接下来：
 
-1. 打开 DSH 侧栏 **插件**，从本地路径装 `packages/core`
-2. 再装 `packages/web`（后端接口）和 `packages/window`（QQ 窗）
-3. 重启 DSH
-4. 桌宠右键 →「和她聊天」，或直接开 `http://<DSH 端口>/companion-window/`
-5. 想只在 DSH 里聊，也可以新建会话选 preset **大肥鱼**
+- **日常入口**：桌宠右键 →「和她聊天」；没桌宠就开 `http://<DSH 端口>/companion-window/`
+- **第一次聊之前**：改 `persona.md` 最后那节「你们的开始」，和 `notebook.md` 里「主人给我的设定」
+- **只想在 DSH 里聊**：新建会话，选 preset「大肥鱼」
 
-第一次聊之前，改两处：`persona.md` 最后那节「你们的开始」（你们怎么认识、她怎么叫你），和 `notebook.md` 里「主人给我的设定」。
+装不上、端口冲突：[安装与排错](docs/install.md)。
 
-装不上、端口冲突，看 [安装与排错](docs/install.md)。
+## 日常怎么用
 
-## 怎么跟她聊
-
-装完有三个入口，用哪个都行，**是同一个她、同一份聊天记录**：
-
-1. **QQ 窗**（日常就用它）：桌宠右键 →「和她聊天」；没装桌宠就直接开 `http://<DSH 端口>/companion-window/`
-2. **DSH 里**：新建会话，选「大肥鱼」preset
-
-窗口用的是 `web` 包的接口（`/companion/api/*`），所以 `web` 必须装，但**只当后端**——它的网页页面还在，问题不少，暂时不推荐，当它不存在就好。
-
-## 她会做什么
-
-- **记得**：你说“下周三面试有点烦”，周三晚上她会来问；面完收进“过去的事”，不再反复问。
-- **有自己的日子**：到点提醒、自己找事做、很久没来会去找你、晚上写日记和反思。都在 [她有自己的日子](#她有自己的日子)。
-- **会打字**：连发几条她会等你说完；回复拆成几个气泡；你插话她会停；偶尔打错一个字，下一条按心情补一句。
-- **会说话（beta）**：本地音色，点一下才念，断网也能用。
-- **能听（beta）**：按一下录 15 秒，转成文字再给她。
-
-## 她怎么记住你
-
-短期是聊天历史；历史满了会被压缩——大多数做法压成一段摘要，压完只剩“他们聊过一些事”。
-
-这里改成：
-
-| 层 | 存什么 | 什么时候用 |
-|---|---|---|
-| 短期 | 最近的聊天 | 每次说话，直到被压缩 |
-| 中期 | 一段段“经历” | 压缩时自动写；每轮挑 2~3 段相关的放进背景 |
-| 长期 | 本子、对你的了解、现在的她、她的标准 | 一直在系统提示里，不靠检索 |
-
-所以一个月后你说“面试好烦”，她想起的是“上次你也说烦，后来面得挺顺”，而不是把聊天记录倒出来。
-
-不上向量库的原因、公式和触发条件写在 [记忆设计](docs/zh-CN/memory.md)。
-
-## 她的人设不是一段 prompt
-
-| 文件 | 是什么 | 谁能改 |
-|---|---|---|
-| `persona.md` | 根：她是谁、怎么说话、边界在哪 | 你；她只能提议 |
-| `self.md` | 现在的她：习惯、看法、对你的感觉 | 她自己 |
-| `standard.md` | 她想成为什么样的人 | 她自己（晚上反思） |
-| `owner.md` | 她对你的了解 | 她自己 |
-| `notebook.md` | 一件件具体的事、约定、偏好 | 她 |
-
-她会变，但不会变成另一个人：根要动，得你点头。
-
-写人设的三条经验：
-
-- 写**具体的脾气**，不写形容词清单。“嘴硬心软，被说中了先顶一句再找台阶”比“温柔可爱”有用。
-- 写**她怎么说话**。“短句，一次说一件事，不列清单”会直接改变输出。
-- **留白**。人设是根，不是设定集；具体的日子放进本子。
-
-更多见 [人设设计](docs/zh-CN/persona.md)。
-
-## 她有自己的日子
-
-她不是只在被戳的时候才存在。
-
-- **惦记**：到点来问你答应了的事。
-- **自己的时间**：一段时间没说话，她可能去翻热榜、找表情包、发条说说，也可能发呆。
-- **主动找你**：很久没来会来找你；连着几次没回，她就不找了。
-- **晚上反思**：写日记、看今天哪里没做好、决定哪些做法留下。
-
-都有上限：活跃度 0–4 档、23:00–08:00 免打扰、失败的一轮会把次数退回去。嫌吵就把 `modules` 改成 `[]`。
-
-## 聊天的手感
-
-细节在 [发送层设计](docs/design/delivery.md)，这里只讲感受：
-
-- 你连发三条，她等你停下来，合成一句再回。
-- 她一次说几句，拆成几个气泡，按字数隔开。
-- 你插话，她没发完就不发了。
-- 偶尔打错一个字，下一条补一句「是「就」啦」——语气跟着心情走。
-- 表情包必须真的存在才发，不会出现裂图。
-
-## 装什么
-
-**三个基础包装完就能聊**；下面是扩展，按需再加，不装不影响聊天。体积和依赖见 [扩展说明](docs/extensions.md)。
-
-| 基础 | 做什么 |
-|---|---|
-| [`@dsh-companion/core`](packages/core) | 人设、本子、心情、记忆、表情包、身体 |
-| [`@dsh-companion/web`](packages/web) | 接口（HTTP + SSE）、日记；**只当后端用，网页页面不推荐** |
-| [`@dsh-companion/window`](packages/window) | 像 QQ 的独立聊天窗——**日常就用它** |
-
-| 扩展 | 多出什么 | 要额外下什么 |
-|---|---|---|
-| [`@dsh-companion/web-search-bing`](packages/web-search-bing) | 不用 key 的必应搜索 | 无 |
-| [`@dsh-companion/ears`](packages/ears) | 按一下听声音，转成文字 | ASR 模型 + 采集 helper |
-| [`@dsh-companion/voice`](packages/voice) | 本地音色，点「▶ 语音」才念 | 197 MB 模型 + 参考音频 |
-| [extras/chrome](extras/chrome) | 她能开浏览器（别人的 MCP） | MCP 包 + Chrome 扩展 |
-
-**硬规矩**：任何扩展不在或起不来，基础功能必须照常跑——语音没声音、耳朵没按钮，但聊天不能坏。
-
-## 架构
-
-```mermaid
-flowchart LR
-  subgraph DSH[DeepSeek Harness]
-    S[会话 / agent 循环] -->|系统提示 + 工具| C
-    C[core 预设<br/>人设、本子、心情、记忆、表情包] -->|工具调用| F[(她的家<br/>普通文件)]
-    W[网页宿主插件<br/>HTTP + SSE + 日子] -->|提示| S
-    W -->|读写| F
-    C -->|压缩钩子| M[记忆压缩<br/>原话 → 经历]
-    M --> F
-    C -->|use_hands| H[手的预设<br/>浏览器工具]
-  end
-  U[浏览器] -->|/companion/| W
-  P[模型服务] <--> S
-```
-
-细节在 [架构说明](docs/architecture.md)。
-
-## 最近加了什么
-
-0.3.x 都在磨「她像不像一个正在打字的人」：错字按心情补、连发先等、能看到她在想、能出声、同一张图换个名字存会被认出来。
-
-逐版记录在 [CHANGELOG](CHANGELOG.md)，每个版本的说明在 [docs/releases](docs/releases/)。
+- **让她记住**：直接说；重要的事说清楚，她不会读心。
+- **让她别记**：过去的事说一句“这个翻篇了”，或者删 `.data/memory/`。
+- **看她记得什么**：聊天窗右边点开头像，资料卡里有最近、说说、日记、她在想。
+- **换声音**：设置里选音色，或者让她自己标记 `[语音]`。
+- **嫌吵**：把日子模块（`modules`）改成 `[]`，她只在你说话时出现。
 
 ## 已知限制
 
-- **网页页面不推荐**：`packages/web` 的聊天页面还有不少问题（状态不同步、布局在窄窗口下会乱）。它现在只作为接口层；日常用 QQ 窗。
-- **beta**：语音每句要等 15~60 秒；耳朵的采集只验过 macOS，识歌和网页语音还没做。
-- **只在 macOS 上验过**；Windows/Linux 没试。
-- **不打包她的真实数据**：人设、日记、记忆、表情包都不在仓库里，仓库里是一份原创示例。
-- 旧的 DSH 内聊天 tab 已弃用，不再维护。
+- **网页聊天页面不推荐**：`@dsh-companion/web` 的页面还有排版问题（窄屏输入框被挤），它现在只当接口层。
+- **语音是 beta**：CPU 上每句 15~60 秒。
+- **耳朵只验过 macOS**：识歌、网页语音还没做。
+- **只在 macOS 上验证过**。
+- **仓库里是示例人设**：真实的日记、记忆、表情包没有上传。
 
 ## 文档
 
-- [安装与排错](docs/install.md) · [扩展说明](docs/extensions.md) · [验证记录](docs/verification.md)
-- 设计：[记忆](docs/design/memory.md) · [发送层](docs/design/delivery.md) · [主动生活](docs/design/proactive.md) · [人设](docs/zh-CN/persona.md)
+[安装](docs/install.md) · [扩展](docs/extensions.md) · [验证记录](docs/verification.md) · [逐版变更](CHANGELOG.md)
 
-## 隐私
+设计：[记忆](docs/design/memory.md) · [发送层](docs/design/delivery.md) · [主动生活](docs/design/proactive.md) · [人设](docs/zh-CN/persona.md)
 
-唯一的出站流量是模型请求，以及她主动去访问的网站。没有遥测。细节见 [SECURITY.md](SECURITY.md)。
+## 隐私与许可
 
-## 许可
-
-MIT。第三方组件和模型许可见 [NOTICE](NOTICE) 与 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+唯一的出站流量是模型请求，以及她主动访问的网站；没有遥测。见 [SECURITY.md](SECURITY.md)。代码 MIT，第三方许可见 [NOTICE](NOTICE)。
