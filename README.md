@@ -40,6 +40,22 @@ She does not rely on "please remember me" in a prompt. Her turns are archived, c
 
 That exchange is possible because of three things: raw turns on disk, compression into episodes, recall by relevance. Not because the context window is big.
 
+## What it looks like
+
+It is not just a chat box. All three are her own screens (demo data):
+
+![The notebook](docs/images/notebook.jpg)
+
+<sub><b>Her notebook</b>: what she senses (what you are running), what she is holding on to, what she wants to do and has done, and the episodes she keeps. Moments, diary and what she knows about you live here too.</sub>
+
+![Her voice](docs/images/voices.jpg)
+
+<sub><b>Her voice</b>: ten voices, preview and switch with one click; synthesised locally, works offline.</sub>
+
+- **Moments**: one-liners she posts on her own, mixed with the diary by time.
+- **Voice**: a play button after her line, never autoplayed. She can also mark a line with `[语音]` to have it spoken.
+- **Profile card**: her current mood, what she is doing, what she has learned.
+
 ## What it solves
 
 | Common approach | The problem | What happens here |
@@ -62,6 +78,22 @@ That exchange is possible because of three things: raw turns on disk, compressio
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | Keyless Bing search | Extension |
 
 Every extension is optional; with any of them missing, basic chat must keep working. Sizes: [docs/extensions.md](docs/extensions.md).
+
+## What tools she has
+
+Not a pile of APIs — a few dozen small actions she decides to use:
+
+| For | Tools |
+|---|---|
+| Notes and recall | `take_note` `recall` `its_past` |
+| Mood, diary, moments | `feel` `write_diary` `post_moment` |
+| Growing | `grow` `learn` `judge_lesson` `update_standard` `propose_change` |
+| Knowing you | `know_him` `keep_in_mind` |
+| Wants and deeds | `want_to` `did` `let_go` |
+| Stickers | `find_sticker` `keep_sticker` `find_pic` |
+| Acting | `use_hands` (a child session that drives a browser) |
+
+Tools have **usage frequency**: the ones she uses stay on hand, the rest sit in a drawer she pulls from — the prompt does not carry fifty schemas.
 
 ## How it runs
 
