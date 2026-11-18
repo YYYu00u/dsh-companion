@@ -57,6 +57,16 @@ Before the first chat, edit two places: the "你们的开始" section at the end
 
 Troubleshooting: [docs/install.md](docs/install.md).
 
+## How to talk to her
+
+Three ways in. They are the same her and the same transcript:
+
+1. **The QQ window** (recommended for daily use): right-click the desktop pet → "Chat with her"; without the pet, open `http://<DSH port>/companion-window/`
+2. **The web room**: <http://127.0.0.1:4318/companion/>
+3. **Inside DSH**: new session, pick the 大肥鱼 preset
+
+One thing to know: **the window is a second front-end that talks to the `web` package's API** (`/companion/api/*`). So `web` is required — but the room page is optional: leave it closed and its API keeps serving the window.
+
 ## What she does
 
 - **Remembers.** "Interview next Wednesday, a bit nervous" → she asks on Wednesday, then files it away and stops asking.
@@ -127,11 +137,11 @@ Details: [docs/design/delivery.md](docs/design/delivery.md).
 | Base | Role |
 |---|---|
 | [`@dsh-companion/core`](packages/core) | Persona, notebook, mood, memory, stickers, body |
-| [`@dsh-companion/web`](packages/web) | Web room, SSE, diary, 中文/English switch |
+| [`@dsh-companion/web`](packages/web) | API (HTTP + SSE), diary, 中文/English switch; the room page lives here too |
 
 | Extension | Adds | Extra download |
 |---|---|---|
-| [`@dsh-companion/window`](packages/window) | QQ-like standalone window | none |
+| [`@dsh-companion/window`](packages/window) | QQ-like standalone window (recommended daily driver) | none |
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | Keyless Bing search | none |
 | [`@dsh-companion/ears`](packages/ears) | Press to listen, speech to text | ASR model + capture helper |
 | [`@dsh-companion/voice`](packages/voice) | Local voice, click to play | 197 MB model + reference clips |

@@ -57,6 +57,18 @@ node scripts/init-home.mjs --name 大肥鱼
 
 装不上、端口冲突，看 [安装与排错](docs/install.md)。
 
+## 怎么跟她聊
+
+装完有三个入口，用哪个都行，**是同一个她、同一份聊天记录**：
+
+1. **QQ 窗**（推荐日常用）：桌宠右键 →「和她聊天」；没装桌宠就直接开 `http://<DSH 端口>/companion-window/`
+2. **网页房间**：<http://127.0.0.1:4318/companion/>
+3. **DSH 里**：新建会话，选「大肥鱼」preset
+
+两个前端的关系要说清：**窗口用的是 `web` 包的接口**（`/companion/api/*`），所以 `web` 必须装——但网页那个页面可以不用，不打开它就行，它的接口还在给窗口用。
+
+不想留网页房间，就把 `packages/web` 的页面入口关掉，只当后端；窗口照常。
+
 ## 她会做什么
 
 - **记得**：你说“下周三面试有点烦”，周三晚上她会来问；面完收进“过去的事”，不再反复问。
@@ -129,11 +141,11 @@ node scripts/init-home.mjs --name 大肥鱼
 | 基础 | 做什么 |
 |---|---|
 | [`@dsh-companion/core`](packages/core) | 人设、本子、心情、记忆、表情包、身体 |
-| [`@dsh-companion/web`](packages/web) | 网页房间、SSE、日记、中英切换 |
+| [`@dsh-companion/web`](packages/web) | 接口（HTTP + SSE）、日记、中英切换；网页房间页面也在这里 |
 
 | 扩展 | 多出什么 | 要额外下什么 |
 |---|---|---|
-| [`@dsh-companion/window`](packages/window) | 像 QQ 的独立聊天窗 | 无 |
+| [`@dsh-companion/window`](packages/window) | 像 QQ 的独立聊天窗（推荐日常用） | 无 |
 | [`@dsh-companion/web-search-bing`](packages/web-search-bing) | 不用 key 的必应搜索 | 无 |
 | [`@dsh-companion/ears`](packages/ears) | 按一下听声音，转成文字 | ASR 模型 + 采集 helper |
 | [`@dsh-companion/voice`](packages/voice) | 本地音色，点「▶ 语音」才念 | 197 MB 模型 + 参考音频 |
