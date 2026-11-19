@@ -12,9 +12,9 @@
   <img src="https://img.shields.io/badge/status-beta-f0a020" alt="Beta">
 </p>
 
-![The chat window on a desktop backdrop](docs/images/window-promo.jpg)
+![The chat window](docs/images/window.jpg)
 
-<sub>The chat window, demo data, placed on a desktop backdrop for the README. Chat on the left, her mood and recent moments on the right.</sub>
+<sub>The chat window, reference build, demo data. Chat on the left, her mood and recent moments on the right.</sub>
 
 ## One sentence
 
@@ -39,6 +39,17 @@ She does not rely on "please remember me" in a prompt. Her turns are archived, c
 > Her: "You said that last time too, and it went better than you expected."
 
 That exchange is possible because of three things: raw turns on disk, compression into episodes, recall by relevance. Not because the context window is big.
+
+## Her screens
+
+The same window, three views of the same person:
+
+| Profile | Recent | Diary |
+|---|---|---|
+| ![Profile](docs/images/profile.jpg) | ![Recent](docs/images/profile-recent.jpg) | ![Diary](docs/images/profile-diary.jpg) |
+| Shared facts, voice, persona slot | What she has been doing, with the feeling behind it | Her own diary, in her own words |
+
+<sub>Reference build, demo data. The public packages carry the same file contracts; the profile tabs are the reference UI.</sub>
 
 ## What it looks like
 
@@ -115,6 +126,53 @@ flowchart TB
 - Voice, ears and browser access are side extensions, off the main path.
 
 Details: [architecture](docs/architecture.md) · [memory](docs/design/memory.md) · [delivery](docs/design/delivery.md).
+
+## Make her yours
+
+Nothing about her appearance or personality is hard-coded in a prompt string.
+
+### Face and body
+
+The window and web room read the same art from `packages/web/public/`:
+
+```text
+art-avatar.jpg          square avatar
+art-face-calm.jpg       chat avatar, by mood
+art-face-happy.jpg
+art-face-sad.jpg
+art-face-sulk.jpg
+art-face-surprised.jpg
+art-face-sleepy.jpg
+art-half-calm.webp      full-body, right panel
+art-half-happy.webp
+...
+art-bg-desk.jpg         backdrop
+art-bg-tank.jpg         her tank
+```
+
+Keep the names, replace the files. `art-face-*` is the face bubble; `art-half-*` is the standing figure.
+
+### Personality
+
+In her home:
+
+| File | What it is |
+|---|---|
+| `persona.md` | root identity and boundaries; owner approval |
+| `self.md` | the current her — habits, opinions, feelings |
+| `standard.md` | who she wants to become |
+| `owner.md` | what she knows about you |
+| `notebook.md` | concrete things, promises, preferences |
+
+Edit `persona.md` for a different character; edit `self.md` for a different phase of the same character.
+
+### Voice
+
+`@dsh-companion/voice` ships ten voices and a local ZipVoice pipeline. Pick one, or add a reference clip; see [packages/voice](packages/voice).
+
+### More than one
+
+`@dsh-companion/web` accepts `people` or a `roster` file: one `/p/<id>/` per slot, each with its own chat, memory and signature. `sharedProfile` holds the facts they share. See [docs/personas.md](docs/personas.md).
 
 ## Five minutes to run
 

@@ -12,9 +12,9 @@
   <img src="https://img.shields.io/badge/status-beta-f0a020" alt="Beta">
 </p>
 
-![聊天窗放在桌面背景上](docs/images/window-promo.jpg)
+![聊天窗](docs/images/window.jpg)
 
-<sub>聊天窗，演示数据；背景是 README 用的桌面示意。左边聊天，右边她的心情和最近发的说说。</sub>
+<sub>聊天窗，参考版界面，演示数据。左边聊天，右边她的心情和最近发的说说。</sub>
 
 ## 一句话
 
@@ -39,6 +39,17 @@
 > 她：“上次你也这么说，后来面得挺顺的。”
 
 这段对话能发生，靠的是三样东西：原话存档、压缩成经历、按相关度回忆。不是靠上下文窗口够大。
+
+## 她的几个界面
+
+同一个窗口，同一个人的三面：
+
+| 资料 | 最近 | 日记 |
+|---|---|---|
+| ![资料](docs/images/profile.jpg) | ![最近](docs/images/profile-recent.jpg) | ![日记](docs/images/profile-diary.jpg) |
+| 共享资料、嗓子、人格槽位 | 她最近在干什么，当时是什么感觉 | 她自己的日记，用她自己的话 |
+
+<sub>参考版界面，演示数据。公开包沿用同一套文件契约；资料页这几个 tab 是参考版 UI。</sub>
 
 ## 看得见的东西
 
@@ -115,6 +126,53 @@ flowchart TB
 - 语音、耳朵、浏览器都是旁挂的扩展，不在主链路上。
 
 细节：[架构](docs/architecture.md) · [记忆](docs/design/memory.md) · [发送层](docs/design/delivery.md)。
+
+## 把她变成你的
+
+她的样子和性格都不是写死在提示词里的。
+
+### 脸和身体
+
+窗口和网页房间读的是同一套图，在 `packages/web/public/`：
+
+```text
+art-avatar.jpg          方形头像
+art-face-calm.jpg       聊天头像，按心情换
+art-face-happy.jpg
+art-face-sad.jpg
+art-face-sulk.jpg
+art-face-surprised.jpg
+art-face-sleepy.jpg
+art-half-calm.webp      右侧全身像
+art-half-happy.webp
+...
+art-bg-desk.jpg         桌面背景
+art-bg-tank.jpg         她的鱼缸
+```
+
+文件名不变，直接换图。`art-face-*` 是聊天头像，`art-half-*` 是站着的全身像。
+
+### 性格
+
+她的家里：
+
+| 文件 | 是什么 |
+|---|---|
+| `persona.md` | 根：她是谁、边界在哪；要主人点头 |
+| `self.md` | 现在的她：习惯、看法、对你的感觉 |
+| `standard.md` | 她想成为什么样的人 |
+| `owner.md` | 她对你的了解 |
+| `notebook.md` | 具体的事、约定、偏好 |
+
+换一个角色，改 `persona.md`；同一个人换阶段，改 `self.md`。
+
+### 嗓子
+
+`@dsh-companion/voice` 自带十个音色和本地 ZipVoice；可以选一个，也可以加参考音频。见 [packages/voice](packages/voice)。
+
+### 不止一个
+
+`@dsh-companion/web` 支持 `people` 或 `roster`：每个槽位一个 `/p/<id>/`，各自聊天、记忆、签名；`sharedProfile` 放共享资料。见 [docs/personas.md](docs/personas.md)。
 
 ## 五分钟跑起来
 
