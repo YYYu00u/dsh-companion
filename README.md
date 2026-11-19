@@ -18,9 +18,12 @@
 
 ## One sentence
 
-**Most AI companions forget you after three days. This project is about fixing that.**
+**She is not a chat character who remembers the last twenty lines. She is a whole person you can re-skin, with layered personality and a memory that survives compression.**
 
-She does not rely on "please remember me" in a prompt. Her turns are archived, compressed into episodes, and recalled by relevance. When you are away, she has her own days.
+- **The look is yours.** Avatar, portraits, expressions and desktop backdrop are ordinary image files; keep the names and replace the art.
+- **Personality is not one prompt.** Root identity, the current her, who she wants to become, what she knows about you, and concrete notes: five layers that can change without becoming someone else.
+- **Memory survives compression.** Raw turns are archived, compressed into episodes, and recalled by relevance; restart, switch models, come back a month later, she can pick up.
+- **She is full.** Mood, her own days, diary, wants and refusals; not a support agent waiting for instructions.
 
 ## One evening, concretely
 
