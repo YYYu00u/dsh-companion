@@ -12,9 +12,9 @@
   <img src="https://img.shields.io/badge/status-beta-f0a020" alt="Beta">
 </p>
 
-![聊天窗](docs/images/window.jpg)
+![聊天窗放在桌面背景上](docs/images/window-promo.jpg)
 
-<sub>聊天窗，演示数据。左边聊天，右边她的心情和最近发的说说。</sub>
+<sub>聊天窗，演示数据；背景是 README 用的桌面示意。左边聊天，右边她的心情和最近发的说说。</sub>
 
 ## 一句话
 
@@ -153,7 +153,7 @@ node scripts/init-home.mjs --name 大肥鱼
 
 ![桌宠菜单](docs/images/pet-menu.jpg)
 
-<sub>这个菜单项由 `@dsh-companion/window` 注册。没有这一项，说明窗口插件没装上。</sub>
+<sub>菜单示意图，按真实菜单重绘；实际文案以你的版本为准。这个菜单项由 `@dsh-companion/window` 注册。</sub>
 
 没有桌宠就直接开：
 

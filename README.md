@@ -12,9 +12,9 @@
   <img src="https://img.shields.io/badge/status-beta-f0a020" alt="Beta">
 </p>
 
-![The chat window](docs/images/window.jpg)
+![The chat window on a desktop backdrop](docs/images/window-promo.jpg)
 
-<sub>The chat window, demo data. Chat on the left, her mood and recent moments on the right.</sub>
+<sub>The chat window, demo data, placed on a desktop backdrop for the README. Chat on the left, her mood and recent moments on the right.</sub>
 
 ## One sentence
 
@@ -153,7 +153,7 @@ Right-click the desktop pet → **和她聊天**:
 
 ![The pet menu](docs/images/pet-menu.jpg)
 
-<sub>The menu item is registered by `@dsh-companion/window`. If it is missing, the window plugin is not loaded.</sub>
+<sub>Menu illustration, redrawn from the real menu. The item is registered by `@dsh-companion/window`; if it is missing, the window plugin is not loaded.</sub>
 
 No pet? Open:
 
