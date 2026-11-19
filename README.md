@@ -120,6 +120,15 @@ Details: [architecture](docs/architecture.md) · [memory](docs/design/memory.md)
 
 Requirements: DSH desktop 0.2.1-rc.5+, Node.js 20+, a model provider configured in DSH.
 
+Just want to see the UI, without installing DSH:
+
+```bash
+npm run demo
+# http://127.0.0.1:4399/companion/
+```
+
+That is mock data, not her brain; the DSH install is the real thing.
+
 ```bash
 git clone https://github.com/YYYu00u/dsh-companion.git
 cd dsh-companion

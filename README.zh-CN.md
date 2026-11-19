@@ -120,6 +120,15 @@ flowchart TB
 
 要求：DSH 桌面版 0.2.1-rc.5+、Node.js 20+、DSH 里配好模型。
 
+只想先看界面、不装 DSH：
+
+```bash
+npm run demo
+# http://127.0.0.1:4399/companion/
+```
+
+这是 mock 数据，不是她的脑；装 DSH 才是完整版。
+
 ```bash
 git clone https://github.com/YYYu00u/dsh-companion.git
 cd dsh-companion
@@ -140,7 +149,7 @@ node scripts/init-home.mjs --name 大肥鱼
 
 - **让她记住**：直接说；重要的事说清楚，她不会读心。
 - **让她别记**：过去的事说一句“这个翻篇了”，或者删 `.data/memory/`。
-- **看她记得什么**：聊天窗右边点开头像，资料卡里有最近、说说、日记、她在想。
+- **看她记得什么**：聊天窗右边点开头像，资料卡里有她的说说和她在想。
 - **换声音**：设置里选音色，或者让她自己标记 `[语音]`。
 - **嫌吵**：把日子模块（`modules`）改成 `[]`，她只在你说话时出现。
 
