@@ -145,6 +145,33 @@ Next:
 
 Troubleshooting: [docs/install.md](docs/install.md).
 
+## How to use
+
+### Open her window
+
+Right-click the desktop pet → **和她聊天**:
+
+![The pet menu](docs/images/pet-menu.jpg)
+
+<sub>The menu item is registered by `@dsh-companion/window`. If it is missing, the window plugin is not loaded.</sub>
+
+No pet? Open:
+
+```text
+http://<DSH port>/companion-window/
+```
+
+The window is a standalone Electron app, not a browser tab. It uses the same transcript as the web room.
+
+### In the window
+
+- **Chat**: type on the left, `Enter` sends, `Shift+Enter` adds a line.
+- **Her side**: the right panel shows her mood, what she is doing, and recent moments.
+- **Her card**: click her avatar to open it.
+- **Images**: click any image to view it full-screen.
+- **Voice**: a play button appears after a spoken line; it never autoplays.
+- **No pet / no window**: open `/companion-window/` directly, or use the DSH preset in a normal session.
+
 ## Day to day
 
 - **To be remembered**: say it. She does not read minds; be specific about what matters.
